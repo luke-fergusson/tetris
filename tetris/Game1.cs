@@ -15,7 +15,7 @@ namespace tetris
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
-
+        //test
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here

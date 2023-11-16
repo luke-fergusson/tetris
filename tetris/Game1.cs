@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Timers;
 
@@ -18,15 +20,20 @@ namespace tetris
 
         private Vector2 _gravity;
 
-        private float _speed;
         
         
+        private const float Time = 0;
+        private float TimeElapsed;
 
 
         public int _height = 0;
         public int _width = 0;
 
         public int _spawnLocation = 0;
+
+        private float count = 0;
+
+        public float Count { get => count; set => count = value; }
 
         public Game1()
         {
@@ -48,33 +55,21 @@ namespace tetris
 
             
         }
-        private float CalcGravity()
+        private bool SpeedRampUp(GameTime gameTime)
         {
-            bool Done = Timer();
-            if (Done)
+            count = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            TimeElapsed = TimeElapsed + count;
+            Debug.WriteLine(TimeElapsed);
+
+            if (TimeElapsed > 2)
             {
-                _speed = 4f;// sets the value of how quick it the block falls
-            }
-            
-
-            
-
-            return _speed;
-        }
-        private bool Timer()
-        {
-            
-            System.Timers.Timer timer = new System.Timers.Timer();
-            timer.Interval = 30;
-            timer.Enabled = true;
                 
-            while(timer.Enabled == true)
-            {
-                return false;
+                TimeElapsed = Time;
+                return true;
             }
-
-            return true;
+            return false;
         }
+        
     
         
 
@@ -92,7 +87,7 @@ namespace tetris
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _grid = Content.Load<Texture2D>("Tetris_Background (1)");
             _testBlock = Content.Load<Texture2D>("testBlock");
-            _gravity = new Vector2(_width+100, 0);
+            _gravity = new Vector2(_width+100, 10);
             
             
             // TODO: use this.Content to load your game content here
@@ -102,8 +97,16 @@ namespace tetris
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            Timer();       
-            _gravity.Y += CalcGravity();
+
+
+            bool Timer = SpeedRampUp(gameTime);
+            if (Timer)
+            {
+                _gravity.Y += 50f;
+            }
+            
+           
+            
             
 
             // TODO: Add your update logic here

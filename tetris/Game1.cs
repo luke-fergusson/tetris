@@ -30,8 +30,9 @@ namespace tetris
         public int _width = 0;
 
         public int _spawnLocation = 0;
-
         private float count = 0;
+
+        private KeyboardState D1, D2;
 
         public float Count { get => count; set => count = value; }
 
@@ -69,6 +70,17 @@ namespace tetris
             }
             return false;
         }
+        private bool CheckForMovement()
+        {
+            if(Keyboard.GetState().IsKeyDown(Keys.D))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
         
     
         
@@ -104,7 +116,12 @@ namespace tetris
             {
                 _velocity.Y += 50f;
             }
-            
+
+            bool keyDown = CheckForMovement();
+            if (keyDown && Keyboard.GetState().IsKeyDown(Keys.D))
+            {
+                _velocity.X += 50f;
+            }
            
             
             

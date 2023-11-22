@@ -32,7 +32,8 @@ namespace tetris
         public int _spawnLocation = 0;
         private float count = 0;
 
-        private KeyboardState D1, D2;
+        private KeyboardState D1, D2; // D1 old keyboard state D2 is current keyboard state so one input is accepted at a time
+        private KeyboardState A1, A2;
 
         public float Count { get => count; set => count = value; }
 
@@ -60,7 +61,7 @@ namespace tetris
         {
             count = (float)gameTime.ElapsedGameTime.TotalSeconds;
             TimeElapsed = TimeElapsed + count;
-            Debug.WriteLine(TimeElapsed);
+            
 
             if (TimeElapsed > 2)
             {
@@ -70,17 +71,7 @@ namespace tetris
             }
             return false;
         }
-        private bool CheckForMovement()
-        {
-            if(Keyboard.GetState().IsKeyDown(Keys.D))
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
+        
         
     
         
@@ -117,14 +108,23 @@ namespace tetris
                 _velocity.Y += 50f;
             }
 
-            bool keyDown = CheckForMovement();
-            if (keyDown && Keyboard.GetState().IsKeyDown(Keys.D))
+
+            D2 = Keyboard.GetState();
+
+            if(D1.IsKeyUp(Keys.D) && D2.IsKeyDown(Keys.D))
             {
                 _velocity.X += 50f;
             }
-           
-            
-            
+            D1 = D2;
+
+            A2 = Keyboard.GetState();
+
+            if (A1.IsKeyUp(Keys.A) && A2.IsKeyDown(Keys.A))
+            {
+                _velocity.X -= 50f;
+            }
+            A1 = A2;
+
 
             // TODO: Add your update logic here
 

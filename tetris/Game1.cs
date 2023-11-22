@@ -18,7 +18,7 @@ namespace tetris
 
 
 
-        private Vector2 _gravity;
+        private Vector2 _velocity;
 
         
         
@@ -87,7 +87,7 @@ namespace tetris
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _grid = Content.Load<Texture2D>("Tetris_Background (1)");
             _testBlock = Content.Load<Texture2D>("testBlock");
-            _gravity = new Vector2(_width+100, 10);
+            _velocity = new Vector2(_width+100, 10);
             
             
             // TODO: use this.Content to load your game content here
@@ -102,7 +102,7 @@ namespace tetris
             bool Timer = SpeedRampUp(gameTime);
             if (Timer)
             {
-                _gravity.Y += 50f;
+                _velocity.Y += 50f;
             }
             
            
@@ -121,7 +121,7 @@ namespace tetris
             
             _spriteBatch.Begin();
             _spriteBatch.Draw(_grid, new Rectangle((_width-100),10, 500,1000), Color.White);
-            _spriteBatch.Draw(_testBlock, _gravity, new Rectangle(_spawnLocation,10,102,100), Color.White);
+            _spriteBatch.Draw(_testBlock, _velocity, new Rectangle(_spawnLocation,10,102,100), Color.White);
             _spriteBatch.End();
             // TODO: Add your drawing code here
 

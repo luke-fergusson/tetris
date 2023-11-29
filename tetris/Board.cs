@@ -15,8 +15,9 @@ namespace tetris
 
         private Texture2D _grid;
         private Texture2D _testBlock;
+        private Texture2D _newBlock;
 
-        GameBoard[,] gameBoards = new GameBoard[];
+        
 
         private Vector2 _velocity;
 
@@ -37,8 +38,10 @@ namespace tetris
 
         public float Count { get => count; set => count = value; }
 
-        public Game1()
+        public Board()
         {
+            
+
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -90,6 +93,7 @@ namespace tetris
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _grid = Content.Load<Texture2D>("Tetris_Background (1)");
+            _newBlock = Content.Load<Texture2D>("sa");
             _testBlock = Content.Load<Texture2D>("testBlock");
             _velocity = new Vector2(_width+100, 10);
             
@@ -138,11 +142,23 @@ namespace tetris
             _spawnLocation = _width+100;
             
             _spriteBatch.Begin();
-            _spriteBatch.Draw(_grid, new Rectangle((_width-100),10, 500,1000), Color.White);
-            _spriteBatch.Draw(_testBlock, _velocity, new Rectangle(_spawnLocation,10,102,100), Color.White);
-            _spriteBatch.End();
+           /* _spriteBatch.Draw(_grid, new Rectangle((_width-100),10, 500,1000), Color.White);
+            _spriteBatch.Draw(_testBlock, _velocity, new Rectangle(_spawnLocation,10,102,100), Color.White);*/
+            
             // TODO: Add your drawing code here
+            for (int i = 0; i < 10; i++)//gennnerates grass tiles in grid
+            {
+                
+                for (int j = 0; j < 20; j++)
+                {
 
+                    _spriteBatch.Draw(_newBlock, new Rectangle(10,10, 50,50), Color.White);
+                   
+
+                }
+
+            }
+            _spriteBatch.End();
             base.Draw(gameTime);
         }
 

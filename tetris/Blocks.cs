@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace tetris
 {
-    internal class Blocks : Game1
+    internal class Blocks : Game
     {
 
 

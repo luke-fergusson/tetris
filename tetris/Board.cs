@@ -142,18 +142,20 @@ namespace tetris
             _spawnLocation = _width+100;
             
             _spriteBatch.Begin();
-           /* _spriteBatch.Draw(_grid, new Rectangle((_width-100),10, 500,1000), Color.White);
-            _spriteBatch.Draw(_testBlock, _velocity, new Rectangle(_spawnLocation,10,102,100), Color.White);*/
-            
+            /* _spriteBatch.Draw(_grid, new Rectangle((_width-100),10, 500,1000), Color.White);
+             _spriteBatch.Draw(_testBlock, _velocity, new Rectangle(_spawnLocation,10,102,100), Color.White);*/
+
             // TODO: Add your drawing code here
+            int col =  500;
+            int row = 0;
             for (int i = 0; i < 10; i++)//gennnerates grass tiles in grid
             {
-                
+                col += 50;
                 for (int j = 0; j < 20; j++)
                 {
 
-                    _spriteBatch.Draw(_newBlock, new Rectangle(10,10, 50,50), Color.White);
-                   
+                    _spriteBatch.Draw(_newBlock, new Rectangle(row,col, 50,50), Color.White);
+                    row += 50;
 
                 }
 

@@ -16,16 +16,17 @@ namespace tetris
         private Texture2D _grid;
         private Texture2D _testBlock;
         private Texture2D _newBlock;
+        private Texture2D _block;
 
-        
+        public Texture2D[,] Grid = new Texture2D[10, 20];
 
         private Vector2 _velocity;
 
-        
+        public int[,] gameBoards;
         
         private const float Time = 0;
         private float TimeElapsed;
-
+        private bool Displayed = false;
 
         public int _height = 0;
         public int _width = 0;
@@ -85,8 +86,9 @@ namespace tetris
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            gameBoards = new int[10, 20];
             
-            
+
 
             base.Initialize();
         }
@@ -94,11 +96,13 @@ namespace tetris
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _grid = Content.Load<Texture2D>("Tetris_Background (1)");
+            //_grid = Content.Load<Texture2D>("Tetris_Background (1)");
             _newBlock = Content.Load<Texture2D>("sa");
-            _testBlock = Content.Load<Texture2D>("testBlock");
+            //_testBlock = Content.Load<Texture2D>("testBlock");
             _velocity = new Vector2(_width+100, 10);
+
             
+
             
             // TODO: use this.Content to load your game content here
         }
@@ -141,29 +145,37 @@ namespace tetris
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            _spawnLocation = _width+100;
             
             _spriteBatch.Begin();
-            /* _spriteBatch.Draw(_grid, new Rectangle((_width-100),10, 500,1000), Color.White);
-             _spriteBatch.Draw(_testBlock, _velocity, new Rectangle(_spawnLocation,10,102,100), Color.White);*/
-
+            
             // TODO: Add your drawing code here
-            int col =  500;
-            int row = 0;
-            for (int i = 0; i < 10; i++)//gennnerates grass tiles in grid
-            {
-                col += 50;
-                for (int j = 0; j < 20; j++)
-                {
+            DrawBoard();
+            
 
-                    _spriteBatch.Draw(_newBlock, new Rectangle(row,col, 50,50), Color.White);
-                    row += 50;
-
-                }
-
-            }
             _spriteBatch.End();
             base.Draw(gameTime);
+        }
+
+        private void DrawBoard()
+        {
+            int count = 0;
+            
+            for (int i = 0; i < 10; i++)
+            {
+                for (int j = 0; j < 20; j++)
+                {
+                    
+                    if (gameBoards[i, j] == 0)
+                    {
+
+                        _spriteBatch.Draw(_newBlock, new Rectangle((50*i)+_width-100,50*j+10, 50,50), Color.White*0.25f);// draws board with size of 50 px per square at 50px intverals at the centre of the screen and 10px down
+                        Debug.Write(count++);
+                        
+                    }
+                }
+            }
+                
+            
         }
 
         

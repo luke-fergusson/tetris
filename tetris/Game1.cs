@@ -29,11 +29,12 @@ namespace tetris
         public int _height = 0;
         public int _width = 0;
 
-        public int _spawnLocation = 0;
+        private int _spawnLocation = 0;
 
         private float count = 0;
 
         public float Count { get => count; set => count = value; }
+        public int SpawnLocation { get => _spawnLocation; set => _spawnLocation = value; }
 
         public Game1()
         {
@@ -55,7 +56,7 @@ namespace tetris
 
             
         }
-        private bool SpeedRampUp(GameTime gameTime)
+        private bool SpeedRampUp(GameTime gameTime)// the game progress speeds up the drop speed of the blocks
         {
             count = (float)gameTime.ElapsedGameTime.TotalSeconds;
             TimeElapsed = TimeElapsed + count;

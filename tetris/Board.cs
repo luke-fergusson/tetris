@@ -8,17 +8,18 @@ using System.Timers;
 
 namespace tetris
 {
-    public class Game1 : Game
+    public class Board : Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
         private Texture2D _grid;
         private Texture2D _testBlock;
+        private Texture2D _newBlock;
 
+        
 
-
-        private Vector2 _gravity;
+        private Vector2 _velocity;
 
         
         
@@ -29,15 +30,20 @@ namespace tetris
         public int _height = 0;
         public int _width = 0;
 
-        private int _spawnLocation = 0;
+        public int _spawnLocation = 0;
 
         private float count = 0;
+
+        private KeyboardState D1, D2; // D1 old keyboard state D2 is current keyboard state so one input is accepted at a time
+        private KeyboardState A1, A2;
 
         public float Count { get => count; set => count = value; }
         public int SpawnLocation { get => _spawnLocation; set => _spawnLocation = value; }
 
-        public Game1()
+        public Board()
         {
+            
+
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -60,7 +66,8 @@ namespace tetris
         {
             count = (float)gameTime.ElapsedGameTime.TotalSeconds;
             TimeElapsed = TimeElapsed + count;
-            Debug.WriteLine(TimeElapsed);
+            
+            
 
             if (TimeElapsed > 2)
             {
@@ -70,6 +77,7 @@ namespace tetris
             }
             return false;
         }
+        
         
     
         
@@ -87,8 +95,9 @@ namespace tetris
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _grid = Content.Load<Texture2D>("Tetris_Background (1)");
+            _newBlock = Content.Load<Texture2D>("sa");
             _testBlock = Content.Load<Texture2D>("testBlock");
-            _gravity = new Vector2(_width+100, 10);
+            _velocity = new Vector2(_width+100, 10);
             
             
             // TODO: use this.Content to load your game content here
@@ -103,12 +112,26 @@ namespace tetris
             bool Timer = SpeedRampUp(gameTime);
             if (Timer)
             {
-                _gravity.Y += 50f;
+                _velocity.Y += 50f;
             }
-            
-           
-            
-            
+
+
+            D2 = Keyboard.GetState();
+
+            if(D1.IsKeyUp(Keys.D) && D2.IsKeyDown(Keys.D))
+            {
+                _velocity.X += 50f;
+            }
+            D1 = D2;
+
+            A2 = Keyboard.GetState();
+
+            if (A1.IsKeyUp(Keys.A) && A2.IsKeyDown(Keys.A))
+            {
+                _velocity.X -= 50f;
+            }
+            A1 = A2;
+
 
             // TODO: Add your update logic here
 
@@ -121,14 +144,30 @@ namespace tetris
             _spawnLocation = _width+100;
             
             _spriteBatch.Begin();
-            _spriteBatch.Draw(_grid, new Rectangle((_width-100),10, 500,1000), Color.White);
-            _spriteBatch.Draw(_testBlock, _gravity, new Rectangle(_spawnLocation,10,102,100), Color.White);
-            _spriteBatch.End();
-            // TODO: Add your drawing code here
+            /* _spriteBatch.Draw(_grid, new Rectangle((_width-100),10, 500,1000), Color.White);
+             _spriteBatch.Draw(_testBlock, _velocity, new Rectangle(_spawnLocation,10,102,100), Color.White);*/
 
+            // TODO: Add your drawing code here
+            int col =  500;
+            int row = 0;
+            for (int i = 0; i < 10; i++)//gennnerates grass tiles in grid
+            {
+                col += 50;
+                for (int j = 0; j < 20; j++)
+                {
+
+                    _spriteBatch.Draw(_newBlock, new Rectangle(row,col, 50,50), Color.White);
+                    row += 50;
+
+                }
+
+            }
+            _spriteBatch.End();
             base.Draw(gameTime);
         }
 
         
     }
+
+ 
 }

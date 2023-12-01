@@ -64,7 +64,7 @@ namespace tetris
 
             
         }
-        private bool SpeedRampUp(GameTime gameTime)// the game progress speeds up the drop speed of the blocks
+        /*private bool SpeedRampUp(GameTime gameTime)// the game progress speeds up the drop speed of the blocks
         {
             count = (float)gameTime.ElapsedGameTime.TotalSeconds;
             TimeElapsed = TimeElapsed + count;
@@ -78,34 +78,27 @@ namespace tetris
                 return true;
             }
             return false;
-        }
+        }*/
         
         
     
-        
+        public void initalGameBoard()
+        {
+            currentGameBoards = new char[10, 20];
+        }
 
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
             currentGameBoards = new char[10, 20];
-           
-            
-
-
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            //_grid = Content.Load<Texture2D>("Tetris_Background (1)");
             _newBlock = Content.Load<Texture2D>("sa");
-            //_testBlock = Content.Load<Texture2D>("testBlock");
             _velocity = new Vector2(_width+100, 10);
-
-            
-
-            
             // TODO: use this.Content to load your game content here
         }
 
@@ -115,11 +108,11 @@ namespace tetris
                 Exit();
 
 
-            bool Timer = SpeedRampUp(gameTime);
+            /*bool Timer = SpeedRampUp(gameTime);
             if (Timer)
             {
                 _velocity.Y += 50f;
-            }
+            }*/
 
 
             D2 = Keyboard.GetState();
@@ -127,7 +120,7 @@ namespace tetris
             if(D1.IsKeyUp(Keys.D) && D2.IsKeyDown(Keys.D))
             {
                 _velocity.X += 50f;
-                DrawBoard();
+                //DrawBoard();
             }
             D1 = D2;
 
@@ -147,47 +140,60 @@ namespace tetris
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue); 
-            
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+
             // TODO: Add your drawing code here
-            DrawBoard();
-            
+            if (!Displayed)
+            {
+                DrawBoard();
+            }
+            Blocks currentBlock = new Blocks();
+            Debug.WriteLine(currentBlock.work);
+            currentBlock.setBlock();
 
             
+
+
+
             base.Draw(gameTime);
         }
 
         private void DrawBoard()
         {
             
-            _spriteBatch.Begin();
+            
             Blocks currentBlock = new Blocks();
             Debug.WriteLine(currentBlock.work);
             currentBlock.setBlock();
-            
-            for (int i = 0; i < 10; i++)
+
+            while (!Displayed)
             {
-                for (int j = 0; j < 20; j++)
+                for (int i = 0; i < 10; i++)
                 {
-                    
-                    if (currentGameBoards[i, j] == 0)
+                    for (int j = 0; j < 20; j++)
                     {
 
-                        _spriteBatch.Draw(_newBlock, new Rectangle((50*i)+_width-100,50*j+10, 50,50), Color.White);
-                        // draws board with size of 50 px per square at 50px intverals at the centre of the screen and 10px down
-                        
-                    }
-                    if(currentGameBoards[i, j] == 'o')
-                    {
-                        
-                        _spriteBatch.Draw(_newBlock, new Rectangle((50 * i) + _width - 100, 50 * j + 10, 50, 50), Color.Yellow);
-                        Debug.WriteLine("yellow");
+                        if (currentGameBoards[i, j] == 0)
+                        {
+                            _spriteBatch.Begin();
+                            _spriteBatch.Draw(_newBlock, new Rectangle((50 * i) + _width - 100, 50 * j + 10, 50, 50), Color.White * 0.25f);
+                            // draws board with size of 50 px per square at 50px intverals at the centre of the screen and 10px down
+                            _spriteBatch.End();
+                        }
+                        if (currentGameBoards[i, j] == 'o')
+                        {
+                            _spriteBatch.Begin();
+                            _spriteBatch.Draw(_newBlock, new Rectangle((50 * i) + _width - 100, 50 * j + 10, 50, 50), Color.Yellow);
+                            Debug.WriteLine("yellow");
+                            _spriteBatch.End();
+                        }
                     }
                 }
-            }
-            _spriteBatch.End();
                 
-            
+                Displayed = true;
+            }
+
+
         }
 
         

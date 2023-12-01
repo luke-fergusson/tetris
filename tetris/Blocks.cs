@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -28,11 +29,12 @@ namespace tetris
 
         public void setBlock()
         {
-            
+            newBoard.initalGameBoard();
             newBoard.currentGameBoards.SetValue('o', 4, 0);
             newBoard.currentGameBoards.SetValue('o', 5, 0);
             newBoard.currentGameBoards.SetValue('o', 4, 1);
             newBoard.currentGameBoards.SetValue('o', 4, 2);
+            Debug.WriteLine("working");
             bool queueFull = false;
             while (!queueFull)
             {

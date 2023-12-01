@@ -18,11 +18,12 @@ namespace tetris
         private Texture2D _newBlock;
         private Texture2D _block;
 
-        public Texture2D[,] Grid = new Texture2D[10, 20];
+        
 
         private Vector2 _velocity;
 
-        public int[,] gameBoards;
+        public char[,] currentGameBoards;
+        public char[,] previousGameBoards;
         
         private const float Time = 0;
         private float TimeElapsed;
@@ -86,7 +87,8 @@ namespace tetris
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            gameBoards = new int[10, 20];
+            currentGameBoards = new char[10, 20];
+           
             
 
 
@@ -125,6 +127,7 @@ namespace tetris
             if(D1.IsKeyUp(Keys.D) && D2.IsKeyDown(Keys.D))
             {
                 _velocity.X += 50f;
+                DrawBoard();
             }
             D1 = D2;
 
@@ -144,36 +147,45 @@ namespace tetris
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            
-            _spriteBatch.Begin();
+            GraphicsDevice.Clear(Color.CornflowerBlue); 
             
             // TODO: Add your drawing code here
             DrawBoard();
             
 
-            _spriteBatch.End();
+            
             base.Draw(gameTime);
         }
 
         private void DrawBoard()
         {
-            int count = 0;
+            
+            _spriteBatch.Begin();
+            Blocks currentBlock = new Blocks();
+            Debug.WriteLine(currentBlock.work);
+            currentBlock.setBlock();
             
             for (int i = 0; i < 10; i++)
             {
                 for (int j = 0; j < 20; j++)
                 {
                     
-                    if (gameBoards[i, j] == 0)
+                    if (currentGameBoards[i, j] == 0)
                     {
 
-                        _spriteBatch.Draw(_newBlock, new Rectangle((50*i)+_width-100,50*j+10, 50,50), Color.White*0.25f);// draws board with size of 50 px per square at 50px intverals at the centre of the screen and 10px down
-                        Debug.Write(count++);
+                        _spriteBatch.Draw(_newBlock, new Rectangle((50*i)+_width-100,50*j+10, 50,50), Color.White);
+                        // draws board with size of 50 px per square at 50px intverals at the centre of the screen and 10px down
                         
+                    }
+                    if(currentGameBoards[i, j] == 'o')
+                    {
+                        
+                        _spriteBatch.Draw(_newBlock, new Rectangle((50 * i) + _width - 100, 50 * j + 10, 50, 50), Color.Yellow);
+                        Debug.WriteLine("yellow");
                     }
                 }
             }
+            _spriteBatch.End();
                 
             
         }

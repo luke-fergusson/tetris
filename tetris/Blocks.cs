@@ -13,9 +13,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace tetris
 {
-    internal class Blocks : Board 
+    internal class Blocks : Game1 
     {
-        public bool work = true;
+        /*public bool work = true;
         Random random = new Random();
         Board newBoard = new Board();
         public Queue<int> upComingBlocks = new Queue<int>(4);
@@ -72,7 +72,7 @@ namespace tetris
                     break;
                 default: break;
             }
-        }
+        }*/
 
     }
 }

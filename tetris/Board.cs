@@ -13,20 +13,18 @@ namespace tetris
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private Texture2D _grid;
-        private Texture2D _testBlock;
-        private Texture2D _newBlock;
-        private Texture2D _block;
 
-        public Texture2D[,] Grid = new Texture2D[10, 20];
+        private Texture2D _newBlock;
+
 
         private Vector2 _velocity;
 
-        public int[,] gameBoards;
+        public char[,] currentGameBoards;
+        public char[,] previousGameBoard;
         
         private const float Time = 0;
         private float TimeElapsed;
-        private bool Displayed = false;
+        
 
         public int _height = 0;
         public int _width = 0;
@@ -86,7 +84,7 @@ namespace tetris
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            gameBoards = new int[10, 20];
+            currentGameBoards = new char[10, 20];
             
 
 
@@ -111,7 +109,7 @@ namespace tetris
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
+            previousGameBoard = currentGameBoards;
 
             bool Timer = SpeedRampUp(gameTime);
             if (Timer)
@@ -165,7 +163,7 @@ namespace tetris
                 for (int j = 0; j < 20; j++)
                 {
                     
-                    if (gameBoards[i, j] == 0)
+                    if (currentGameBoards[i, j] == 0)
                     {
 
                         _spriteBatch.Draw(_newBlock, new Rectangle((50*i)+_width-100,50*j+10, 50,50), Color.White*0.25f);// draws board with size of 50 px per square at 50px intverals at the centre of the screen and 10px down

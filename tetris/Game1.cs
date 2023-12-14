@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SharpDX.DirectWrite;
 using SharpDX.XInput;
 using System;
 using System.Diagnostics;
@@ -23,6 +24,9 @@ namespace tetris
         public char col;
 
         public Board board = new Board();
+        public Blocks blocks = new Blocks();
+        public O_Block O_Block = new O_Block();
+
 
         private Vector2 _velocity;
 
@@ -33,6 +37,8 @@ namespace tetris
         private float TimeElapsed;
         private bool Displayed = false;
 
+        private bool OutOfBounds;
+
         public int _height = 0;
         public int _width = 0;
 
@@ -40,8 +46,8 @@ namespace tetris
 
         private float count = 0;
 
-        private KeyboardState D1, D2; // D1 old keyboard state D2 is current keyboard state so one input is accepted at a time
-        private KeyboardState A1, A2;
+        private KeyboardState D1; 
+        private KeyboardState A1;
 
         public float Count { get => count; set => count = value; }
         public int SpawnLocation { get => _spawnLocation; set => _spawnLocation = value; }
@@ -68,7 +74,7 @@ namespace tetris
 
             
         }
-        /*private bool SpeedRampUp(GameTime gameTime)// the game progress speeds up the drop speed of the blocks
+        private bool SpeedRampUp(GameTime gameTime)// the game progress speeds up the drop speed of the blocks
         {
             count = (float)gameTime.ElapsedGameTime.TotalSeconds;
             TimeElapsed = TimeElapsed + count;
@@ -82,30 +88,33 @@ namespace tetris
                 return true;
             }
             return false;
-        }*/
-        
-        
-    
-        /*public void initalGameBoard()
+        }
+        private bool DelayInput(GameTime gameTime)// the game progress speeds up the drop speed of the blocks
         {
-            //board = new Board(Row, col);
-            for (int i = 0; i < 10; i++)
-            {
-                for (int j = 0; j < 20; j++)
-                {
-                    int CurrentBoard = board.currentGameBoards[i,j];
+            float delay = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float totalDelay = 0;
+            totalDelay= totalDelay + delay;
 
-                    
-                }
+
+
+            if (totalDelay > 0.2)
+            {
+
+                totalDelay = Time;
+                return true;
             }
-        }*/
+            return false;
+        }
+
 
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            
             board.blankBoard();
-            board.OBlock();
+            O_Block.StarPosition();
+            
+            //O_Block.board.
+            
             base.Initialize();
         }
 
@@ -123,29 +132,32 @@ namespace tetris
                 Exit();
 
 
-            /*bool Timer = SpeedRampUp(gameTime);
+            bool Timer = SpeedRampUp(gameTime);
+            bool Delay = DelayInput(gameTime);
             if (Timer)
             {
-                _velocity.Y += 50f;
-            }*/
-
-
-            D2 = Keyboard.GetState();
-
-            if(D1.IsKeyUp(Keys.D) && D2.IsKeyDown(Keys.D))
-            {
-                _velocity.X += 50f;
-                //DrawBoard();
+                O_Block.Down();
+                DrawBoard();
             }
-            D1 = D2;
 
-            A2 = Keyboard.GetState();
-
-            if (A1.IsKeyUp(Keys.A) && A2.IsKeyDown(Keys.A))
+            if(Keyboard.GetState().IsKeyDown(Keys.D))
             {
-                _velocity.X -= 50f;
+                OutOfBounds = O_Block.Test();
+                if (OutOfBounds)
+                {
+                    O_Block.Right();
+                    DrawBoard();
+                }
+                
+               
             }
-            A1 = A2;
+            
+            if (Keyboard.GetState().IsKeyDown(Keys.A) && Delay)
+            {
+                O_Block.Left();
+                DrawBoard();
+            }
+            
             
 
             // TODO: Add your update logic here
@@ -159,9 +171,9 @@ namespace tetris
 
             // TODO: Add your drawing code here
 
-            _spriteBatch.Begin();
+            
             DrawBoard();
-            _spriteBatch.End();
+            
 
 
             base.Draw(gameTime);
@@ -169,18 +181,23 @@ namespace tetris
 
         private void DrawBoard()
         {
+            previousGameBoards = O_Block.board.GetBoard();
             
             for (int i = 0; i < 10; i++)
             {
                 for (int j = 0; j < 20; j++)
                 {
-                    if (board.currentGameBoards[i,j] == 0)
+                    if (previousGameBoards[i,j] == '0' || previousGameBoards[i, j] == 0)
                     {
+                        _spriteBatch.Begin();
                         _spriteBatch.Draw(_newBlock, new Rectangle((50 * i) + _width - 100, 50 * j + 10, 50, 50), Color.White);
+                        _spriteBatch.End();
                     }
-                    if(board.currentGameBoards[i, j] == 'o')
+                    if(previousGameBoards[i, j] == 'o')
                     {
+                        _spriteBatch.Begin();
                         _spriteBatch.Draw(_newBlock, new Rectangle((50 * i) + _width - 100, 50 * j + 10, 50, 50), Color.Yellow);
+                        _spriteBatch.End();
                     }
                     
                 }

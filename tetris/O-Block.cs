@@ -21,7 +21,7 @@ public class O_Block: Blocks
     int[] R2 = new int[] { 5, 1 };
     public override bool Test()
     {
-        try
+        /*try
         {
             L1[1] = L1[1] + 1;
             L2[1] = L2[1] + 1;
@@ -36,7 +36,8 @@ public class O_Block: Blocks
         catch (Exception ex)
         {
             return false;
-        }
+        }*/
+        return true;
     }
     public override void Down()
     {

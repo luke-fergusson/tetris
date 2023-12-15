@@ -5,6 +5,7 @@ using SharpDX.DirectWrite;
 using SharpDX.XInput;
 using System;
 using System.Diagnostics;
+using System.Reflection;
 using System.Threading;
 using System.Timers;
 
@@ -46,11 +47,15 @@ namespace tetris
 
         private float count = 0;
 
-        private KeyboardState D1; 
-        private KeyboardState A1;
+        private float delay = 0;
+        private float totalDelay;
+
+        public bool Delay = true;
 
         public float Count { get => count; set => count = value; }
         public int SpawnLocation { get => _spawnLocation; set => _spawnLocation = value; }
+        
+
 
         public Game1()
         {
@@ -78,8 +83,7 @@ namespace tetris
         {
             count = (float)gameTime.ElapsedGameTime.TotalSeconds;
             TimeElapsed = TimeElapsed + count;
-            
-            
+
 
             if (TimeElapsed > 2)
             {
@@ -91,17 +95,16 @@ namespace tetris
         }
         private bool DelayInput(GameTime gameTime)// the game progress speeds up the drop speed of the blocks
         {
-            float delay = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            float totalDelay = 0;
+            delay = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            
             totalDelay= totalDelay + delay;
 
 
-
-            if (totalDelay > 0.2)
+            Debug.WriteLine(totalDelay);
+            if(totalDelay > 100)
             {
-
                 totalDelay = Time;
-                return true;
+                return true ;
             }
             return false;
         }
@@ -133,29 +136,33 @@ namespace tetris
 
 
             bool Timer = SpeedRampUp(gameTime);
-            bool Delay = DelayInput(gameTime);
+            Delay = DelayInput(gameTime);
             if (Timer)
             {
                 O_Block.Down();
                 DrawBoard();
             }
 
-            if(Keyboard.GetState().IsKeyDown(Keys.D))
+            if(Keyboard.GetState().IsKeyDown(Keys.D) )
             {
-                OutOfBounds = O_Block.Test();
-                if (OutOfBounds)
+
+                if (Delay)
                 {
+
                     O_Block.Right();
                     DrawBoard();
                 }
-                
-               
             }
             
-            if (Keyboard.GetState().IsKeyDown(Keys.A) && Delay)
+            if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
-                O_Block.Left();
-                DrawBoard();
+                if (Delay)
+                {
+                    O_Block.Left();
+                    DrawBoard();
+                    
+                }
+                
             }
             
             

@@ -13,7 +13,9 @@ using tetris;
 
 public class Blocks 
 {
-
+    public Board board { get; set; }
+    public int BottomRow;
+    public int BottomColumn;
     public virtual void Down()
     {
         
@@ -24,7 +26,7 @@ public class Blocks
     }   
     public Blocks() 
     {
-        
+        board = new Board();
     }
     public virtual void Left()
     {
@@ -34,9 +36,30 @@ public class Blocks
     {
 
     }
-    public virtual bool Test()
+    public virtual bool GroundCollision()
     {
-        return false;
+        if (BottomRow == 19)
+        {
+            return false;
+        }
+        return true;
+    }
+    public virtual bool RWallCollision()
+    {
+        if (BottomColumn == 9)
+        {
+            return false;
+        }
+        
+        return true;
+    }
+    public virtual bool LWallCollision()
+    {
+        if (BottomColumn == 0)
+        {
+            return false;
+        }
+        return true;
     }
 
 

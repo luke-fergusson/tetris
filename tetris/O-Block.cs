@@ -14,31 +14,19 @@ using tetris;
 
 public class O_Block: Blocks
 {
-    public Board board { get; set; }
+    
     int[] L1 = new int[] { 4, 0 };
     int[] L2 = new int[] { 5, 0 };
     int[] R1 = new int[] { 4, 1 };
     int[] R2 = new int[] { 5, 1 };
-    public override bool Test()
-    {
-        /*try
-        {
-            L1[1] = L1[1] + 1;
-            L2[1] = L2[1] + 1;
-            R1[1] = R1[1] + 1;
-            R2[1] = R2[1] + 1;
-            L1[0] = L1[0] - 1;
-            L2[0] = L2[0] - 1;
-            R1[0] = R1[0] - 1;
-            R2[0] = R2[0] - 1;
-            return true;
-        }
-        catch (Exception ex)
-        {
-            return false;
-        }*/
-        return true;
-    }
+
+    /* 
+     *          L1  L2
+     *          
+     *          R1  R2
+     * O block
+     */
+    
     public override void Down()
     {
         board.ChangeBoard(L1[0], L1[1], '0');
@@ -56,7 +44,7 @@ public class O_Block: Blocks
     }
     public O_Block()
     {
-        board = new Board();
+        
     }
     public override void StarPosition()
     {
@@ -95,6 +83,24 @@ public class O_Block: Blocks
         board.ChangeBoard(L2[0], L2[1], 'o');
         board.ChangeBoard(R1[0], R1[1], 'o');
         board.ChangeBoard(R2[0], R2[1], 'o');
+    }
+    public override bool GroundCollision()
+    {
+        BottomRow = R1[1];
+        BottomColumn = R1[0];
+        return base.GroundCollision();
+    }
+    public override bool RWallCollision()
+    {
+        BottomRow = R2[1];
+        BottomColumn = R2[0];
+        return base.RWallCollision();
+    }
+    public override bool LWallCollision()
+    {
+        BottomRow = R1[1];
+        BottomColumn = R1[0];
+        return base.LWallCollision();
     }
 }
 

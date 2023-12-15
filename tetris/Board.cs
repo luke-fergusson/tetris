@@ -18,7 +18,6 @@ public class Board
     public char[,] currentGameBoards;
     public char Row;
     public char Col;
-    //public Blocks blocks = new Blocks();
     
 
     public Board()
@@ -48,4 +47,5 @@ public class Board
         }*/
         return currentGameBoards;
     }
+    
 }

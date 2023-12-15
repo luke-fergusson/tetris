@@ -27,6 +27,7 @@ namespace tetris
         public Board board = new Board();
         public Blocks blocks = new Blocks();
         public O_Block O_Block = new O_Block();
+        public I_Block I_Block = new I_Block();
 
 
         private Vector2 _velocity;
@@ -54,8 +55,10 @@ namespace tetris
 
         public float Count { get => count; set => count = value; }
         public int SpawnLocation { get => _spawnLocation; set => _spawnLocation = value; }
-        
 
+        public bool bottom;
+        public bool LWall;
+        public bool RWall;
 
         public Game1()
         {
@@ -85,7 +88,7 @@ namespace tetris
             TimeElapsed = TimeElapsed + count;
 
 
-            if (TimeElapsed > 2)
+            if (TimeElapsed > 0.5)
             {
                 
                 TimeElapsed = Time;
@@ -114,9 +117,9 @@ namespace tetris
         {
             // TODO: Add your initialization logic here
             board.blankBoard();
+            //I_Block.StarPosition();
+
             O_Block.StarPosition();
-            
-            //O_Block.board.
             
             base.Initialize();
         }
@@ -133,11 +136,12 @@ namespace tetris
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-
+            bottom = O_Block.GroundCollision();
+            RWall = O_Block.RWallCollision();
+            LWall = O_Block.LWallCollision();
             bool Timer = SpeedRampUp(gameTime);
             Delay = DelayInput(gameTime);
-            if (Timer)
+            if (Timer && bottom)
             {
                 O_Block.Down();
                 DrawBoard();
@@ -146,7 +150,7 @@ namespace tetris
             if(Keyboard.GetState().IsKeyDown(Keys.D) )
             {
 
-                if (Delay)
+                if (Delay&& RWall)
                 {
 
                     O_Block.Right();
@@ -156,7 +160,7 @@ namespace tetris
             
             if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
-                if (Delay)
+                if (Delay && LWall)
                 {
                     O_Block.Left();
                     DrawBoard();
@@ -204,6 +208,12 @@ namespace tetris
                     {
                         _spriteBatch.Begin();
                         _spriteBatch.Draw(_newBlock, new Rectangle((50 * i) + _width - 100, 50 * j + 10, 50, 50), Color.Yellow);
+                        _spriteBatch.End();
+                    }
+                    if (previousGameBoards[i, j] == 'i')
+                    {
+                        _spriteBatch.Begin();
+                        _spriteBatch.Draw(_newBlock, new Rectangle((50 * i) + _width - 100, 50 * j + 10, 50, 50), Color.Blue);
                         _spriteBatch.End();
                     }
                     

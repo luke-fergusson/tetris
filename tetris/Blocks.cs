@@ -16,6 +16,7 @@ public class Blocks
     public Board board { get; set; }
     public int BottomRow;
     public int BottomColumn;
+    public char CharacterBottom;
     public virtual void Down()
     {
         
@@ -40,26 +41,30 @@ public class Blocks
     {
         if (BottomRow == 19)
         {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
     public virtual bool RWallCollision()
     {
         if (BottomColumn == 9)
         {
-            return false;
+            return true;
         }
+        /*if(CharacterBottom != '0')
+        {
+            return true;
+        }*/
         
-        return true;
+        return false;
     }
     public virtual bool LWallCollision()
     {
         if (BottomColumn == 0)
         {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
 

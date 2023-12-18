@@ -29,6 +29,7 @@ public class O_Block: Blocks
     
     public override void Down()
     {
+
         board.ChangeBoard(L1[0], L1[1], '0');
         board.ChangeBoard(L2[0], L2[1], '0');
         board.ChangeBoard(R1[0], R1[1], '0');
@@ -41,6 +42,7 @@ public class O_Block: Blocks
         board.ChangeBoard(L2[0], L2[1], 'o');
         board.ChangeBoard(R1[0], R1[1], 'o');
         board.ChangeBoard(R2[0], R2[1], 'o');
+        
     }
     public O_Block()
     {
@@ -88,6 +90,8 @@ public class O_Block: Blocks
     {
         BottomRow = R1[1];
         BottomColumn = R1[0];
+        //CharacterBottom = board.currentGameBoards[BottomColumn, BottomRow];
+        
         return base.GroundCollision();
     }
     public override bool RWallCollision()

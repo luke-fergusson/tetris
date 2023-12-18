@@ -24,7 +24,7 @@ namespace tetris
         public char Row;
         public char col;
 
-        public Board board = new Board();
+        //public Board board = new Board();
         public Blocks blocks = new Blocks();
         public O_Block O_Block = new O_Block();
         public I_Block I_Block = new I_Block();
@@ -32,8 +32,8 @@ namespace tetris
 
         private Vector2 _velocity;
 
-        //public char[,] currentGameBoards;
-        public char[,] previousGameBoards;
+        public char[,] currentBoards;
+        public char[,] previousBoards;
         
         private const float Time = 0;
         private float TimeElapsed;
@@ -88,7 +88,7 @@ namespace tetris
             TimeElapsed = TimeElapsed + count;
 
 
-            if (TimeElapsed > 0.5)
+            if (TimeElapsed > 0.2)
             {
                 
                 TimeElapsed = Time;
@@ -103,7 +103,7 @@ namespace tetris
             totalDelay= totalDelay + delay;
 
 
-            Debug.WriteLine(totalDelay);
+            
             if(totalDelay > 100)
             {
                 totalDelay = Time;
@@ -116,11 +116,12 @@ namespace tetris
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            board.blankBoard();
+            //board.blankBoard();
             //I_Block.StarPosition();
+            blocks = O_Block;
+            blocks.StarPosition();
+            currentBoards = new char[10,20];
 
-            O_Block.StarPosition();
-            
             base.Initialize();
         }
 
@@ -136,33 +137,46 @@ namespace tetris
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            bottom = O_Block.GroundCollision();
-            RWall = O_Block.RWallCollision();
-            LWall = O_Block.LWallCollision();
+            bottom = blocks.GroundCollision();
+            RWall = blocks.RWallCollision();
+            LWall = blocks.LWallCollision();
             bool Timer = SpeedRampUp(gameTime);
             Delay = DelayInput(gameTime);
-            if (Timer && bottom)
+            
+            if (Timer && !bottom)
             {
-                O_Block.Down();
+                blocks.Down();
+                DrawBoard();
+            }
+            if (bottom)
+            {
+                
+                currentBoards = previousBoards;
+
+                blocks = new O_Block();
+                
+                
+                blocks.board.currentGameBoards = currentBoards;
+                blocks.StarPosition();
                 DrawBoard();
             }
 
             if(Keyboard.GetState().IsKeyDown(Keys.D) )
             {
 
-                if (Delay&& RWall)
+                if (Delay&& !RWall )
                 {
 
-                    O_Block.Right();
+                    blocks.Right();
                     DrawBoard();
                 }
             }
             
             if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
-                if (Delay && LWall)
+                if (Delay && !LWall)
                 {
-                    O_Block.Left();
+                    blocks.Left();
                     DrawBoard();
                     
                 }
@@ -192,25 +206,25 @@ namespace tetris
 
         private void DrawBoard()
         {
-            previousGameBoards = O_Block.board.GetBoard();
+            previousBoards = blocks.board.GetBoard();
             
             for (int i = 0; i < 10; i++)
             {
                 for (int j = 0; j < 20; j++)
                 {
-                    if (previousGameBoards[i,j] == '0' || previousGameBoards[i, j] == 0)
+                    if (previousBoards[i,j] == '0' || previousBoards[i, j] == 0)
                     {
                         _spriteBatch.Begin();
                         _spriteBatch.Draw(_newBlock, new Rectangle((50 * i) + _width - 100, 50 * j + 10, 50, 50), Color.White);
                         _spriteBatch.End();
                     }
-                    if(previousGameBoards[i, j] == 'o')
+                    if(previousBoards[i, j] == 'o')
                     {
                         _spriteBatch.Begin();
                         _spriteBatch.Draw(_newBlock, new Rectangle((50 * i) + _width - 100, 50 * j + 10, 50, 50), Color.Yellow);
                         _spriteBatch.End();
                     }
-                    if (previousGameBoards[i, j] == 'i')
+                    if (previousBoards[i, j] == 'i')
                     {
                         _spriteBatch.Begin();
                         _spriteBatch.Draw(_newBlock, new Rectangle((50 * i) + _width - 100, 50 * j + 10, 50, 50), Color.Blue);

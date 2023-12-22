@@ -91,6 +91,7 @@ public class O_Block: Blocks
         BottomRow = R1[1];
         BottomColumn = R1[0];
         //CharacterBottom = board.currentGameBoards[BottomColumn, BottomRow];
+        PB = board.currentGameBoards;
         
         return base.GroundCollision();
     }
@@ -98,13 +99,22 @@ public class O_Block: Blocks
     {
         BottomRow = R2[1];
         BottomColumn = R2[0];
+        PB = board.currentGameBoards;
         return base.RWallCollision();
     }
     public override bool LWallCollision()
     {
         BottomRow = R1[1];
-        BottomColumn = R1[0];
+        BottomColumn = R1[0]; 
+        PB = board.currentGameBoards;
         return base.LWallCollision();
+    }
+    public override bool BlockCollision()
+    {
+        BottomRow = R1[1];
+        BottomColumn = R1[0];
+        PB = board.GetBoard();
+        return base.BlockCollision();
     }
 }
 

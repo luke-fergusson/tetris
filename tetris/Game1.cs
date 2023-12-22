@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
 using System.Timers;
-
+using System.Collections.Generic;
 namespace tetris
 {
     public class Game1 : Game
@@ -59,6 +59,12 @@ namespace tetris
         public bool bottom;
         public bool LWall;
         public bool RWall;
+        public bool BlockHit;
+
+        public List<Blocks> BlockList = new List<Blocks>();
+
+        public Random random = new Random();
+        public Queue<int> upComingBlocks = new Queue<int>(4);
 
         public Game1()
         {
@@ -121,7 +127,7 @@ namespace tetris
             blocks = O_Block;
             blocks.StarPosition();
             currentBoards = new char[10,20];
-
+            BlockList.Add(blocks);
             base.Initialize();
         }
 
@@ -142,23 +148,22 @@ namespace tetris
             LWall = blocks.LWallCollision();
             bool Timer = SpeedRampUp(gameTime);
             Delay = DelayInput(gameTime);
+            BlockHit = blocks.BlockCollision();
+            if (BlockHit && BlockList.Count > 1)
+            {
+                GenerateNewBlock();
+            }
             
             if (Timer && !bottom)
             {
                 blocks.Down();
                 DrawBoard();
             }
+            
             if (bottom)
             {
+                GenerateNewBlock();
                 
-                currentBoards = previousBoards;
-
-                blocks = new O_Block();
-                
-                
-                blocks.board.currentGameBoards = currentBoards;
-                blocks.StarPosition();
-                DrawBoard();
             }
 
             if(Keyboard.GetState().IsKeyDown(Keys.D) )
@@ -235,6 +240,47 @@ namespace tetris
             }
                 
 
+        }
+        public void GenerateNewBlock()
+        {
+            currentBoards = previousBoards;
+
+            blocks = new O_Block();
+            BlockList.Add(blocks);
+
+            blocks.board.currentGameBoards = currentBoards;
+            blocks.StarPosition();
+            DrawBoard();
+        }
+        public void RanBlock()
+        {
+            int num = random.Next(0, 6);
+            switch (num)
+            {
+                case 0:
+                    blocks = new O_Block();
+                    break;
+                case 1:
+                    blocks = new I_Block();
+                    break;
+                case 2:
+                    blocks = new L_Block();
+                    break;
+                case 3:
+                    blocks = new J_Block();
+                    break;
+                case 4:
+                    blocks = new S_Block();
+                    break;
+                case 5:
+                    blocks = new Z_Block();
+                    break;
+                case 6:
+                    blocks = new T_Block();
+                    break;
+                default:break;
+            }
+            BlockList.Add(blocks);
         }
 
         

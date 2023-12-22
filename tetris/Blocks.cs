@@ -16,7 +16,7 @@ public class Blocks
     public Board board { get; set; }
     public int BottomRow;
     public int BottomColumn;
-    public char CharacterBottom;
+    public char[,] PB;
     public virtual void Down()
     {
         
@@ -28,6 +28,7 @@ public class Blocks
     public Blocks() 
     {
         board = new Board();
+        PB = new char[10, 20];
     }
     public virtual void Left()
     {
@@ -66,64 +67,30 @@ public class Blocks
         }
         return false;
     }
-
-
-
-
-
-
-
-    /*public bool work = true;
-    Random random = new Random();
-    Board newBoard = new Board();
-    public Queue<int> upComingBlocks = new Queue<int>(4);*/
-    /*
-    public void setBlock()
+    public virtual bool BlockCollision()
     {
-        newBoard.initalGameBoard();
-        newBoard.currentGameBoards.SetValue('o', 4, 0);
-        newBoard.currentGameBoards.SetValue('o', 5, 0);
-        newBoard.currentGameBoards.SetValue('o', 4, 1);
-        newBoard.currentGameBoards.SetValue('o', 4, 2);
-        Debug.WriteLine("working");
-        bool queueFull = false;
-        while (!queueFull)
+        if (!GroundCollision())
         {
-            int nextTetroimino = random.Next(0, 4);
-
-            upComingBlocks.Enqueue(nextTetroimino);
-            if (upComingBlocks.Count == 4)
+            Debug.WriteLine(PB[BottomColumn, BottomRow + 1]);
+            if (PB[BottomColumn, BottomRow+1] == 'o')
             {
-                queueFull = true;
+                Debug.WriteLine("worked");
+                return true;
             }
+            if (PB[BottomColumn +1, BottomRow + 1] == 'o')
+            {
+                return true;
+            }
+            if (BottomColumn - 1 >= 0 && PB[BottomColumn-1, BottomRow + 1] == 'o' )
+            {
+                return true;
+            }
+            return false;
         }
-        //int currrent = upComingBlocks.Dequeue();
-        int current = 0;
-        switch (current)
-        {
-            case 0:
+        return false;
+    }
 
-                newBoard.currentGameBoards.SetValue('o', 4, 0);
-                newBoard.currentGameBoards.SetValue('o', 5, 0);
-                newBoard.currentGameBoards.SetValue('o', 4, 1);
-                newBoard.currentGameBoards.SetValue('o', 4, 2);
 
-                break;
-            case 1:
-
-                break;
-            case 2:
-
-                break;
-            case 3:
-
-                break;
-            case 4:
-
-                break;
-            default: break;
-        }
-    }*/
 
 }
 

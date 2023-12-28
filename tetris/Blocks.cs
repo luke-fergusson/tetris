@@ -17,6 +17,8 @@ public class Blocks
     public int BottomRow;
     public int BottomColumn;
     public char[,] PB;
+    public int State;
+
     public virtual void Down()
     {
         
@@ -52,10 +54,7 @@ public class Blocks
         {
             return true;
         }
-        /*if(CharacterBottom != '0')
-        {
-            return true;
-        }*/
+        
         
         return false;
     }
@@ -72,22 +71,26 @@ public class Blocks
         if (!GroundCollision())
         {
             Debug.WriteLine(PB[BottomColumn, BottomRow + 1]);
-            if (PB[BottomColumn, BottomRow+1] == 'o')
+            if (PB[BottomColumn, BottomRow+1] == 'i')
             {
                 Debug.WriteLine("worked");
                 return true;
             }
-            if (PB[BottomColumn +1, BottomRow + 1] == 'o')
+            if (BottomColumn +1 < 10 && PB[BottomColumn +1, BottomRow+1 ] == 'i')
             {
                 return true;
             }
-            if (BottomColumn - 1 >= 0 && PB[BottomColumn-1, BottomRow + 1] == 'o' )
+            if (BottomColumn - 1 >= 0 && PB[BottomColumn-1, BottomRow + 1] == 'i' )
             {
                 return true;
             }
             return false;
         }
         return false;
+    }
+    public virtual void RotateClockwise()
+    {
+
     }
 
 

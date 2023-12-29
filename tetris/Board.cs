@@ -36,15 +36,6 @@ public class Board
     public char[,] GetBoard()
     {
 
-        /*for (int i = 0; i < 10; i++)
-        {
-            for (int j = 0; j < 20; j++)
-            {
-                Debug.Write(currentGameBoards[i, j] + "\t");
-
-            }
-            Debug.WriteLine("");
-        }*/
         return currentGameBoards;
     }
     

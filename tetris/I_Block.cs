@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -115,61 +116,81 @@ namespace tetris
             switch (State)
             {
                 case 0:
+       
+                    board.ChangeBoard(M1[0], M1[1], '0');
+                    board.ChangeBoard(M2[0], M2[1], '0');
+                    board.ChangeBoard(M3[0], M3[1], '0');
+                    board.ChangeBoard(M4[0], M4[1], '0');// replacing previous poistion with 0's 
+
+                    M1[0] = M2[0] - 1;
+                    M3[0] = M2[0] + 1;
+                    M4[0] = M2[0] + 2;// rotating clockwise
+
+                    M1[1] = M2[1];
+                    M3[1] = M2[1];
+                    M4[1] = M2[1];
+
+                    board.ChangeBoard(M1[0], M1[1], 'i');
+                    board.ChangeBoard(M2[0], M2[1], 'i');
+                    board.ChangeBoard(M3[0], M3[1], 'i');
+                    board.ChangeBoard(M4[0], M4[1], 'i');// set new position with i's
+                    State = 1;
+                    break;
+                case 1:
                     board.ChangeBoard(M1[0], M1[1], '0');
                     board.ChangeBoard(M2[0], M2[1], '0');
                     board.ChangeBoard(M3[0], M3[1], '0');
                     board.ChangeBoard(M4[0], M4[1], '0');
+                    Debug.WriteLine(M1[0] + ", " + M1[1]);
+                    Debug.WriteLine(M2[0] + ", " + M2[1]);
+                    Debug.WriteLine(M3[0] + ", " + M3[1]);
+                    Debug.WriteLine(M4[0] + ", " + M4[1]);
 
-                    CurrentM1 = M1[1];
-                    CurrentM2 = M2[1];
-                    CurrentM3 = M3[1];
-                    CurrentM4 = M4[1];
+                    M1[0] = M3[0];
+                    M2[0] = M3[0];
+                    M4[0] = M3[0];
 
-                    M1[1] = M1[0];
-                    M2[1] = M2[0];
-                    M3[1] = M3[0];
-                    M4[1] = M4[0];
+                    M1[1] = M3[1] - 1;
+                    M3[1] = M3[1] + 1;
+                    M4[1] = M3[1] + 1;
 
-                    M1[0] = CurrentM1;
-                    M2[0] = CurrentM2;
-                    M3[0] = CurrentM3;
-                    M4[0] = CurrentM4;
+                    Debug.WriteLine(M1[0] + ", " + M1[1]);
+                    Debug.WriteLine(M2[0] + ", " + M2[1]);
+                    Debug.WriteLine(M3[0] + ", " + M3[1]);
+                    Debug.WriteLine(M4[0] + ", " + M4[1]);
+                    board.ChangeBoard(M1[0], M1[1], 'i');
+                    board.ChangeBoard(M2[0], M2[1], 'i');
+                    board.ChangeBoard(M3[0], M3[1], 'i');
+                    board.ChangeBoard(M4[0], M4[1], 'i');
+                    State = 2;
+                    break;
+                case 2:
+                    board.ChangeBoard(M1[0], M1[1], '0');
+                    board.ChangeBoard(M2[0], M2[1], '0');
+                    board.ChangeBoard(M3[0], M3[1], '0');
+                    board.ChangeBoard(M4[0], M4[1], '0');
+                    Debug.WriteLine(M1[0] + ", " + M1[1]);
+                    Debug.WriteLine(M2[0] + ", " + M2[1]);
+                    Debug.WriteLine(M3[0] + ", " + M3[1]);
+                    Debug.WriteLine(M4[0] + ", " + M4[1]);
 
+                    M1[0] = M3[0] -2;
+                    M2[0] = M3[0] - 1;
+                    M4[0] = M3[0]+1;
+
+                    M1[1] = M3[1];
+                    M2[1] = M3[1];
+                    M4[1] = M3[1];
+
+                    Debug.WriteLine(M1[0] + ", " + M1[1]);
+                    Debug.WriteLine(M2[0] + ", " + M2[1]);
+                    Debug.WriteLine(M3[0] + ", " + M3[1]);
+                    Debug.WriteLine(M4[0] + ", " + M4[1]);
                     board.ChangeBoard(M1[0], M1[1], 'i');
                     board.ChangeBoard(M2[0], M2[1], 'i');
                     board.ChangeBoard(M3[0], M3[1], 'i');
                     board.ChangeBoard(M4[0], M4[1], 'i');
                     State = 0;
-                    break;
-                case 1:
-                    /*board.ChangeBoard(M1[0], M1[1], '0');
-                    board.ChangeBoard(M2[0], M2[1], '0');
-                    board.ChangeBoard(M3[0], M3[1], '0');
-                    board.ChangeBoard(M4[0], M4[1], '0');
-
-                    CurrentM1 = M1[1];
-                    CurrentM2 = M2[1];
-                    CurrentM3 = M3[1];
-                    CurrentM4 = M4[1];
-
-                    M1[1] = M1[0];
-                    M2[1] = M2[0];
-                    M3[1] = M3[0];
-                    M4[1] = M4[0];
-
-                    M1[0] = CurrentM1 +1;
-                    M2[0] = CurrentM2 +1;
-                    M3[0] = CurrentM3 + 1;
-                    M4[0] = CurrentM4 + 1;
-
-                    board.ChangeBoard(M1[0], M1[1], 'i');
-                    board.ChangeBoard(M2[0], M2[1], 'i');
-                    board.ChangeBoard(M3[0], M3[1], 'i');
-                    board.ChangeBoard(M4[0], M4[1], 'i');
-                    State = 0;*/
-                    break;
-                case 2:
-                   
                     break;
                 
             }

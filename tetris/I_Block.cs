@@ -107,6 +107,7 @@ namespace tetris
             BottomRow = M4[1];
             BottomColumn = M4[0];
             PB = board.GetBoard();
+            
             return base.BlockCollision();
             
         }

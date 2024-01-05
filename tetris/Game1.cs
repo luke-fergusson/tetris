@@ -28,6 +28,7 @@ namespace tetris
         public Blocks blocks = new Blocks();
         public O_Block O_Block = new O_Block();
         public I_Block I_Block = new I_Block();
+        public J_Block J_Block = new J_Block();
 
 
         private Vector2 _velocity;
@@ -124,7 +125,7 @@ namespace tetris
             // TODO: Add your initialization logic here
             //board.blankBoard();
             //I_Block.StarPosition();
-            blocks = I_Block;
+            blocks = J_Block;
             blocks.StarPosition();
             currentBoards = new char[10,20];
             BlockList.Add(blocks);
@@ -240,10 +241,16 @@ namespace tetris
                     if (previousBoards[i, j] == 'i')
                     {
                         _spriteBatch.Begin();
+                        _spriteBatch.Draw(_newBlock, new Rectangle((50 * i) + _width - 100, 50 * j + 10, 50, 50), Color.LightBlue);
+                        _spriteBatch.End();
+                    }
+                    if (previousBoards[i, j] == 'j')
+                    {
+                        _spriteBatch.Begin();
                         _spriteBatch.Draw(_newBlock, new Rectangle((50 * i) + _width - 100, 50 * j + 10, 50, 50), Color.Blue);
                         _spriteBatch.End();
                     }
-                    
+
                 }
             }
                 
@@ -253,7 +260,7 @@ namespace tetris
         {
             currentBoards = previousBoards;
 
-            blocks = new I_Block();
+            blocks = new J_Block();
             BlockList.Add(blocks);
 
             blocks.board.currentGameBoards = currentBoards;

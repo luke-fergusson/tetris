@@ -76,14 +76,16 @@ public class Blocks
                 Debug.WriteLine("worked");
                 return true;
             }
-            if (BottomColumn +1 < 10 && PB[BottomColumn +1, BottomRow+1 ] == 'i')
+            /*if (BottomColumn +1 < 10 && PB[BottomColumn +1, BottomRow+1 ] == 'i')
             {
+                Debug.WriteLine("hit");
                 return true;
             }
             if (BottomColumn - 1 >= 0 && PB[BottomColumn-1, BottomRow + 1] == 'i' )
             {
+                Debug.WriteLine("done");
                 return true;
-            }
+            }*/
             return false;
         }
         return false;

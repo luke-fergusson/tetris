@@ -16,16 +16,37 @@ public class Blocks
     public Board board { get; set; }
     public int BottomRow;
     public int BottomColumn;
+    public int RRow;
+    public int RColumn;
     public char[,] PB;
     public int State;
+    public int[] M1;
+    public int[] M2;
+    public int[] M3;
+    public int[] M4;
+    public char CurrentLetter;
 
     public virtual void Down()
     {
-        
+        board.ChangeBoard(M1[0], M1[1], '0');
+        board.ChangeBoard(M2[0], M2[1], '0');
+        board.ChangeBoard(M3[0], M3[1], '0');
+        board.ChangeBoard(M4[0], M4[1], '0');
+        M1[1] = M1[1] + 1;
+        M2[1] = M2[1] + 1;
+        M3[1] = M3[1] + 1;
+        M4[1] = M4[1] + 1;
+        board.ChangeBoard(M1[0], M1[1], CurrentLetter);
+        board.ChangeBoard(M2[0], M2[1], CurrentLetter);
+        board.ChangeBoard(M3[0], M3[1], CurrentLetter);
+        board.ChangeBoard(M4[0], M4[1], CurrentLetter);
     }
     public virtual void StarPosition() 
     {
-       
+        board.ChangeBoard(M1[0], M1[1], CurrentLetter);
+        board.ChangeBoard(M2[0], M2[1], CurrentLetter);
+        board.ChangeBoard(M3[0], M3[1], CurrentLetter);
+        board.ChangeBoard(M4[0], M4[1], CurrentLetter);
     }   
     public Blocks() 
     {
@@ -34,11 +55,33 @@ public class Blocks
     }
     public virtual void Left()
     {
-
+        board.ChangeBoard(M1[0], M1[1], '0');
+        board.ChangeBoard(M2[0], M2[1], '0');
+        board.ChangeBoard(M3[0], M3[1], '0');
+        board.ChangeBoard(M4[0], M4[1], '0');
+        M1[0] = M1[0] - 1;
+        M2[0] = M2[0] - 1;
+        M3[0] = M3[0] - 1;
+        M4[0] = M4[0] - 1;
+        board.ChangeBoard(M1[0], M1[1], CurrentLetter);
+        board.ChangeBoard(M2[0], M2[1], CurrentLetter);
+        board.ChangeBoard(M3[0], M3[1], CurrentLetter);
+        board.ChangeBoard(M4[0], M4[1], CurrentLetter);
     }
     public virtual void Right()
     {
-
+        board.ChangeBoard(M1[0], M1[1], '0');
+        board.ChangeBoard(M2[0], M2[1], '0');
+        board.ChangeBoard(M3[0], M3[1], '0');
+        board.ChangeBoard(M4[0], M4[1], '0');
+        M1[0] = M1[0] + 1;
+        M2[0] = M2[0] + 1;
+        M3[0] = M3[0] + 1;
+        M4[0] = M4[0] + 1;
+        board.ChangeBoard(M1[0], M1[1], CurrentLetter);
+        board.ChangeBoard(M2[0], M2[1], CurrentLetter);
+        board.ChangeBoard(M3[0], M3[1], CurrentLetter);
+        board.ChangeBoard(M4[0], M4[1], CurrentLetter);
     }
     public virtual bool GroundCollision()
     {
@@ -71,9 +114,14 @@ public class Blocks
         if (!GroundCollision())
         {
             Debug.WriteLine(PB[BottomColumn, BottomRow + 1]);
+            Debug.WriteLine(PB[RColumn, RRow + 1]);
             if (PB[BottomColumn, BottomRow+1] == 'i')
             {
                 Debug.WriteLine("worked");
+                return true;
+            }
+            if(PB[RColumn-1, RRow+1] == 'i')
+            {
                 return true;
             }
             /*if (BottomColumn +1 < 10 && PB[BottomColumn +1, BottomRow+1 ] == 'i')

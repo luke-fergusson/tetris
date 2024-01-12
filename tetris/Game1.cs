@@ -125,7 +125,7 @@ namespace tetris
             // TODO: Add your initialization logic here
             //board.blankBoard();
             //I_Block.StarPosition();
-            blocks = J_Block;
+            blocks = I_Block;
             blocks.StarPosition();
             currentBoards = new char[10,20];
             BlockList.Add(blocks);
@@ -260,7 +260,7 @@ namespace tetris
         {
             currentBoards = previousBoards;
 
-            blocks = new J_Block();
+            blocks = new I_Block();
             BlockList.Add(blocks);
 
             blocks.board.currentGameBoards = currentBoards;

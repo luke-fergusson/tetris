@@ -1,4 +1,5 @@
 ﻿using SharpDX;
+using SharpDX.Direct2D1;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,14 +12,15 @@ namespace tetris
 {
     public class I_Block : Blocks
     {     
-        int[] M1 = new int[] {4, 0};
+        /*int[] M1 = new int[] {4, 0};
         int[] M2 = new int[] {4, 1};
         int[] M3 = new int[] {4, 2};
         int[] M4 = new int[] {4, 3};
         int CurrentM1;
         int CurrentM2;
         int CurrentM3;
-        int CurrentM4;
+        int CurrentM4;*/
+       
         /*
          *          M1
          *          M2
@@ -30,18 +32,24 @@ namespace tetris
         public I_Block()
         {
             State = 0;
+            M1 = new int[] { 4, 0 };
+            M2 = new int[] { 4, 1 };
+            M3 = new int[] { 4, 2 };
+            M4 = new int[] { 4, 3 };
 
+            CurrentLetter = 'i';
         }
         public override void StarPosition()
         {
-            board.ChangeBoard(M1[0], M1[1], 'i');
+            /*board.ChangeBoard(M1[0], M1[1], 'i');
             board.ChangeBoard(M2[0], M2[1], 'i');
             board.ChangeBoard(M3[0], M3[1], 'i');
-            board.ChangeBoard(M4[0], M4[1], 'i');
+            board.ChangeBoard(M4[0], M4[1], 'i');*/
+            base.StarPosition();
         }
         public override void Down()
         {
-            board.ChangeBoard(M1[0], M1[1], '0');
+            /*board.ChangeBoard(M1[0], M1[1], '0');
             board.ChangeBoard(M2[0], M2[1], '0');
             board.ChangeBoard(M3[0], M3[1], '0');
             board.ChangeBoard(M4[0], M4[1], '0');
@@ -52,11 +60,12 @@ namespace tetris
             board.ChangeBoard(M1[0], M1[1], 'i');
             board.ChangeBoard(M2[0], M2[1], 'i');
             board.ChangeBoard(M3[0], M3[1], 'i');
-            board.ChangeBoard(M4[0], M4[1], 'i');
+            board.ChangeBoard(M4[0], M4[1], 'i');*/
+            base.Down();
         }
         public override void Right()
         {
-            board.ChangeBoard(M1[0], M1[1], '0');
+            /*board.ChangeBoard(M1[0], M1[1], '0');
             board.ChangeBoard(M2[0], M2[1], '0');
             board.ChangeBoard(M3[0], M3[1], '0');
             board.ChangeBoard(M4[0], M4[1], '0');
@@ -67,11 +76,13 @@ namespace tetris
             board.ChangeBoard(M1[0], M1[1], 'i');
             board.ChangeBoard(M2[0], M2[1], 'i');
             board.ChangeBoard(M3[0], M3[1], 'i');
-            board.ChangeBoard(M4[0], M4[1], 'i');
+            board.ChangeBoard(M4[0], M4[1], 'i');*/
+            base.Right();
+            
         }
         public override void Left()
         {
-            board.ChangeBoard(M1[0], M1[1], '0');
+            /*board.ChangeBoard(M1[0], M1[1], '0');
             board.ChangeBoard(M2[0], M2[1], '0');
             board.ChangeBoard(M3[0], M3[1], '0');
             board.ChangeBoard(M4[0], M4[1], '0');
@@ -82,7 +93,8 @@ namespace tetris
             board.ChangeBoard(M1[0], M1[1], 'i');
             board.ChangeBoard(M2[0], M2[1], 'i');
             board.ChangeBoard(M3[0], M3[1], 'i');
-            board.ChangeBoard(M4[0], M4[1], 'i');
+            board.ChangeBoard(M4[0], M4[1], 'i');*/
+            base.Left();
         }
         public override bool GroundCollision()
         {
@@ -98,17 +110,47 @@ namespace tetris
         }
         public override bool LWallCollision()
         {
-            BottomRow = M4[1];
-            BottomColumn = M4[0];
+            BottomRow = M1[1];
+            BottomColumn = M1[0];
             return base.LWallCollision();
         }
         public override bool BlockCollision()
         {
-            BottomRow = M4[1];
+            /*BottomRow = M4[1];
             BottomColumn = M4[0];
+            RColumn = 1;
+            RRow = 0;
             PB = board.GetBoard();
             
-            return base.BlockCollision();
+            return base.BlockCollision();*/
+
+            PB = board.GetBoard();
+            if (!GroundCollision())
+            {
+                if (State == 1 || State == 3)
+                {
+
+                    if (PB[M4[0], M4[1] + 1] == CurrentLetter || PB[M3[0], M3[1] + 1] == CurrentLetter || PB[M2[0], M2[1] + 1] == CurrentLetter || PB[M1[0], M1[1] + 1] == CurrentLetter)
+                    {
+                        return true;
+                    }
+                }
+                else if(State == 0)
+                {
+                    if(PB[M4[0], M4[1] + 1] == CurrentLetter )
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    if( PB[M1[0], M1[1] + 1] == CurrentLetter)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
             
         }
         public override void RotateClockwise()

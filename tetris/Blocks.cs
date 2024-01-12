@@ -28,25 +28,20 @@ public class Blocks
 
     public virtual void Down()
     {
-        board.ChangeBoard(M1[0], M1[1], '0');
+        /*board.ChangeBoard(M1[0], M1[1], '0');
         board.ChangeBoard(M2[0], M2[1], '0');
         board.ChangeBoard(M3[0], M3[1], '0');
-        board.ChangeBoard(M4[0], M4[1], '0');
+        board.ChangeBoard(M4[0], M4[1], '0');*/
+        SetToZero();
         M1[1] = M1[1] + 1;
         M2[1] = M2[1] + 1;
         M3[1] = M3[1] + 1;
         M4[1] = M4[1] + 1;
-        board.ChangeBoard(M1[0], M1[1], CurrentLetter);
-        board.ChangeBoard(M2[0], M2[1], CurrentLetter);
-        board.ChangeBoard(M3[0], M3[1], CurrentLetter);
-        board.ChangeBoard(M4[0], M4[1], CurrentLetter);
+        SetToLetter();
     }
     public virtual void StarPosition() 
     {
-        board.ChangeBoard(M1[0], M1[1], CurrentLetter);
-        board.ChangeBoard(M2[0], M2[1], CurrentLetter);
-        board.ChangeBoard(M3[0], M3[1], CurrentLetter);
-        board.ChangeBoard(M4[0], M4[1], CurrentLetter);
+        SetToLetter();
     }   
     public Blocks() 
     {
@@ -55,33 +50,21 @@ public class Blocks
     }
     public virtual void Left()
     {
-        board.ChangeBoard(M1[0], M1[1], '0');
-        board.ChangeBoard(M2[0], M2[1], '0');
-        board.ChangeBoard(M3[0], M3[1], '0');
-        board.ChangeBoard(M4[0], M4[1], '0');
+        SetToZero();
         M1[0] = M1[0] - 1;
         M2[0] = M2[0] - 1;
         M3[0] = M3[0] - 1;
         M4[0] = M4[0] - 1;
-        board.ChangeBoard(M1[0], M1[1], CurrentLetter);
-        board.ChangeBoard(M2[0], M2[1], CurrentLetter);
-        board.ChangeBoard(M3[0], M3[1], CurrentLetter);
-        board.ChangeBoard(M4[0], M4[1], CurrentLetter);
+        SetToLetter();
     }
     public virtual void Right()
     {
-        board.ChangeBoard(M1[0], M1[1], '0');
-        board.ChangeBoard(M2[0], M2[1], '0');
-        board.ChangeBoard(M3[0], M3[1], '0');
-        board.ChangeBoard(M4[0], M4[1], '0');
+        SetToZero();
         M1[0] = M1[0] + 1;
         M2[0] = M2[0] + 1;
         M3[0] = M3[0] + 1;
         M4[0] = M4[0] + 1;
-        board.ChangeBoard(M1[0], M1[1], CurrentLetter);
-        board.ChangeBoard(M2[0], M2[1], CurrentLetter);
-        board.ChangeBoard(M3[0], M3[1], CurrentLetter);
-        board.ChangeBoard(M4[0], M4[1], CurrentLetter);
+        SetToLetter();
     }
     public virtual bool GroundCollision()
     {
@@ -142,7 +125,22 @@ public class Blocks
     {
 
     }
+    public void SetToZero()
+    {
+        board.ChangeBoard(M1[0], M1[1], '0');
+        board.ChangeBoard(M2[0], M2[1], '0');
+        board.ChangeBoard(M3[0], M3[1], '0');
+        board.ChangeBoard(M4[0], M4[1], '0');// replacing previous poistion with 0's 
+    }
+    public void SetToLetter()
+    {
+        board.ChangeBoard(M1[0], M1[1], CurrentLetter);
+        board.ChangeBoard(M2[0], M2[1], CurrentLetter);
+        board.ChangeBoard(M3[0], M3[1], CurrentLetter);
+        board.ChangeBoard(M4[0], M4[1], CurrentLetter);
+    }
 
+    
 
 
 }

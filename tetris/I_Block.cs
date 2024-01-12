@@ -39,63 +39,11 @@ namespace tetris
 
             CurrentLetter = 'i';
         }
-        public override void StarPosition()
-        {
-            /*board.ChangeBoard(M1[0], M1[1], 'i');
-            board.ChangeBoard(M2[0], M2[1], 'i');
-            board.ChangeBoard(M3[0], M3[1], 'i');
-            board.ChangeBoard(M4[0], M4[1], 'i');*/
-            base.StarPosition();
-        }
-        public override void Down()
-        {
-            /*board.ChangeBoard(M1[0], M1[1], '0');
-            board.ChangeBoard(M2[0], M2[1], '0');
-            board.ChangeBoard(M3[0], M3[1], '0');
-            board.ChangeBoard(M4[0], M4[1], '0');
-            M1[1] = M1[1] + 1;
-            M2[1] = M2[1] + 1;
-            M3[1] = M3[1] + 1;
-            M4[1] = M4[1] + 1;
-            board.ChangeBoard(M1[0], M1[1], 'i');
-            board.ChangeBoard(M2[0], M2[1], 'i');
-            board.ChangeBoard(M3[0], M3[1], 'i');
-            board.ChangeBoard(M4[0], M4[1], 'i');*/
-            base.Down();
-        }
-        public override void Right()
-        {
-            /*board.ChangeBoard(M1[0], M1[1], '0');
-            board.ChangeBoard(M2[0], M2[1], '0');
-            board.ChangeBoard(M3[0], M3[1], '0');
-            board.ChangeBoard(M4[0], M4[1], '0');
-            M1[0] = M1[0] + 1;
-            M2[0] = M2[0] + 1;
-            M3[0] = M3[0] + 1;
-            M4[0] = M4[0] + 1;
-            board.ChangeBoard(M1[0], M1[1], 'i');
-            board.ChangeBoard(M2[0], M2[1], 'i');
-            board.ChangeBoard(M3[0], M3[1], 'i');
-            board.ChangeBoard(M4[0], M4[1], 'i');*/
-            base.Right();
-            
-        }
-        public override void Left()
-        {
-            /*board.ChangeBoard(M1[0], M1[1], '0');
-            board.ChangeBoard(M2[0], M2[1], '0');
-            board.ChangeBoard(M3[0], M3[1], '0');
-            board.ChangeBoard(M4[0], M4[1], '0');
-            M1[0] = M1[0] - 1;
-            M2[0] = M2[0] - 1;
-            M3[0] = M3[0] - 1;
-            M4[0] = M4[0] - 1;
-            board.ChangeBoard(M1[0], M1[1], 'i');
-            board.ChangeBoard(M2[0], M2[1], 'i');
-            board.ChangeBoard(M3[0], M3[1], 'i');
-            board.ChangeBoard(M4[0], M4[1], 'i');*/
-            base.Left();
-        }
+        
+       
+       
+        
+        
         public override bool GroundCollision()
         {
             BottomRow = M4[1];
@@ -127,28 +75,32 @@ namespace tetris
             PB = board.GetBoard();
             if (!GroundCollision())
             {
-                if (State == 1 || State == 3)
+                if (State == 1)
                 {
 
                     if (PB[M4[0], M4[1] + 1] == CurrentLetter || PB[M3[0], M3[1] + 1] == CurrentLetter || PB[M2[0], M2[1] + 1] == CurrentLetter || PB[M1[0], M1[1] + 1] == CurrentLetter)
                     {
+                        Debug.WriteLine("1");
                         return true;
                     }
                 }
-                else if(State == 0)
+                else if(State == 0 || State ==2)
                 {
                     if(PB[M4[0], M4[1] + 1] == CurrentLetter )
                     {
+                        Debug.WriteLine("2");
                         return true;
                     }
                 }
-                else
+                /*else if(State == 2)
                 {
-                    if( PB[M1[0], M1[1] + 1] == CurrentLetter)
+                    if (PB[M1[0], M1[1] + 1] == CurrentLetter)
                     {
+                        Debug.WriteLine("3");
                         return true;
                     }
-                }
+                }*/
+                
             }
             return false;
             
@@ -160,10 +112,7 @@ namespace tetris
             {
                 case 0:
        
-                    board.ChangeBoard(M1[0], M1[1], '0');
-                    board.ChangeBoard(M2[0], M2[1], '0');
-                    board.ChangeBoard(M3[0], M3[1], '0');
-                    board.ChangeBoard(M4[0], M4[1], '0');// replacing previous poistion with 0's 
+                    SetToZero();
 
                     M1[0] = M2[0] - 1;
                     M3[0] = M2[0] + 1;
@@ -173,21 +122,15 @@ namespace tetris
                     M3[1] = M2[1];
                     M4[1] = M2[1];
 
-                    board.ChangeBoard(M1[0], M1[1], 'i');
-                    board.ChangeBoard(M2[0], M2[1], 'i');
-                    board.ChangeBoard(M3[0], M3[1], 'i');
-                    board.ChangeBoard(M4[0], M4[1], 'i');// set new position with i's
+                    SetToLetter();// set new position with i's
                     State = 1;
                     break;
                 case 1:
-                    board.ChangeBoard(M1[0], M1[1], '0');
-                    board.ChangeBoard(M2[0], M2[1], '0');
-                    board.ChangeBoard(M3[0], M3[1], '0');
-                    board.ChangeBoard(M4[0], M4[1], '0');
-                    Debug.WriteLine(M1[0] + ", " + M1[1]);
+                    SetToZero();
+                    /*Debug.WriteLine(M1[0] + ", " + M1[1]);
                     Debug.WriteLine(M2[0] + ", " + M2[1]);
                     Debug.WriteLine(M3[0] + ", " + M3[1]);
-                    Debug.WriteLine(M4[0] + ", " + M4[1]);
+                    Debug.WriteLine(M4[0] + ", " + M4[1]);*/
 
                     M1[0] = M3[0];
                     M2[0] = M3[0];
@@ -197,25 +140,19 @@ namespace tetris
                     M3[1] = M3[1] + 1;
                     M4[1] = M3[1] + 1;
 
-                    Debug.WriteLine(M1[0] + ", " + M1[1]);
+                    /*Debug.WriteLine(M1[0] + ", " + M1[1]);
                     Debug.WriteLine(M2[0] + ", " + M2[1]);
                     Debug.WriteLine(M3[0] + ", " + M3[1]);
-                    Debug.WriteLine(M4[0] + ", " + M4[1]);
-                    board.ChangeBoard(M1[0], M1[1], 'i');
-                    board.ChangeBoard(M2[0], M2[1], 'i');
-                    board.ChangeBoard(M3[0], M3[1], 'i');
-                    board.ChangeBoard(M4[0], M4[1], 'i');
+                    Debug.WriteLine(M4[0] + ", " + M4[1]);*/
+                    SetToLetter();
                     State = 2;
                     break;
                 case 2:
-                    board.ChangeBoard(M1[0], M1[1], '0');
-                    board.ChangeBoard(M2[0], M2[1], '0');
-                    board.ChangeBoard(M3[0], M3[1], '0');
-                    board.ChangeBoard(M4[0], M4[1], '0');
-                    Debug.WriteLine(M1[0] + ", " + M1[1]);
+                    SetToZero();
+                    /*Debug.WriteLine(M1[0] + ", " + M1[1]);
                     Debug.WriteLine(M2[0] + ", " + M2[1]);
                     Debug.WriteLine(M3[0] + ", " + M3[1]);
-                    Debug.WriteLine(M4[0] + ", " + M4[1]);
+                    Debug.WriteLine(M4[0] + ", " + M4[1]);*/
 
                     M1[0] = M3[0] -2;
                     M2[0] = M3[0] - 1;
@@ -225,14 +162,11 @@ namespace tetris
                     M2[1] = M3[1];
                     M4[1] = M3[1];
 
-                    Debug.WriteLine(M1[0] + ", " + M1[1]);
+                    /*Debug.WriteLine(M1[0] + ", " + M1[1]);
                     Debug.WriteLine(M2[0] + ", " + M2[1]);
                     Debug.WriteLine(M3[0] + ", " + M3[1]);
-                    Debug.WriteLine(M4[0] + ", " + M4[1]);
-                    board.ChangeBoard(M1[0], M1[1], 'i');
-                    board.ChangeBoard(M2[0], M2[1], 'i');
-                    board.ChangeBoard(M3[0], M3[1], 'i');
-                    board.ChangeBoard(M4[0], M4[1], 'i');
+                    Debug.WriteLine(M4[0] + ", " + M4[1]);*/
+                    SetToLetter();
                     State = 0;
                     break;
                 
@@ -240,5 +174,7 @@ namespace tetris
 
             
         }
+        
+        
     }
 }

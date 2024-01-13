@@ -27,37 +27,7 @@ public class O_Block: Blocks
      * O block
      */
     
-    public override void Down()
-    {
-
-        /*board.ChangeBoard(L1[0], L1[1], '0');
-        board.ChangeBoard(L2[0], L2[1], '0');
-        board.ChangeBoard(R1[0], R1[1], '0');
-        board.ChangeBoard(R2[0], R2[1], '0');
-        L1[1] = L1[1] + 1;
-        L2[1] = L2[1] + 1;
-        R1[1] = R1[1] + 1;
-        R2[1] = R2[1] + 1;
-        board.ChangeBoard(L1[0], L1[1], 'o');
-        board.ChangeBoard(L2[0], L2[1], 'o');
-        board.ChangeBoard(R1[0], R1[1], 'o');
-        board.ChangeBoard(R2[0], R2[1], 'o');*/
-
-        /*board.ChangeBoard(M1[0], M1[1], '0');
-        board.ChangeBoard(M2[0], M2[1], '0');
-        board.ChangeBoard(M3[0], M3[1], '0');
-        board.ChangeBoard(M4[0], M4[1], '0');
-        M1[1] = M1[1] + 1;
-        M2[1] = M2[1] + 1;
-        M3[1] = M3[1] + 1;
-        M4[1] = M4[1] + 1;*/
-        base.Down();
-        /*board.ChangeBoard(M1[0], M1[1], 'o');
-        board.ChangeBoard(M2[0], M2[1], 'o');
-        board.ChangeBoard(M3[0], M3[1], 'o');
-        board.ChangeBoard(M4[0], M4[1], 'o');*/
-
-    }
+    
     public O_Block()
     {
         M1 = new int[] { 4, 0 };
@@ -66,79 +36,7 @@ public class O_Block: Blocks
         M4 = new int[] { 5, 1 };
         CurrentLetter = 'o';
     }
-    public override void StarPosition()
-    {
-        /*board.ChangeBoard(L1[0], L1[1], 'o');
-        board.ChangeBoard(L2[0], L2[1], 'o');
-        board.ChangeBoard(R1[0], R1[1], 'o');
-        board.ChangeBoard(R2[0], R2[1], 'o');*/
-
-        /*board.ChangeBoard(M1[0], M1[1], 'o');
-        board.ChangeBoard(M2[0], M2[1], 'o');
-        board.ChangeBoard(M3[0], M3[1], 'o');
-        board.ChangeBoard(M4[0], M4[1], 'o');*/
-
-        base.StarPosition();
-
-    }
-    public override void Left()
-    {
-        /*board.ChangeBoard(L1[0], L1[1], '0');
-        board.ChangeBoard(L2[0], L2[1], '0');
-        board.ChangeBoard(R1[0], R1[1], '0');
-        board.ChangeBoard(R2[0], R2[1], '0');
-        L1[0] = L1[0] - 1;
-        L2[0] = L2[0] - 1;
-        R1[0] = R1[0] - 1;
-        R2[0] = R2[0] - 1;
-        board.ChangeBoard(L1[0], L1[1], 'o');
-        board.ChangeBoard(L2[0], L2[1], 'o');
-        board.ChangeBoard(R1[0], R1[1], 'o');
-        board.ChangeBoard(R2[0], R2[1], 'o');*/
-
-        /*board.ChangeBoard(M1[0], M1[1], '0');
-        board.ChangeBoard(M2[0], M2[1], '0');
-        board.ChangeBoard(M3[0], M3[1], '0');
-        board.ChangeBoard(M4[0], M4[1], '0');
-        M1[0] = M1[0] - 1;
-        M2[0] = M2[0] - 1;
-        M3[0] = M3[0] - 1;
-        M4[0] = M4[0] - 1;
-        board.ChangeBoard(M1[0], M1[1], 'o');
-        board.ChangeBoard(M2[0], M2[1], 'o');
-        board.ChangeBoard(M3[0], M3[1], 'o');
-        board.ChangeBoard(M4[0], M4[1], 'o');*/
-        base.Left();
-    }
-    public override void Right() 
-    {
-        /*board.ChangeBoard(L1[0], L1[1], '0');
-        board.ChangeBoard(L2[0], L2[1], '0');
-        board.ChangeBoard(R1[0], R1[1], '0');
-        board.ChangeBoard(R2[0], R2[1], '0');
-        L1[0] = L1[0] + 1;
-        L2[0] = L2[0] + 1;
-        R1[0] = R1[0] + 1;
-        R2[0] = R2[0] + 1;
-        board.ChangeBoard(L1[0], L1[1], 'o');
-        board.ChangeBoard(L2[0], L2[1], 'o');
-        board.ChangeBoard(R1[0], R1[1], 'o');
-        board.ChangeBoard(R2[0], R2[1], 'o');*/
-
-        /*board.ChangeBoard(M1[0], M1[1], '0');
-        board.ChangeBoard(M2[0], M2[1], '0');
-        board.ChangeBoard(M3[0], M3[1], '0');
-        board.ChangeBoard(M4[0], M4[1], '0');
-        M1[0] = M1[0] + 1;
-        M2[0] = M2[0] + 1;
-        M3[0] = M3[0] + 1;
-        M4[0] = M4[0] + 1;
-        board.ChangeBoard(M1[0], M1[1], 'o');
-        board.ChangeBoard(M2[0], M2[1], 'o');
-        board.ChangeBoard(M3[0], M3[1], 'o');
-        board.ChangeBoard(M4[0], M4[1], 'o');*/
-        base.Right();
-    }
+    
     public override bool GroundCollision()
     {
         BottomRow = M4[1];

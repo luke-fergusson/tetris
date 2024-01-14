@@ -98,12 +98,12 @@ public class Blocks
         {
             Debug.WriteLine(PB[BottomColumn, BottomRow + 1]);
             Debug.WriteLine(PB[RColumn, RRow + 1]);
-            if (PB[BottomColumn, BottomRow+1] == CurrentLetter)
+            if (PB[BottomColumn, BottomRow+1] != '0')
             {
                 Debug.WriteLine("worked");
                 return true;
             }
-            if(PB[RColumn-1, RRow+1] == CurrentLetter)
+            if(PB[RColumn-1, RRow+1] != '0')
             {
                 return true;
             }

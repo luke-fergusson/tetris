@@ -31,6 +31,8 @@ namespace tetris
         public J_Block J_Block = new J_Block();
         public L_Block L_Block = new L_Block(); 
         public T_Block T_Block = new T_Block(); 
+        public S_Block S_Block = new S_Block();
+        public Z_Block Z_Block = new Z_Block();
 
 
         private Vector2 _velocity;
@@ -127,7 +129,7 @@ namespace tetris
             // TODO: Add your initialization logic here
             //board.blankBoard();
             //I_Block.StarPosition();
-            blocks = T_Block;
+            blocks = Z_Block;
             blocks.StarPosition();
             currentBoards = new char[10,20];
             BlockList.Add(blocks);
@@ -264,6 +266,18 @@ namespace tetris
                         _spriteBatch.Draw(_newBlock, new Rectangle((50 * i) + _width - 100, 50 * j + 10, 50, 50), Color.Purple);
                         _spriteBatch.End();
                     }
+                    if (previousBoards[i, j] == 's')
+                    {
+                        _spriteBatch.Begin();
+                        _spriteBatch.Draw(_newBlock, new Rectangle((50 * i) + _width - 100, 50 * j + 10, 50, 50), Color.LimeGreen);
+                        _spriteBatch.End();
+                    }
+                    if (previousBoards[i, j] == 'z')
+                    {
+                        _spriteBatch.Begin();
+                        _spriteBatch.Draw(_newBlock, new Rectangle((50 * i) + _width - 100, 50 * j + 10, 50, 50), Color.Red);
+                        _spriteBatch.End();
+                    }
 
                 }
             }
@@ -274,16 +288,16 @@ namespace tetris
         {
             currentBoards = previousBoards;
 
-            blocks = new T_Block();
-            BlockList.Add(blocks);
-
+            //blocks = new Z_Block();
+            //BlockList.Add(blocks);
+            RanBlock();
             blocks.board.currentGameBoards = currentBoards;
             blocks.StarPosition();
             DrawBoard();
         }
         public void RanBlock()
         {
-            int num = random.Next(0, 6);
+            int num = random.Next(0, 7);
             switch (num)
             {
                 case 0:

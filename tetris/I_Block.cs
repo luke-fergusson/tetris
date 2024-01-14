@@ -78,7 +78,7 @@ namespace tetris
                 if (State == 1)
                 {
 
-                    if (PB[M4[0], M4[1] + 1] == CurrentLetter || PB[M3[0], M3[1] + 1] == CurrentLetter || PB[M2[0], M2[1] + 1] == CurrentLetter || PB[M1[0], M1[1] + 1] == CurrentLetter)
+                    if (PB[M4[0], M4[1] + 1] != '0' || PB[M3[0], M3[1] + 1] != '0' || PB[M2[0], M2[1] + 1] != '0' || PB[M1[0], M1[1] + 1] != '0')
                     {
                         Debug.WriteLine("1");
                         return true;
@@ -86,7 +86,7 @@ namespace tetris
                 }
                 else if(State == 0 || State ==2)
                 {
-                    if(PB[M4[0], M4[1] + 1] == CurrentLetter )
+                    if(PB[M4[0], M4[1] + 1] != '0' )
                     {
                         Debug.WriteLine("2");
                         return true;

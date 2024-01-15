@@ -134,7 +134,7 @@ namespace tetris
                     M3[1] = M3[1] - 1;
 
                    
-                    Debug.WriteLine(0);
+                    
                     SetToLetter();
                     State = 1;
                     break;
@@ -147,7 +147,7 @@ namespace tetris
 
                     M1[1] = M1[1] + 1;
                     M2[1] = M2[1] + 1;
-                    Debug.WriteLine(1);
+                    
                     SetToLetter();
                     State = 2;
                     break;
@@ -160,28 +160,25 @@ namespace tetris
                     M1[1] = M1[1] +1;
                     M2[1] = M2[1] - 1;
                     
-                    Debug.WriteLine(2);
+                    
                     SetToLetter();
 
                     State = 3;
                     break;
                 case 3:
                     SetToZero();
-                    Debug.WriteLine("M1 " + M1[0] + ", " + M1[1]);
-                    Debug.WriteLine("M2 " + M2[0] + ", " + M2[1]);
-                    Debug.WriteLine("M3 " + M3[0] + ", " + M3[1]);
-                    Debug.WriteLine("M4 " + M4[0] + ", " + M4[1]);
+                    
                     M2[0] = M2[0] - 1;
                     M4[0] = M4[0] + 1;
 
                     M1[1] = M1[1] - 1;
                     M2[1] = M2[1] + 2;
                     M3[1] = M3[1] + 1;
-                    Debug.WriteLine("M1 " + M1[0] + ", " + M1[1]);
+                    /*Debug.WriteLine("M1 " + M1[0] + ", " + M1[1]);
                     Debug.WriteLine("M2 " + M2[0] + ", " + M2[1]);
                     Debug.WriteLine("M3 " + M3[0] + ", " + M3[1]);
-                    Debug.WriteLine("M4 " + M4[0] + ", " + M4[1]);
-                    Debug.WriteLine(3);
+                    Debug.WriteLine("M4 " + M4[0] + ", " + M4[1]);*/
+                    
                     SetToLetter();
                     State = 0;
                     break;

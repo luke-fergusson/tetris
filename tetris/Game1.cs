@@ -129,7 +129,7 @@ namespace tetris
             // TODO: Add your initialization logic here
             //board.blankBoard();
             //I_Block.StarPosition();
-            blocks = Z_Block;
+            blocks = T_Block;
             blocks.StarPosition();
             currentBoards = new char[10,20];
             BlockList.Add(blocks);
@@ -148,6 +148,7 @@ namespace tetris
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            LineCheck();
             bottom = blocks.GroundCollision();
             RWall = blocks.RWallCollision();
             LWall = blocks.LWallCollision();
@@ -156,6 +157,7 @@ namespace tetris
             BlockHit = blocks.BlockCollision();
             if (BlockHit && BlockList.Count > 1)
             {
+                Debug.WriteLine("done" + blocks);
                 GenerateNewBlock();
             }
             
@@ -288,7 +290,7 @@ namespace tetris
         {
             currentBoards = previousBoards;
 
-            //blocks = new Z_Block();
+            //blocks = new T_Block();
             //BlockList.Add(blocks);
             RanBlock();
             blocks.board.currentGameBoards = currentBoards;
@@ -325,8 +327,28 @@ namespace tetris
             }
             BlockList.Add(blocks);
         }
+        public void LineCheck()
+        {
+            int LineCount = 0;
+            currentBoards = blocks.board.GetBoard();
+            for (int j = 0; j < 20; j++)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    if (currentBoards[i, j] != '0')
+                    {
+                        LineCount++;
+                    }
+                }
+                if (LineCount == 10)
+                {
+                    blocks.LineMoveDown(j);
+                }
+                LineCount = 0;
+            }
+        }
 
-        
+
     }
 
  

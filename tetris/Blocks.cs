@@ -47,6 +47,13 @@ public class Blocks
     {
         board = new Board();
         PB = new char[10, 20];
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 20; j++)
+            {
+                PB[i, j] = '0';
+            }
+        }
     }
     public virtual void Left()
     {
@@ -96,11 +103,10 @@ public class Blocks
     {
         if (!GroundCollision())
         {
-            Debug.WriteLine(PB[BottomColumn, BottomRow + 1]);
-            Debug.WriteLine(PB[RColumn, RRow + 1]);
+            
             if (PB[BottomColumn, BottomRow+1] != '0')
             {
-                Debug.WriteLine("worked");
+                
                 return true;
             }
             if(PB[RColumn-1, RRow+1] != '0')
@@ -139,8 +145,30 @@ public class Blocks
         board.ChangeBoard(M3[0], M3[1], CurrentLetter);
         board.ChangeBoard(M4[0], M4[1], CurrentLetter);
     }
+    public void LineMoveDown()
+    {
 
+    }
     
+    public void LineMoveDown(int line)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            board.ChangeBoard(i, line, '0');
+        }
+
+        for (int j = 0; j < 20; j++)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                if(line > j)
+                {
+                    board.MoveDown(i, j);
+                }
+            }
+        }
+    }
+
 
 
 }

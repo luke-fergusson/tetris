@@ -161,10 +161,10 @@ namespace tetris
                     M4[1] = M4[1] + 1;
 
                     SetToLetter();
-                    Debug.WriteLine("M1 " + M1[0] + ", " + M1[1]);
+                    /*Debug.WriteLine("M1 " + M1[0] + ", " + M1[1]);
                     Debug.WriteLine("M2 " + M2[0] + ", " + M2[1]);///rotation not working
                     Debug.WriteLine("M3 " + M3[0] + ", " + M3[1]);
-                    Debug.WriteLine("M4 " + M4[0] + ", " + M4[1]);
+                    Debug.WriteLine("M4 " + M4[0] + ", " + M4[1]);*/
                     
                     State = 2;
                     break;

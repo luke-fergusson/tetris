@@ -129,8 +129,9 @@ namespace tetris
             // TODO: Add your initialization logic here
             //board.blankBoard();
             //I_Block.StarPosition();
-            blocks = T_Block;
-            blocks.StarPosition();
+            //blocks = T_Block;
+            //blocks.StarPosition();
+            RanBlock();
             currentBoards = new char[10,20];
             BlockList.Add(blocks);
             base.Initialize();
@@ -342,6 +343,7 @@ namespace tetris
                 }
                 if (LineCount == 10)
                 {
+
                     blocks.LineMoveDown(j);
                 }
                 LineCount = 0;

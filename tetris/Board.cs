@@ -52,17 +52,10 @@ public class Board
 
         return currentGameBoards;
     }
-    public void MoveDown(int row, int col)
+    public char GetCurrentPos(int col, int row)
     {
-       // Debug.WriteLine(currentGameBoards[row, col-1]);
-        if(col !=0)
-        {
-            //Debug.WriteLine(currentGameBoards[row, col]);
-            currentGameBoards[row, col] = currentGameBoards[row, col - 1];
-            Debug.WriteLine(currentGameBoards[row, col]);
-        }
-        
-        
+        return currentGameBoards[col, row];
     }
+   
 
 }

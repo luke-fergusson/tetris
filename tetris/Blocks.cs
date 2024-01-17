@@ -149,24 +149,51 @@ public class Blocks
     {
 
     }
-    
+
     public void LineMoveDown(int line)
     {
-        for (int i = 0; i < 10; i++)
-        {
-            board.ChangeBoard(i, line, '0');
-        }
-
-        for (int j = 0; j < 20; j++)
+        /*for (int j = 0; j < 20; j++)
         {
             for (int i = 0; i < 10; i++)
             {
-                if(line > j)
+                if (line <= j)
                 {
-                    board.MoveDown(i, j);
+                    if (j + 1 < 20)
+                    {
+                        Debug.WriteLine("worked");
+                        //Debug.WriteLine(" this " + currentGameBoards[col, row - 1]);
+                        board.ChangeBoard(i, j+1, board.GetCurrentPos(i,j));
+                        Debug.WriteLine(board.GetCurrentPos(i,j));
+                    }
                 }
             }
+        }*/
+        for (int i = 0; i < 10; i++)
+        {
+            board.ChangeBoard(i, line, '0');
+            //Debug.WriteLine("");
+            /*for (int j = 0; j < 20; j++)
+            {
+                //Debug.Write(board.GetCurrentPos(i, j));
+                
+                if (j - 1 >= 0)
+                {
+                    board.ChangeBoard(i, j, board.GetCurrentPos(i, j - 1));
+                }
+                
+            }*/
+            
+            if (line - 1 >= 0)
+            {
+                board.ChangeBoard(i, line, board.GetCurrentPos(i, line - 1));
+            }
+            if (line - 1 >= 0)
+            {
+                board.ChangeBoard(i, line-1, '0');
+            }
+
         }
+
     }
 
 

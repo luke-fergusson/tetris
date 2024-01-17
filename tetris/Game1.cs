@@ -9,6 +9,9 @@ using System.Reflection;
 using System.Threading;
 using System.Timers;
 using System.Collections.Generic;
+using SharpDX.MediaFoundation;
+
+
 namespace tetris
 {
     public class Game1 : Game
@@ -20,6 +23,20 @@ namespace tetris
         private Texture2D _testBlock;
         private Texture2D _newBlock;
         private Texture2D _block;
+        private Texture2D _menu;
+        public enum GameStates
+        {
+            Menu,
+            Game,
+            Pause
+        }
+        private GameStates _state;
+        private SpriteFont _font;
+        private SpriteFont _ScreenTitle;
+        private string Title = "TETRIS";
+        private string buttonFont = "buttonFont";
+        
+
 
         public char Row;
         public char col;
@@ -66,10 +83,18 @@ namespace tetris
         public bool RWall;
         public bool BlockHit;
 
+        private MouseState oldState;
+        public event EventHandler Click;
+        public Rectangle Rectangle { get; set; }
+
         public List<Blocks> BlockList = new List<Blocks>();
 
         public Random random = new Random();
         public Queue<int> upComingBlocks = new Queue<int>(4);
+
+
+
+        private List<component> _gameComponents;
 
         public Game1()
         {
@@ -131,6 +156,8 @@ namespace tetris
             //I_Block.StarPosition();
             //blocks = T_Block;
             //blocks.StarPosition();
+            IsMouseVisible = true;
+            _state = GameStates.Menu;
             RanBlock();
             currentBoards = new char[10,20];
             BlockList.Add(blocks);
@@ -141,66 +168,125 @@ namespace tetris
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _newBlock = Content.Load<Texture2D>("sa");
-            _velocity = new Vector2(_width+100, 10);
+           
+            _font = Content.Load<SpriteFont>("buttonFont");
+            _ScreenTitle = Content.Load<SpriteFont>("Title");
+
+
+            var PlayButton = new Button(Content.Load<Texture2D>("sa"), Content.Load<SpriteFont>("buttonFont"))
+            {
+                Position = new Vector2(_width / 2 + 375, _height / 2 + 150),
+                Text = "play",
+                
+            };
+            var AIButton = new Button(Content.Load<Texture2D>("sa"), Content.Load<SpriteFont>("buttonFont"))
+            {
+                Position = new Vector2(_width / 2 + 375, _height / 2 + 350),
+                Text = "AI",
+
+            }; var QuitButton = new Button(Content.Load<Texture2D>("sa"), Content.Load<SpriteFont>("ButtonFont"))
+            {
+                Position = new Vector2(_width / 2 + 375, _height / 2 + 550),
+                Text = "Quit",
+
+            };
+            AIButton.Click += AIButton_Click;
+            QuitButton.Click += QuitButton_Click;
+
+            PlayButton.Click += PlayButton_Click;
+            _gameComponents = new List<component>()
+            {
+                PlayButton,
+                AIButton,
+                QuitButton,
+            };
+
             // TODO: use this.Content to load your game content here
+        }
+
+        private void QuitButton_Click(object sender, EventArgs e)
+        {
+            Exit();
+        }
+
+        private void AIButton_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void PlayButton_Click(object sender, EventArgs e)
+        {
+            _state = GameStates.Game;
         }
 
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            LineCheck();
-            bottom = blocks.GroundCollision();
-            RWall = blocks.RWallCollision();
-            LWall = blocks.LWallCollision();
-            bool Timer = SpeedRampUp(gameTime);
-            Delay = DelayInput(gameTime);
-            BlockHit = blocks.BlockCollision();
-            if (BlockHit && BlockList.Count > 1)
+            if(_state == GameStates.Menu)
             {
-                Debug.WriteLine("done" + blocks);
-                GenerateNewBlock();
-            }
-            
-            if (Timer && !bottom)
-            {
-                blocks.Down();
-                DrawBoard();
-            }
-            
-            if (bottom)
-            {
-                GenerateNewBlock();
-                
-            }
-
-            if(Keyboard.GetState().IsKeyDown(Keys.D) )
-            {
-
-                if (Delay&& !RWall )
+                foreach(var component in _gameComponents)
                 {
-
-                    blocks.Right();
-                    DrawBoard();
+                    component.Update(gameTime);
                 }
             }
-            
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
+
+            if (_state == GameStates.Game)
             {
-                if (Delay && !LWall)
+
+                LineCheck();
+                bottom = blocks.GroundCollision();
+                RWall = blocks.RWallCollision();
+                LWall = blocks.LWallCollision();
+                bool Timer = SpeedRampUp(gameTime);
+                Delay = DelayInput(gameTime);
+                BlockHit = blocks.BlockCollision();
+                if (BlockHit && BlockList.Count > 1)
                 {
-                    blocks.Left();
-                    DrawBoard();
-                    
+                    Debug.WriteLine("done" + blocks);
+                    GenerateNewBlock();
                 }
-                
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.W))
-            {
-                if (Delay)
+
+                if (Timer && !bottom)
                 {
-                    blocks.RotateClockwise();
+                    blocks.Down();
                     DrawBoard();
+                }
+
+                if (bottom)
+                {
+                    GenerateNewBlock();
+
+                }
+
+                if (Keyboard.GetState().IsKeyDown(Keys.D))
+                {
+
+                    if (Delay && !RWall)
+                    {
+
+                        blocks.Right();
+                        DrawBoard();
+                    }
+                }
+
+                if (Keyboard.GetState().IsKeyDown(Keys.A))
+                {
+                    if (Delay && !LWall)
+                    {
+                        blocks.Left();
+                        DrawBoard();
+
+                    }
+
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.W))
+                {
+                    if (Delay)
+                    {
+                        blocks.RotateClockwise();
+                        DrawBoard();
+                    }
                 }
             }
             
@@ -217,8 +303,18 @@ namespace tetris
 
             // TODO: Add your drawing code here
 
+            if(_state == GameStates.Menu)
+            {
+                
+                DrawMenu(gameTime);
+                this.IsMouseVisible = true;
+            }
+            if(_state == GameStates.Game)
+            {
+                DrawBoard();
+                this.IsMouseVisible = false;
+            }
             
-            DrawBoard();
             
 
 
@@ -287,6 +383,18 @@ namespace tetris
                 
 
         }
+        public void DrawMenu(GameTime gameTime)
+        {
+
+            _spriteBatch.Begin();
+            _spriteBatch.DrawString(_ScreenTitle, Title, new Vector2(_width / 2 + 375, _height -375), Color.Black);
+            foreach (var component in _gameComponents)
+            {
+                
+                component.Draw(gameTime, _spriteBatch);
+            }
+            _spriteBatch.End();
+        }
         public void GenerateNewBlock()
         {
             currentBoards = previousBoards;
@@ -349,6 +457,7 @@ namespace tetris
                 LineCount = 0;
             }
         }
+        
 
 
     }

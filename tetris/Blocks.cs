@@ -28,10 +28,7 @@ public class Blocks
 
     public virtual void Down()
     {
-        /*board.ChangeBoard(M1[0], M1[1], '0');
-        board.ChangeBoard(M2[0], M2[1], '0');
-        board.ChangeBoard(M3[0], M3[1], '0');
-        board.ChangeBoard(M4[0], M4[1], '0');*/
+        
         SetToZero();
         M1[1] = M1[1] + 1;
         M2[1] = M2[1] + 1;
@@ -47,6 +44,7 @@ public class Blocks
     {
         board = new Board();
         PB = new char[10, 20];
+        board.blankBoard();
         for (int i = 0; i < 10; i++)
         {
             for (int j = 0; j < 20; j++)
@@ -113,16 +111,7 @@ public class Blocks
             {
                 return true;
             }
-            /*if (BottomColumn +1 < 10 && PB[BottomColumn +1, BottomRow+1 ] == 'i')
-            {
-                Debug.WriteLine("hit");
-                return true;
-            }
-            if (BottomColumn - 1 >= 0 && PB[BottomColumn-1, BottomRow + 1] == 'i' )
-            {
-                Debug.WriteLine("done");
-                return true;
-            }*/
+            
             return false;
         }
         return false;
@@ -145,52 +134,30 @@ public class Blocks
         board.ChangeBoard(M3[0], M3[1], CurrentLetter);
         board.ChangeBoard(M4[0], M4[1], CurrentLetter);
     }
-    public void LineMoveDown()
-    {
-
-    }
+    
 
     public void LineMoveDown(int line)
     {
-        /*for (int j = 0; j < 20; j++)
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                if (line <= j)
-                {
-                    if (j + 1 < 20)
-                    {
-                        Debug.WriteLine("worked");
-                        //Debug.WriteLine(" this " + currentGameBoards[col, row - 1]);
-                        board.ChangeBoard(i, j+1, board.GetCurrentPos(i,j));
-                        Debug.WriteLine(board.GetCurrentPos(i,j));
-                    }
-                }
-            }
-        }*/
+        int count = 0;
+        
         for (int i = 0; i < 10; i++)
         {
             board.ChangeBoard(i, line, '0');
-            //Debug.WriteLine("");
-            /*for (int j = 0; j < 20; j++)
-            {
-                //Debug.Write(board.GetCurrentPos(i, j));
-                
-                if (j - 1 >= 0)
-                {
-                    board.ChangeBoard(i, j, board.GetCurrentPos(i, j - 1));
-                }
-                
-            }*/
             
-            if (line - 1 >= 0)
+            count = line;
+            while (count != 0)
             {
-                board.ChangeBoard(i, line, board.GetCurrentPos(i, line - 1));
+                
+                if (count -1 >= 0)
+                {
+                    Debug.WriteLine("run");
+                    Debug.WriteLine("this" + board.GetCurrentPos(i, count - 1));
+                    board.ChangeBoard(i, count, board.GetCurrentPos(i, count -1));
+                }
+                count--;
+                Debug.WriteLine(count);
             }
-            if (line - 1 >= 0)
-            {
-                board.ChangeBoard(i, line-1, '0');
-            }
+            
 
         }
 

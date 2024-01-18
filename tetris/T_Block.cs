@@ -59,18 +59,18 @@ namespace tetris
         {
             if(State == 0 || State == 3)
             {
-                BottomColumn = M3[0];
-                BottomRow = M3[1];
+                BottomColumn = M3[0] +1;
+                BottomRow = M3[1] +1;
             }
             if (State == 1)
             {
-                BottomColumn = M4[0];
-                BottomRow = M4[1];
+                BottomColumn = M4[0] +1;
+                BottomRow = M4[1] + 1;
             }
             if(State == 2)
             {
-                BottomColumn = M1[0];
-                BottomRow = M1[1];
+                BottomColumn = M1[0] + 1;
+                BottomRow = M1[1] + 1;
             }
             
             return base.RWallCollision();
@@ -79,18 +79,18 @@ namespace tetris
         {
             if(State == 0 || State == 1)
             {
-                BottomColumn = M1[0];
-                BottomRow = M1[1];
+                BottomColumn = M1[0]-1;
+                BottomRow = M1[1]-1;
             }
             if(State == 2)
             {
-                BottomColumn = M3[0];
-                BottomRow = M3[1];
+                BottomColumn = M3[0]-1;
+                BottomRow = M3[1] - 1;
             }
             if(State == 3)
             {
-                BottomColumn = M4[0];
-                BottomRow = M4[1];
+                BottomColumn = M4[0] - 1;
+                BottomRow = M4[1]-1;
             }
             
             return base.LWallCollision();
@@ -98,7 +98,7 @@ namespace tetris
         public override bool BlockCollision()
         {
             PB = board.GetBoard();
-
+            
             if (!GroundCollision())
             {
                 if (State == 0)
@@ -135,10 +135,12 @@ namespace tetris
         }
         public override void RotateClockwise()
         {
+            
             switch (State)
             {
                 case 0:
                     SetToZero();
+                    Debug.WriteLine(M1[1]);
                     M1[0] = M1[0] + 1;
                     M3[0] = M3[0] - 1;
                     M4[0] = M4[0] + 1;
@@ -146,8 +148,23 @@ namespace tetris
 
                     M1[1] = M1[1] - 2;
                     M2[1] = M2[1] - 1;
+                    PB = board.GetBoard();
 
+                    Debug.WriteLine(M1[1]);
+                    /*if (DirectCollision())
+                    {
+                        SetToZero();
+                        M1[0] = M1[0] - 1;
+                        M3[0] = M3[0] + 1;
+                        M4[0] = M4[0] - 1;
+
+
+                        M1[1] = M1[1] + 2;
+                        M2[1] = M2[1] + 1;
+                        SetToLetter();
+                    }*/
                     SetToLetter();
+                    
                     State = 1;
                     break;
                 case 1:
@@ -161,11 +178,19 @@ namespace tetris
                     M4[1] = M4[1] + 1;
 
                     SetToLetter();
-                    /*Debug.WriteLine("M1 " + M1[0] + ", " + M1[1]);
-                    Debug.WriteLine("M2 " + M2[0] + ", " + M2[1]);///rotation not working
-                    Debug.WriteLine("M3 " + M3[0] + ", " + M3[1]);
-                    Debug.WriteLine("M4 " + M4[0] + ", " + M4[1]);*/
-                    
+                    /*if (DirectCollision())
+                    {
+                        SetToZero();
+                        M1[0] = M1[0] - 1;
+                        M3[0] = M3[0] + 1;
+                        M4[0] = M4[0] + 1;
+
+                        M1[1] = M1[1] - 1;
+                        M3[1] = M3[1] + 1;
+                        M4[1] = M4[1] - 1;
+                        SetToLetter();
+                    }*/
+
                     State = 2;
                     break;
                 case 2:
@@ -180,8 +205,21 @@ namespace tetris
                     M3[1] = M3[1] - 1;
                     M4[1] = M4[1] - 1;
                     SetToLetter();
-                    
-                    State = 3;
+                    /*if (DirectCollision())
+                    {
+                        SetToZero();
+                        M1[0] = M1[0] + 1;
+                        M3[0] = M3[0] - 1;
+                        M4[0] = M4[0] + 1;
+
+
+                        M1[1] = M1[1] - 1;
+                        M3[1] = M3[1] + 1;
+                        M4[1] = M4[1] + 1;
+                        SetToLetter();
+                    }*/
+
+                        State = 3;
                     break;
                 case 3:
                     SetToZero();
@@ -192,10 +230,33 @@ namespace tetris
                     M2[1] = M2[1] + 1;
                     M3[1] = M3[1] + 2;
                     SetToLetter();
-                    
+                    /*if (DirectCollision())
+                    {
+                        SetToZero();
+                        M1[0] = M1[0] + 1;
+                        M3[0] = M3[0] - 1;
+                        M4[0] = M4[0] - 1;
+
+                        M2[1] = M2[1] - 1;
+                        M3[1] = M3[1] - 2;
+                        SetToLetter();
+                    }*/
                     State = 0;
                     break;
             }
+        }
+        public bool DirectCollision()
+        {
+            PB = board.GetBoard();
+            if (!GroundCollision())
+            {
+
+                if (PB[M1[0], M1[1]] != '0' || PB[M2[0], M2[1]] != '0' || PB[M3[0], M3[1]] != '0' || PB[M4[0], M4[1]] != '0')
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

@@ -56,13 +56,13 @@ namespace tetris
         {
             if(State == 0 || State == 3)
             {
-                BottomColumn = M4[0];
-                BottomRow = M4[1];
+                BottomColumn = M4[0] + 1;
+                BottomRow = M4[1] + 1;
             }
             if(State == 1 || State == 2)
             {
-                BottomColumn = M1[0];
-                BottomRow = M1[1];
+                BottomColumn = M1[0] +1;
+                BottomRow = M1[1] + 1;
             }
            
             return base.RWallCollision();
@@ -71,13 +71,13 @@ namespace tetris
         {
             if(State == 0 || State ==3)
             {
-                BottomColumn = M1[0];
-                BottomRow = M1[1];
+                BottomColumn = M1[0] - 1;
+                BottomRow = M1[1] - 1;
             }
             if(State == 1 || State == 2)
             {
-                BottomColumn = M4[0];
-                BottomRow = M4[1];
+                BottomColumn = M4[0] - 1;
+                BottomRow = M4[1] -1;
             }
             
             return base.LWallCollision();

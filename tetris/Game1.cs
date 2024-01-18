@@ -28,7 +28,8 @@ namespace tetris
         {
             Menu,
             Game,
-            Pause
+            Pause,
+            Ai
         }
         private GameStates _state;
         private SpriteFont _font;
@@ -51,8 +52,8 @@ namespace tetris
         public S_Block S_Block = new S_Block();
         public Z_Block Z_Block = new Z_Block();
 
-
-        private Vector2 _velocity;
+        public GameAi AI = new GameAi();
+        //private Vector2 _velocity;
 
         public char[,] currentBoards;
         public char[,] previousBoards;
@@ -61,12 +62,12 @@ namespace tetris
         private float TimeElapsed;
         private bool Displayed = false;
 
-        private bool OutOfBounds;
+       // private bool OutOfBounds;
 
         public int _height = 0;
         public int _width = 0;
 
-        public int _spawnLocation = 0;
+       // public int _spawnLocation = 0;
 
         private float count = 0;
 
@@ -76,16 +77,12 @@ namespace tetris
         public bool Delay = true;
 
         public float Count { get => count; set => count = value; }
-        public int SpawnLocation { get => _spawnLocation; set => _spawnLocation = value; }
+        //public int SpawnLocation { get => _spawnLocation; set => _spawnLocation = value; }
 
         public bool bottom;
         public bool LWall;
         public bool RWall;
         public bool BlockHit;
-
-        private MouseState oldState;
-        public event EventHandler Click;
-        public Rectangle Rectangle { get; set; }
 
         public List<Blocks> BlockList = new List<Blocks>();
 
@@ -154,11 +151,11 @@ namespace tetris
             // TODO: Add your initialization logic here
             //board.blankBoard();
             //I_Block.StarPosition();
-            //blocks = T_Block;
-            //blocks.StarPosition();
+            blocks = T_Block;
+            blocks.StarPosition();
             IsMouseVisible = true;
             _state = GameStates.Menu;
-            RanBlock();
+            //RanBlock();
             currentBoards = new char[10,20];
             BlockList.Add(blocks);
             base.Initialize();
@@ -211,7 +208,9 @@ namespace tetris
 
         private void AIButton_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            _state = GameStates.Ai;
+            blocks = T_Block;
+            blocks.StarPosition();
         }
 
         private void PlayButton_Click(object sender, EventArgs e)
@@ -230,22 +229,18 @@ namespace tetris
                     component.Update(gameTime);
                 }
             }
-
-            if (_state == GameStates.Game)
+            if(_state == GameStates.Ai)
             {
-
+                AI.block = blocks;
+                AI.SimulateMove();
                 LineCheck();
                 bottom = blocks.GroundCollision();
                 RWall = blocks.RWallCollision();
                 LWall = blocks.LWallCollision();
                 bool Timer = SpeedRampUp(gameTime);
                 Delay = DelayInput(gameTime);
-                BlockHit = blocks.BlockCollision();
-                if (BlockHit && BlockList.Count > 1)
-                {
-                    Debug.WriteLine("done" + blocks);
-                    GenerateNewBlock();
-                }
+
+
 
                 if (Timer && !bottom)
                 {
@@ -288,6 +283,74 @@ namespace tetris
                         DrawBoard();
                     }
                 }
+                BlockHit = blocks.BlockCollision();
+                if (BlockHit && BlockList.Count > 1)
+                {
+                    Debug.WriteLine(blocks);
+                    GenerateNewBlock();
+                }
+            
+            }
+
+            if (_state == GameStates.Game)
+            {
+
+                LineCheck();
+                bottom = blocks.GroundCollision();
+                RWall = blocks.RWallCollision();
+                LWall = blocks.LWallCollision();
+                bool Timer = SpeedRampUp(gameTime);
+                Delay = DelayInput(gameTime);
+                
+                
+
+                if (Timer && !bottom)
+                {
+                    blocks.Down();
+                    DrawBoard();
+                }
+
+                if (bottom)
+                {
+                    GenerateNewBlock();
+
+                }
+
+                if (Keyboard.GetState().IsKeyDown(Keys.D))
+                {
+                    
+                    if (Delay && !RWall)
+                    {
+                        
+                        blocks.Right();
+                        DrawBoard();
+                    }
+                }
+
+                if (Keyboard.GetState().IsKeyDown(Keys.A))
+                {
+                    if (Delay && !LWall)
+                    {
+                        blocks.Left();
+                        DrawBoard();
+
+                    }
+
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.W))
+                {
+                    if (Delay)
+                    {
+                        blocks.RotateClockwise();
+                        DrawBoard();
+                    }
+                }
+                BlockHit = blocks.BlockCollision();
+                if (BlockHit && BlockList.Count > 1)
+                {
+                    Debug.WriteLine(blocks);
+                    GenerateNewBlock();
+                }
             }
             
             
@@ -313,6 +376,11 @@ namespace tetris
             {
                 DrawBoard();
                 this.IsMouseVisible = false;
+            }
+            if(_state == GameStates.Ai) 
+            {
+                DrawBoard();
+                this.IsMouseVisible = false;    
             }
             
             
@@ -399,9 +467,9 @@ namespace tetris
         {
             currentBoards = previousBoards;
 
-            //blocks = new T_Block();
-            //BlockList.Add(blocks);
-            RanBlock();
+            blocks = new T_Block();
+            BlockList.Add(blocks);
+            //RanBlock();
             blocks.board.currentGameBoards = currentBoards;
             blocks.StarPosition();
             DrawBoard();

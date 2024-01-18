@@ -48,15 +48,15 @@ public class O_Block: Blocks
     }
     public override bool RWallCollision()
     {
-        BottomRow = M4[1];
-        BottomColumn = M4[0];
+        BottomRow = M4[1]+1;
+        BottomColumn = M4[0]+1;
         PB = board.currentGameBoards;
         return base.RWallCollision();
     }
     public override bool LWallCollision()
     {
-        BottomRow = M3[1];
-        BottomColumn = M3[0]; 
+        BottomRow = M3[1]-1;
+        BottomColumn = M3[0]-1; 
         PB = board.currentGameBoards;
         return base.LWallCollision();
     }

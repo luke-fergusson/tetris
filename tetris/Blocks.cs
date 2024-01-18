@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using tetris;
+﻿using System.Diagnostics;
 
-public class Blocks 
+public class Blocks
 {
     public Board board { get; set; }
     public int BottomRow;
@@ -36,11 +25,11 @@ public class Blocks
         M4[1] = M4[1] + 1;
         SetToLetter();
     }
-    public virtual void StarPosition() 
+    public virtual void StarPosition()
     {
         SetToLetter();
-    }   
-    public Blocks() 
+    }
+    public Blocks()
     {
         board = new Board();
         PB = new char[10, 20];
@@ -81,17 +70,27 @@ public class Blocks
     }
     public virtual bool RWallCollision()
     {
-        if (BottomColumn == 9)
+        if (BottomColumn-1 == 9)
         {
             return true;
         }
-        
-        
+        PB = board.GetBoard();
+        if (PB[BottomColumn, BottomRow-1] != '0')
+        {
+            return true;
+        }
+
+
         return false;
     }
     public virtual bool LWallCollision()
     {
-        if (BottomColumn == 0)
+        if (BottomColumn+1 == 0)
+        {
+            return true;
+        }
+        PB = board.GetBoard();
+        if (PB[BottomColumn, BottomRow+1] != '0')
         {
             return true;
         }
@@ -99,19 +98,20 @@ public class Blocks
     }
     public virtual bool BlockCollision()
     {
+        
         if (!GroundCollision())
         {
-            
-            if (PB[BottomColumn, BottomRow+1] != '0')
+
+            if (PB[BottomColumn, BottomRow + 1] != '0')
             {
-                
+
                 return true;
             }
-            if(PB[RColumn-1, RRow+1] != '0')
+            if (PB[RColumn - 1, RRow + 1] != '0')
             {
                 return true;
             }
-            
+
             return false;
         }
         return false;
@@ -120,48 +120,49 @@ public class Blocks
     {
 
     }
-    public void SetToZero()
+    public virtual void SetToZero()
     {
         board.ChangeBoard(M1[0], M1[1], '0');
         board.ChangeBoard(M2[0], M2[1], '0');
         board.ChangeBoard(M3[0], M3[1], '0');
         board.ChangeBoard(M4[0], M4[1], '0');// replacing previous poistion with 0's 
     }
-    public void SetToLetter()
+    public virtual void SetToLetter()
     {
         board.ChangeBoard(M1[0], M1[1], CurrentLetter);
         board.ChangeBoard(M2[0], M2[1], CurrentLetter);
         board.ChangeBoard(M3[0], M3[1], CurrentLetter);
         board.ChangeBoard(M4[0], M4[1], CurrentLetter);
     }
-    
+
 
     public void LineMoveDown(int line)
     {
         int count = 0;
-        
+
         for (int i = 0; i < 10; i++)
         {
             board.ChangeBoard(i, line, '0');
-            
+
             count = line;
             while (count != 0)
             {
-                
-                if (count -1 >= 0)
+
+                if (count - 1 >= 0)
                 {
                     Debug.WriteLine("run");
                     Debug.WriteLine("this" + board.GetCurrentPos(i, count - 1));
-                    board.ChangeBoard(i, count, board.GetCurrentPos(i, count -1));
+                    board.ChangeBoard(i, count, board.GetCurrentPos(i, count - 1));
                 }
                 count--;
                 Debug.WriteLine(count);
             }
-            
+
 
         }
 
     }
+    
 
 
 

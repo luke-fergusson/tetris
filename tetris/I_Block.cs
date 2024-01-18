@@ -52,25 +52,19 @@ namespace tetris
         }
         public override bool RWallCollision()
         {
-            BottomRow = M4[1];
-            BottomColumn = M4[0];
+            BottomRow = M4[1] +1;
+            BottomColumn = M4[0]+1;
             return base.RWallCollision();
         }
         public override bool LWallCollision()
         {
-            BottomRow = M1[1];
-            BottomColumn = M1[0];
+            BottomRow = M1[1]-1;
+            BottomColumn = M1[0]-1;
             return base.LWallCollision();
         }
         public override bool BlockCollision()
         {
-            /*BottomRow = M4[1];
-            BottomColumn = M4[0];
-            RColumn = 1;
-            RRow = 0;
-            PB = board.GetBoard();
             
-            return base.BlockCollision();*/
 
             PB = board.GetBoard();
             if (!GroundCollision())
@@ -92,14 +86,7 @@ namespace tetris
                         return true;
                     }
                 }
-                /*else if(State == 2)
-                {
-                    if (PB[M1[0], M1[1] + 1] == CurrentLetter)
-                    {
-                        Debug.WriteLine("3");
-                        return true;
-                    }
-                }*/
+                
                 
             }
             return false;
@@ -127,10 +114,7 @@ namespace tetris
                     break;
                 case 1:
                     SetToZero();
-                    /*Debug.WriteLine(M1[0] + ", " + M1[1]);
-                    Debug.WriteLine(M2[0] + ", " + M2[1]);
-                    Debug.WriteLine(M3[0] + ", " + M3[1]);
-                    Debug.WriteLine(M4[0] + ", " + M4[1]);*/
+                   
 
                     M1[0] = M3[0];
                     M2[0] = M3[0];
@@ -140,19 +124,13 @@ namespace tetris
                     M3[1] = M3[1] + 1;
                     M4[1] = M3[1] + 1;
 
-                    /*Debug.WriteLine(M1[0] + ", " + M1[1]);
-                    Debug.WriteLine(M2[0] + ", " + M2[1]);
-                    Debug.WriteLine(M3[0] + ", " + M3[1]);
-                    Debug.WriteLine(M4[0] + ", " + M4[1]);*/
+                   
                     SetToLetter();
                     State = 2;
                     break;
                 case 2:
                     SetToZero();
-                    /*Debug.WriteLine(M1[0] + ", " + M1[1]);
-                    Debug.WriteLine(M2[0] + ", " + M2[1]);
-                    Debug.WriteLine(M3[0] + ", " + M3[1]);
-                    Debug.WriteLine(M4[0] + ", " + M4[1]);*/
+                 
 
                     M1[0] = M3[0] -2;
                     M2[0] = M3[0] - 1;
@@ -162,10 +140,7 @@ namespace tetris
                     M2[1] = M3[1];
                     M4[1] = M3[1];
 
-                    /*Debug.WriteLine(M1[0] + ", " + M1[1]);
-                    Debug.WriteLine(M2[0] + ", " + M2[1]);
-                    Debug.WriteLine(M3[0] + ", " + M3[1]);
-                    Debug.WriteLine(M4[0] + ", " + M4[1]);*/
+                    
                     SetToLetter();
                     State = 0;
                     break;

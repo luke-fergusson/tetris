@@ -151,6 +151,7 @@ namespace tetris
             // TODO: Add your initialization logic here
             //board.blankBoard();
             //I_Block.StarPosition();
+            previousBoards = blocks.board.GetBoard();
             blocks = T_Block;
             blocks.StarPosition();
             IsMouseVisible = true;
@@ -231,15 +232,18 @@ namespace tetris
             }
             if(_state == GameStates.Ai)
             {
+                int numberOfMoves = 0;
+                int HorizontalMove;
                 AI.block = blocks;
                 AI.SimulateMove();
+                HorizontalMove = AI.Best();
                 LineCheck();
                 bottom = blocks.GroundCollision();
                 RWall = blocks.RWallCollision();
                 LWall = blocks.LWallCollision();
                 bool Timer = SpeedRampUp(gameTime);
                 Delay = DelayInput(gameTime);
-
+                
 
 
                 if (Timer && !bottom)
@@ -254,7 +258,7 @@ namespace tetris
 
                 }
 
-                if (Keyboard.GetState().IsKeyDown(Keys.D))
+                while (numberOfMoves != HorizontalMove)
                 {
 
                     if (Delay && !RWall)
@@ -263,6 +267,7 @@ namespace tetris
                         blocks.Right();
                         DrawBoard();
                     }
+                    numberOfMoves++;
                 }
 
                 if (Keyboard.GetState().IsKeyDown(Keys.A))
@@ -465,6 +470,7 @@ namespace tetris
         }
         public void GenerateNewBlock()
         {
+            
             currentBoards = previousBoards;
 
             blocks = new T_Block();

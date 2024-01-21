@@ -152,7 +152,7 @@ namespace tetris
             //board.blankBoard();
             //I_Block.StarPosition();
             previousBoards = blocks.board.GetBoard();
-            blocks = T_Block;
+            blocks = S_Block;
             blocks.StarPosition();
             IsMouseVisible = true;
             _state = GameStates.Menu;
@@ -210,8 +210,7 @@ namespace tetris
         private void AIButton_Click(object sender, EventArgs e)
         {
             _state = GameStates.Ai;
-            blocks = T_Block;
-            blocks.StarPosition();
+            GenerateNewBlock();
         }
 
         private void PlayButton_Click(object sender, EventArgs e)
@@ -221,6 +220,7 @@ namespace tetris
 
         protected override void Update(GameTime gameTime)
         {
+           
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             if(_state == GameStates.Menu)
@@ -234,8 +234,9 @@ namespace tetris
             {
                 int numberOfMoves = 0;
                 int HorizontalMove;
-                AI.block = blocks;
-                AI.SimulateMove();
+                Type BlockType = blocks.GetType();
+                Debug.WriteLine(blocks);
+                AI.SimulateMove(BlockType);
                 HorizontalMove = AI.Best();
                 LineCheck();
                 bottom = blocks.GroundCollision();
@@ -243,13 +244,13 @@ namespace tetris
                 LWall = blocks.LWallCollision();
                 bool Timer = SpeedRampUp(gameTime);
                 Delay = DelayInput(gameTime);
-                
 
 
-                if (Timer && !bottom)
+                if (!bottom && Timer)
                 {
+                    
                     blocks.Down();
-                    DrawBoard();
+                    DrawBoard();  
                 }
 
                 if (bottom)
@@ -258,14 +259,15 @@ namespace tetris
 
                 }
 
-                while (numberOfMoves != HorizontalMove)
+                while (numberOfMoves < HorizontalMove)
                 {
 
-                    if (Delay && !RWall)
+                    if (!RWall)
                     {
-
                         blocks.Right();
                         DrawBoard();
+                        
+
                     }
                     numberOfMoves++;
                 }
@@ -473,7 +475,7 @@ namespace tetris
             
             currentBoards = previousBoards;
 
-            blocks = new T_Block();
+            blocks = new S_Block();
             BlockList.Add(blocks);
             //RanBlock();
             blocks.board.currentGameBoards = currentBoards;

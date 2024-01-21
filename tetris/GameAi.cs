@@ -17,13 +17,14 @@ namespace tetris
         public int ClosestToWall { get; set; }
     }
 
-    public class GameAi : Blocks
+    public class GameAi : Blocks 
     {
-        public Blocks block;
+        public Blocks currentBlock;
 
         private int highestRow = 20;
         public char[,] simBoard;
         public List<BestMove> moves = new List<BestMove>();
+        
         
 
         public GameAi()
@@ -53,35 +54,78 @@ namespace tetris
             simBoard[M3[0], M3[1]] = CurrentLetter;
             simBoard[M4[0], M4[1]] = CurrentLetter;
         }
-        public void SimulateMove()
+        public override bool GroundCollision()
         {
-            simBoard = block.board.GetBoard();
-            int count;
-
-            //T_block
-            
-            if (block is T_Block TB)
+            if (M1[1] +1 == 19)
             {
-                CurrentLetter = TB.CurrentLetter;
+                return true;
+            }
+            return false;
+        }
+        public void newDown()
+        {
+            SetToZero();
+            M1[1] = M1[1] + 1;
+            M2[1] = M2[1] + 1;
+            M3[1] = M3[1] + 1;
+            M4[1] = M4[1] + 1;
+            SetToLetter();
+        }
+        public override void Right()
+        {
+            SetToZero();
+            M1[0] = M1[0] + 1;
+            M2[0] = M2[0] + 1;
+            M3[0] = M3[0] + 1;
+            M4[0] = M4[0] + 1;
+            SetToLetter();
+        }
+        public override void Left()
+        {
+            SetToZero();
+            M1[0] = M1[0] - 1;
+            M2[0] = M2[0] - 1;
+            M3[0] = M3[0] - 1;
+            M4[0] = M4[0] - 1;
+            SetToLetter();
+        }
+        public void SimulateMove(Type block)
+        {
+            
+            simBoard = board.GetBoard();
+            int count;
+            
+            //S_block
+            
+            if (block.FullName == "tetris.S_Block")
+            {
+                currentBlock = new S_Block();
+
+                M1 = currentBlock.M1;
+                M2 = currentBlock.M2;
+                M3 = currentBlock.M3;
+                M4 = currentBlock.M4;
+                CurrentLetter = currentBlock.CurrentLetter;
                 
-                if (TB.State == 0)
+                if (currentBlock.State == 0)
                 {
-                    for (int i = 1; i <= 9-TB.M3[0]; i++)
+                    for (int i = 1; i <= 9-currentBlock.M3[0]; i++)
                     {
                         count = 0;
                         while(count < i)
                         {
-                            TB.Right();
+                            Right();
                             count++;
                         }
                         
-                        while(!TB.GroundCollision() || TB.BlockCollision())
+                        while(!currentBlock.GroundCollision() && !currentBlock.BlockCollision())
                         {
-                            TB.Down();
+                            
+                            newDown();
                         }
 
-                        moves.Add( new BestMove { HorizontalMovement = count + 1, RotationState = TB.State, HighestPoint = Highest(), ClosestToWall = DistanceToWall() });
-                        simBoard = block.board.GetBoard();
+                        moves.Add( new BestMove { HorizontalMovement = count + 1, RotationState = currentBlock.State, HighestPoint = Highest(), ClosestToWall = DistanceToWall() });
+                        simBoard = currentBlock.board.GetBoard();
                     }
                 }
             }
@@ -133,9 +177,11 @@ namespace tetris
         }
         public int Best()
         {
-            BestMove HPoint = moves.OrderByDescending(Top  => Top.HighestPoint).ThenBy(Top => Top.ClosestToWall).First();//highest point on the board
+            BestMove HPoint = moves.OrderByDescending(Top  => Top.HighestPoint).ThenBy(Top => Top.ClosestToWall).FirstOrDefault();//highest point on the board
             
             return HPoint.HorizontalMovement;
         }
+        
+        
     }
 }

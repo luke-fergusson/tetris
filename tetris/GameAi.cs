@@ -124,27 +124,46 @@ namespace tetris
                             newDown();
                         }
 
+                        simBoard = board.GetBoard();
                         moves.Add( new BestMove { HorizontalMovement = count + 1, RotationState = currentBlock.State, HighestPoint = Highest(), ClosestToWall = DistanceToWall() });
-                        simBoard = currentBlock.board.GetBoard();
                     }
+                    while (!currentBlock.GroundCollision() && !currentBlock.BlockCollision())
+                    {
+                        newDown();
+                    }
+
+                    simBoard = board.GetBoard();
+                    moves.Add(new BestMove { HorizontalMovement = 0, RotationState = currentBlock.State, HighestPoint = Highest(), ClosestToWall = DistanceToWall() });
+
                 }
+                
             }
             
         }
         public int Highest()
         {
+            highestRow = -1;
+            for (int j = 0; j < 20; j++)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    if (simBoard[i, j] != '0')
+                    {
+                        if (j >= highestRow)
+                        {
+                            highestRow = j;
+                            Debug.WriteLine(highestRow);
+                        }
+                    }
+                }
+            }
             for (int i = 0; i < 10; i++)
             {
                 for (int j = 0; j < 20; j++)
                 {
-                    if (simBoard[i, j] != '0')
-                    {
-                        if (j <= highestRow)
-                        {
-                            highestRow = j;
-                        }
-                    }
+                    Debug.Write(simBoard[i, j] + " ");
                 }
+                Debug.WriteLine(""); // Move to the next row
             }
             return highestRow;
         }
@@ -163,6 +182,7 @@ namespace tetris
                         LWall = LWall + i;
                         if(RWall < LWall)
                         {
+                            Debug.WriteLine(RWall);
                             return RWall;
                         }
                         else
@@ -177,7 +197,18 @@ namespace tetris
         }
         public int Best()
         {
-            BestMove HPoint = moves.OrderByDescending(Top  => Top.HighestPoint).ThenBy(Top => Top.ClosestToWall).FirstOrDefault();//highest point on the board
+            List<BestMove> HPointList = new List<BestMove>();
+            BestMove HPoint;
+            HPoint = moves.OrderByDescending(Top => Top.HighestPoint).FirstOrDefault(); //.ThenBy(Top => Top.ClosestToWall).FirstOrDefault();//highest point on the board
+
+            foreach(BestMove bestMove in moves)
+            {
+                if(HPoint.HighestPoint == bestMove.HighestPoint)
+                {
+                    HPointList.Add(bestMove);
+                }
+            }
+            HPoint = HPointList.OrderBy(Top => Top.ClosestToWall).FirstOrDefault();
             
             return HPoint.HorizontalMovement;
         }

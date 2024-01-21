@@ -89,7 +89,8 @@ namespace tetris
         public Random random = new Random();
         public Queue<int> upComingBlocks = new Queue<int>(4);
 
-
+        public Type BlockType;
+        public int HorizontalMove;
 
         private List<component> _gameComponents;
 
@@ -159,6 +160,10 @@ namespace tetris
             //RanBlock();
             currentBoards = new char[10,20];
             BlockList.Add(blocks);
+            BlockType = blocks.GetType();
+            Debug.WriteLine(blocks);
+            AI.SimulateMove(BlockType);
+            HorizontalMove = AI.Best();
             base.Initialize();
         }
 
@@ -233,11 +238,7 @@ namespace tetris
             if(_state == GameStates.Ai)
             {
                 int numberOfMoves = 0;
-                int HorizontalMove;
-                Type BlockType = blocks.GetType();
-                Debug.WriteLine(blocks);
-                AI.SimulateMove(BlockType);
-                HorizontalMove = AI.Best();
+            
                 LineCheck();
                 bottom = blocks.GroundCollision();
                 RWall = blocks.RWallCollision();
@@ -256,6 +257,10 @@ namespace tetris
                 if (bottom)
                 {
                     GenerateNewBlock();
+                    BlockType = blocks.GetType();
+                    Debug.WriteLine(blocks);
+                    AI.SimulateMove(BlockType);
+                    HorizontalMove = AI.Best();
 
                 }
 
@@ -295,6 +300,10 @@ namespace tetris
                 {
                     Debug.WriteLine(blocks);
                     GenerateNewBlock();
+                    BlockType = blocks.GetType();
+                    Debug.WriteLine(blocks);
+                    AI.SimulateMove(BlockType);
+                    HorizontalMove = AI.Best();
                 }
             
             }

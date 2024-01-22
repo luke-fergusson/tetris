@@ -44,7 +44,11 @@ public class Board
     }
     public void ChangeBoard(int row, int col, char val)
     {
-        currentGameBoards[row, col] = val;
+        if(row <=9 && col <=19) 
+        {
+            currentGameBoards[row, col] = val;
+        }
+        
     }
     
     public char[,] GetBoard()
@@ -56,6 +60,6 @@ public class Board
     {
         return currentGameBoards[col, row];
     }
-   
+  
 
 }

@@ -73,7 +73,7 @@ namespace tetris
 
         private float delay = 0;
         private float totalDelay;
-
+        private int Totalnum = 0;
         public bool Delay = true;
 
         public float Count { get => count; set => count = value; }
@@ -93,6 +93,8 @@ namespace tetris
         public int HorizontalMove;
 
         private List<component> _gameComponents;
+
+        private int numberOfMoves = 0;
 
         public Game1()
         {
@@ -161,7 +163,7 @@ namespace tetris
             currentBoards = new char[10,20];
             BlockList.Add(blocks);
             BlockType = blocks.GetType();
-            Debug.WriteLine(blocks);
+
             AI.SimulateMove(BlockType);
             HorizontalMove = AI.Best();
             base.Initialize();
@@ -237,8 +239,13 @@ namespace tetris
             }
             if(_state == GameStates.Ai)
             {
-                int numberOfMoves = 0;
-            
+                DrawBoard();
+
+                //BlockType = blocks.GetType();
+                //Debug.WriteLine(blocks);
+                //AI.SimulateMove(BlockType);
+                //HorizontalMove = AI.Best();
+
                 LineCheck();
                 bottom = blocks.GroundCollision();
                 RWall = blocks.RWallCollision();
@@ -257,22 +264,24 @@ namespace tetris
                 if (bottom)
                 {
                     GenerateNewBlock();
+                    DrawBoard();
                     BlockType = blocks.GetType();
                     Debug.WriteLine(blocks);
+
                     AI.SimulateMove(BlockType);
                     HorizontalMove = AI.Best();
-
+                    Totalnum = 0;
                 }
 
                 while (numberOfMoves < HorizontalMove)
                 {
 
-                    if (!RWall)
+                    if (!RWall && Totalnum != 3)
                     {
                         blocks.Right();
                         DrawBoard();
                         
-
+                        Totalnum ++;
                     }
                     numberOfMoves++;
                 }
@@ -304,6 +313,7 @@ namespace tetris
                     Debug.WriteLine(blocks);
                     AI.SimulateMove(BlockType);
                     HorizontalMove = AI.Best();
+                    Totalnum = 0;
                 }
             
             }

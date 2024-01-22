@@ -24,6 +24,8 @@ public class Blocks
         M3[1] = M3[1] + 1;
         M4[1] = M4[1] + 1;
         SetToLetter();
+        
+        
     }
     public virtual void StarPosition()
     {
@@ -64,8 +66,10 @@ public class Blocks
     {
         if (BottomRow == 19)
         {
+            
             return true;
         }
+        
         return false;
     }
     public virtual bool RWallCollision()
@@ -104,14 +108,17 @@ public class Blocks
 
             if (PB[BottomColumn, BottomRow + 1] != '0')
             {
-
+                for (int i = 0; i < 10; i++)
+                {
+                    
+                }
                 return true;
             }
             if (PB[RColumn - 1, RRow + 1] != '0')
             {
                 return true;
             }
-
+            
             return false;
         }
         return false;
@@ -133,6 +140,10 @@ public class Blocks
         board.ChangeBoard(M2[0], M2[1], CurrentLetter);
         board.ChangeBoard(M3[0], M3[1], CurrentLetter);
         board.ChangeBoard(M4[0], M4[1], CurrentLetter);
+    }
+    public char[,] ReturnCurrentBoard()
+    {
+        return board.GetBoard();
     }
 
 

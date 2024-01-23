@@ -164,7 +164,7 @@ namespace tetris
             BlockList.Add(blocks);
             BlockType = blocks.GetType();
 
-            AI.SimulateMove(BlockType);
+            AI.SimulateMove(BlockType, blocks);
             HorizontalMove = AI.Best();
             base.Initialize();
         }
@@ -268,23 +268,24 @@ namespace tetris
                     BlockType = blocks.GetType();
                     Debug.WriteLine(blocks);
 
-                    AI.SimulateMove(BlockType);
+                    AI.SimulateMove(BlockType, blocks);
                     HorizontalMove = AI.Best();
                     Totalnum = 0;
+                    numberOfMoves = 0;
                 }
 
-                while (numberOfMoves < HorizontalMove)
-                {
+                //while (numberOfMoves < HorizontalMove)
+                //{
 
-                    if (!RWall && Totalnum != 3)
-                    {
-                        blocks.Right();
-                        DrawBoard();
+                //    if (!RWall && Totalnum != 3)
+                //    {
+                //        blocks.Right();
+                //        DrawBoard();
                         
-                        Totalnum ++;
-                    }
-                    numberOfMoves++;
-                }
+                //        Totalnum ++;
+                //    }
+                //    numberOfMoves++;
+                //}
 
                 if (Keyboard.GetState().IsKeyDown(Keys.A))
                 {
@@ -311,9 +312,10 @@ namespace tetris
                     GenerateNewBlock();
                     BlockType = blocks.GetType();
                     Debug.WriteLine(blocks);
-                    AI.SimulateMove(BlockType);
+                    AI.SimulateMove(BlockType, blocks);
                     HorizontalMove = AI.Best();
                     Totalnum = 0;
+                    numberOfMoves = 0;
                 }
             
             }
@@ -498,6 +500,7 @@ namespace tetris
             BlockList.Add(blocks);
             //RanBlock();
             blocks.board.currentGameBoards = currentBoards;
+            AI.board.currentGameBoards = currentBoards;
             blocks.StarPosition();
             DrawBoard();
         }

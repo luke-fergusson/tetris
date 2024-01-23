@@ -257,6 +257,7 @@ namespace tetris
 
         private int highestRow = 20;
         public char[,] simBoard;
+        public char[,] newBoard;
         public List<BestMove> moves = new List<BestMove>();
 
 
@@ -323,17 +324,18 @@ namespace tetris
             M4[0] = M4[0] - 1;
             SetToLetter();
         }
-        public void SimulateMove(Type block)
+        public void SimulateMove(Type block, Blocks currentBlock)
         {
 
             simBoard = board.GetBoard();
+            newBoard = simBoard;
             int count;
 
             //S_block
 
             if (block.FullName == "tetris.S_Block")
             {
-                currentBlock = new S_Block();
+                //currentBlock = new S_Block();
 
                 M1 = currentBlock.M1;
                 M2 = currentBlock.M2;
@@ -358,7 +360,7 @@ namespace tetris
                             newDown();
                         }
 
-                        simBoard = board.GetBoard();
+                        simBoard = newBoard;
                         moves.Add(new BestMove { HorizontalMovement = count + 1, RotationState = currentBlock.State, HighestPoint = Highest(), ClosestToWall = DistanceToWall() });
                     }
                     while (!currentBlock.GroundCollision() && !currentBlock.BlockCollision())
@@ -366,7 +368,7 @@ namespace tetris
                         newDown();
                     }
 
-                    simBoard = board.GetBoard();
+                    simBoard = newBoard;
                     moves.Add(new BestMove { HorizontalMovement = 0, RotationState = currentBlock.State, HighestPoint = Highest(), ClosestToWall = DistanceToWall() });
 
                 }
@@ -376,6 +378,7 @@ namespace tetris
         }
         public int Highest()
         {
+            
             highestRow = -1;
             for (int j = 0; j < 20; j++)
             {
@@ -391,14 +394,14 @@ namespace tetris
                     }
                 }
             }
-            /*for (int i = 0; i < 10; i++)
-            {
-                for (int j = 0; j < 20; j++)
-                {
-                    Debug.Write(simBoard[i, j] + " ");
-                }
-                Debug.WriteLine(""); // Move to the next row
-            }*/
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    for (int j = 0; j < 20; j++)
+            //    {
+            //        Debug.Write(simBoard[i, j] + " ");
+            //    }
+            //    Debug.WriteLine(""); // Move to the next row
+            //}
             return highestRow;
         }
         public int DistanceToWall()
@@ -435,14 +438,14 @@ namespace tetris
             BestMove HPoint;
             HPoint = moves.OrderByDescending(Top => Top.HighestPoint).FirstOrDefault(); //.ThenBy(Top => Top.ClosestToWall).FirstOrDefault();//highest point on the board
 
-            //foreach (BestMove bestMove in moves)
-            //{
-            //    if (HPoint.HighestPoint == bestMove.HighestPoint)
-            //    {
-            //        HPointList.Add(bestMove);
-            //    }
-            //}
-            //HPoint = HPointList.OrderBy(Top => Top.ClosestToWall).FirstOrDefault();
+            foreach (BestMove bestMove in moves)
+            {
+                if (HPoint.HighestPoint == bestMove.HighestPoint)
+                {
+                    HPointList.Add(bestMove);
+                }
+            }
+            HPoint = HPointList.OrderBy(Top => Top.ClosestToWall).FirstOrDefault();
             Debug.WriteLine(" this" + HPoint.HorizontalMovement);
             Debug.WriteLine(" this" + HPoint.HighestPoint);
             return HPoint.HorizontalMovement;

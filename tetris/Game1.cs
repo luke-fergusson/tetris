@@ -152,8 +152,7 @@ namespace tetris
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            //board.blankBoard();
-            //I_Block.StarPosition();
+            
             previousBoards = blocks.board.GetBoard();
             blocks = S_Block;
             blocks.StarPosition();
@@ -164,7 +163,7 @@ namespace tetris
             BlockList.Add(blocks);
             BlockType = blocks.GetType();
 
-            AI.SimulateMove(BlockType, blocks);
+            AI.SimulateMove(BlockType);
             HorizontalMove = AI.Best();
             base.Initialize();
         }
@@ -241,11 +240,6 @@ namespace tetris
             {
                 DrawBoard();
 
-                //BlockType = blocks.GetType();
-                //Debug.WriteLine(blocks);
-                //AI.SimulateMove(BlockType);
-                //HorizontalMove = AI.Best();
-
                 LineCheck();
                 bottom = blocks.GroundCollision();
                 RWall = blocks.RWallCollision();
@@ -253,7 +247,14 @@ namespace tetris
                 bool Timer = SpeedRampUp(gameTime);
                 Delay = DelayInput(gameTime);
 
+                //BlockType = blocks.GetType();
+                //Debug.WriteLine(blocks);
 
+                //AI.SimulateMove(BlockType);
+                //HorizontalMove = AI.Best();
+                //Totalnum = 0;
+                //numberOfMoves = 0;
+                //DrawBoard();
                 if (!bottom && Timer)
                 {
                     
@@ -264,28 +265,29 @@ namespace tetris
                 if (bottom)
                 {
                     GenerateNewBlock();
-                    DrawBoard();
+                   
                     BlockType = blocks.GetType();
                     Debug.WriteLine(blocks);
 
-                    AI.SimulateMove(BlockType, blocks);
+                    AI.SimulateMove(BlockType);
                     HorizontalMove = AI.Best();
                     Totalnum = 0;
                     numberOfMoves = 0;
+                    DrawBoard();
                 }
 
-                //while (numberOfMoves < HorizontalMove)
-                //{
+                while (numberOfMoves < HorizontalMove)
+                {
 
-                //    if (!RWall && Totalnum != 3)
-                //    {
-                //        blocks.Right();
-                //        DrawBoard();
-                        
-                //        Totalnum ++;
-                //    }
-                //    numberOfMoves++;
-                //}
+                    if (!RWall && Totalnum != 3)
+                    {
+                        blocks.Right();
+                        DrawBoard();
+
+                        Totalnum++;
+                    }
+                    numberOfMoves++;
+                }
 
                 if (Keyboard.GetState().IsKeyDown(Keys.A))
                 {
@@ -310,12 +312,14 @@ namespace tetris
                 {
                     Debug.WriteLine(blocks);
                     GenerateNewBlock();
+
                     BlockType = blocks.GetType();
                     Debug.WriteLine(blocks);
-                    AI.SimulateMove(BlockType, blocks);
+                    AI.SimulateMove(BlockType);
                     HorizontalMove = AI.Best();
                     Totalnum = 0;
                     numberOfMoves = 0;
+                    DrawBoard();
                 }
             
             }

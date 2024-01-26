@@ -20,7 +20,7 @@ namespace tetris
     public class GameAi : Blocks
     {
         public Blocks currentBlock;
-        public S_Block S_Block = new S_Block();
+        
 
         private int highestRow = 20;
         public char[,] simBoard;
@@ -51,20 +51,12 @@ namespace tetris
         }
         public override void SetToLetter()
         {
-            try
-            {
-                simBoard[M1[0], M1[1]] = CurrentLetter;
-                simBoard[M2[0], M2[1]] = CurrentLetter;
-                simBoard[M3[0], M3[1]] = CurrentLetter;
-                simBoard[M4[0], M4[1]] = CurrentLetter;
-            }
-            catch
-            {
-                simBoard[M1[0] - 1, M1[1]] = CurrentLetter;
-                simBoard[M2[0] - 1, M2[1]] = CurrentLetter;
-                simBoard[M3[0]-1, M3[1]] = CurrentLetter;
-                simBoard[M4[0] -1, M4[1]] = CurrentLetter;
-            }   
+          
+            simBoard[M1[0], M1[1]] = CurrentLetter;
+            simBoard[M2[0], M2[1]] = CurrentLetter;
+            simBoard[M3[0], M3[1]] = CurrentLetter;
+            simBoard[M4[0], M4[1]] = CurrentLetter;
+              
         }
         public override bool GroundCollision()
         {
@@ -112,7 +104,8 @@ namespace tetris
 
             if (block.FullName == "tetris.S_Block")
             {
-                currentBlock = S_Block;
+                currentBlock = new S_Block();
+                
 
                 M1 = currentBlock.M1;
                 M2 = currentBlock.M2;
@@ -229,6 +222,7 @@ namespace tetris
             moves.Clear();
             return HPoint.HorizontalMovement;
         }
+        
 
 
     }

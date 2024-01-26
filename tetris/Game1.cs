@@ -165,6 +165,7 @@ namespace tetris
 
             AI.SimulateMove(BlockType);
             HorizontalMove = AI.Best();
+            BlockList.Add(AI.currentBlock);
             base.Initialize();
         }
 
@@ -270,6 +271,7 @@ namespace tetris
                     Debug.WriteLine(blocks);
 
                     AI.SimulateMove(BlockType);
+                    BlockList.Add(AI.currentBlock);
                     HorizontalMove = AI.Best();
                     Totalnum = 0;
                     numberOfMoves = 0;
@@ -278,6 +280,7 @@ namespace tetris
 
                 while (numberOfMoves < HorizontalMove)
                 {
+                    Debug.WriteLine(RWall);
 
                     if (!RWall && Totalnum != 3)
                     {
@@ -317,6 +320,7 @@ namespace tetris
                     Debug.WriteLine(blocks);
                     AI.SimulateMove(BlockType);
                     HorizontalMove = AI.Best();
+                    BlockList.Add(AI.currentBlock);
                     Totalnum = 0;
                     numberOfMoves = 0;
                     DrawBoard();

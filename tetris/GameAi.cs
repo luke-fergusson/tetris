@@ -45,23 +45,23 @@ namespace tetris
 
         public override void SetToZero()
         {
-            simBoard[M1[0], M1[1]] = '0';
-            simBoard[M2[0], M2[1]] = '0';
-            simBoard[M3[0], M3[1]] = '0';
-            simBoard[M4[0], M4[1]] = '0';
+            simBoard[currentBlock.M1[0], currentBlock.M1[1]] = '0';
+            simBoard[currentBlock.M2[0], currentBlock.M2[1]] = '0';
+            simBoard[currentBlock.M3[0], currentBlock.M3[1]] = '0';
+            simBoard[currentBlock.M4[0], currentBlock.M4[1]] = '0';
         }
         public override void SetToLetter()
         {
           
-            simBoard[M1[0], M1[1]] = CurrentLetter;
-            simBoard[M2[0], M2[1]] = CurrentLetter;
-            simBoard[M3[0], M3[1]] = CurrentLetter;
-            simBoard[M4[0], M4[1]] = CurrentLetter;
+            simBoard[currentBlock.M1[0], currentBlock.M1[1]] = CurrentLetter;
+            simBoard[currentBlock.M2[0], currentBlock.M2[1]] = CurrentLetter;
+            simBoard[currentBlock.M3[0], currentBlock.M3[1]] = CurrentLetter;
+            simBoard[currentBlock.M4[0], currentBlock.M4[1]] = CurrentLetter;
               
         }
         public override bool GroundCollision()
         {
-            if (M1[1] + 1 == 19)
+            if (currentBlock.M1[1] + 1 == 19)
             {
                 return true;
             }
@@ -70,40 +70,40 @@ namespace tetris
         public override void Down()
         {
             SetToZero();
-            M1[1] = M1[1] + 1;
-            M2[1] = M2[1] + 1;
-            M3[1] = M3[1] + 1;
-            M4[1] = M4[1] + 1;
+            currentBlock.M1[1] = currentBlock.M1[1] + 1;
+            currentBlock.M2[1] = currentBlock.M2[1] + 1;
+            currentBlock.M3[1] = currentBlock.M3[1] + 1;
+            currentBlock.M4[1] = currentBlock.M4[1] + 1;
             SetToLetter();
         }
         public override void Right()
         {
             SetToZero();
-            M1[0] = M1[0] + 1;
-            M2[0] = M2[0] + 1;
-            M3[0] = M3[0] + 1;
-            M4[0] = M4[0] + 1;
+            currentBlock.M1[0] = currentBlock.M1[0] + 1;
+            currentBlock.M2[0] = currentBlock.M2[0] + 1;
+            currentBlock.M3[0] = currentBlock.M3[0] + 1;
+            currentBlock.M4[0] = currentBlock.M4[0] + 1;
             SetToLetter();
         }
         public override void Left()
         {
             SetToZero();
-            M1[0] = M1[0] - 1;
-            M2[0] = M2[0] - 1;
-            M3[0] = M3[0] - 1;
-            M4[0] = M4[0] - 1;
+            currentBlock.M1[0] = currentBlock.M1[0] - 1;
+            currentBlock.M2[0] = currentBlock.M2[0] - 1;
+            currentBlock.M3[0] = currentBlock.M3[0] - 1;
+            currentBlock.M4[0] = currentBlock.M4[0] - 1;
             SetToLetter();
         }
-        public void SimulateMove(Type block,char[,] WorkBoard)
+        public void SimulateMove(Type blockName,char[,] WorkBoard, Blocks blocks)
         {
 
-            simBoard = WorkBoard;
+            //simBoard = board.currentGameBoards;
             newBoard = simBoard;
             int count;
 
             //S_block
 
-            if (block.FullName == "tetris.S_Block")
+            if (blockName.FullName == "tetris.S_Block")
             {
                 currentBlock = new S_Block();
                 
@@ -125,21 +125,21 @@ namespace tetris
                             count++;
                         }
 
-                        /*while (!currentBlock.GroundCollision() && !currentBlock.BlockCollision())
+                        while (!currentBlock.GroundCollision() && !currentBlock.BlockCollision())
                         {
 
                             Down();
                             
 
-                        }*/
+                        }
 
                         simBoard = newBoard;
                         moves.Add(new BestMove { HorizontalMovement = count + 1, RotationState = currentBlock.State, HighestPoint = Highest(), ClosestToWall = DistanceToWall() });
                     }
-                    /*while (!currentBlock.GroundCollision() && !currentBlock.BlockCollision())
+                    while (!currentBlock.GroundCollision() && !currentBlock.BlockCollision())
                     {
-                       newDown();
-                    }*/
+                       Down();
+                    }
 
                     simBoard = newBoard;
                     moves.Add(new BestMove { HorizontalMovement = 0, RotationState = currentBlock.State, HighestPoint = Highest(), ClosestToWall = DistanceToWall() });

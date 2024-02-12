@@ -163,10 +163,9 @@ namespace tetris
             BlockList.Add(blocks);
             BlockType = blocks.GetType();
 
-            AI.SimulateMove(BlockType, currentBoards);
+            AI.SimulateMove(BlockType, previousBoards , blocks);
             //AI.SimulateMove(BlockType);
             HorizontalMove = AI.Best();
-            BlockList.Add(AI.currentBlock);
             base.Initialize();
         }
 
@@ -284,7 +283,7 @@ namespace tetris
                     BlockType = blocks.GetType();
                     Debug.WriteLine(blocks);
 
-                    AI.SimulateMove(BlockType, currentBoards);
+                    AI.SimulateMove(BlockType, blocks.board.GetBoard(), blocks);
                     //AI.SimulateMove(BlockType);
                     HorizontalMove = AI.Best();
                     Totalnum = 0;
@@ -319,10 +318,9 @@ namespace tetris
 
                     BlockType = blocks.GetType();
                     Debug.WriteLine(blocks);
-                    AI.SimulateMove(BlockType, currentBoards);
+                    AI.SimulateMove(BlockType, blocks.board.GetBoard(), blocks);
                     //AI.SimulateMove(BlockType);
                     HorizontalMove = AI.Best();
-                    BlockList.Add(AI.currentBlock);
                     Totalnum = 0;
                     numberOfMoves = 0;
                     DrawBoard();
@@ -417,6 +415,7 @@ namespace tetris
             }
             if(_state == GameStates.Ai) 
             {
+
                 DrawBoard();
                 this.IsMouseVisible = false;    
             }
@@ -511,7 +510,7 @@ namespace tetris
             //RanBlock();
             blocks.board.currentGameBoards = currentBoards;
             
-            //AI.board.currentGameBoards = currentBoards;
+            AI.board.currentGameBoards = currentBoards;
             blocks.StarPosition();
             DrawBoard();
         }

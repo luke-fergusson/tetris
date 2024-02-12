@@ -32,6 +32,7 @@ namespace tetris
         public GameAi()
         {
             simBoard = new char[10, 20];
+            newBoard = new char[10, 20];
 
             for (int i = 0; i < 10; i++)
             {
@@ -66,7 +67,7 @@ namespace tetris
             }
             return false;
         }
-        public  void newDown()
+        public override void Down()
         {
             SetToZero();
             M1[1] = M1[1] + 1;
@@ -93,10 +94,10 @@ namespace tetris
             M4[0] = M4[0] - 1;
             SetToLetter();
         }
-        public void SimulateMove(Type block)
+        public void SimulateMove(Type block,char[,] WorkBoard)
         {
 
-            simBoard = board.GetBoard();
+            simBoard = WorkBoard;
             newBoard = simBoard;
             int count;
 
@@ -124,19 +125,21 @@ namespace tetris
                             count++;
                         }
 
-                        while (!currentBlock.GroundCollision() && !currentBlock.BlockCollision())
+                        /*while (!currentBlock.GroundCollision() && !currentBlock.BlockCollision())
                         {
 
-                            newDown();
-                        }
+                            Down();
+                            
+
+                        }*/
 
                         simBoard = newBoard;
                         moves.Add(new BestMove { HorizontalMovement = count + 1, RotationState = currentBlock.State, HighestPoint = Highest(), ClosestToWall = DistanceToWall() });
                     }
-                    while (!currentBlock.GroundCollision() && !currentBlock.BlockCollision())
+                    /*while (!currentBlock.GroundCollision() && !currentBlock.BlockCollision())
                     {
                        newDown();
-                    }
+                    }*/
 
                     simBoard = newBoard;
                     moves.Add(new BestMove { HorizontalMovement = 0, RotationState = currentBlock.State, HighestPoint = Highest(), ClosestToWall = DistanceToWall() });

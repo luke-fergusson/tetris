@@ -163,7 +163,8 @@ namespace tetris
             BlockList.Add(blocks);
             BlockType = blocks.GetType();
 
-            AI.SimulateMove(BlockType);
+            AI.SimulateMove(BlockType, currentBoards);
+            //AI.SimulateMove(BlockType);
             HorizontalMove = AI.Best();
             BlockList.Add(AI.currentBlock);
             base.Initialize();
@@ -262,22 +263,6 @@ namespace tetris
                     blocks.Down();
                     DrawBoard();  
                 }
-
-                if (bottom)
-                {
-                    GenerateNewBlock();
-                   
-                    BlockType = blocks.GetType();
-                    Debug.WriteLine(blocks);
-
-                    AI.SimulateMove(BlockType);
-                    BlockList.Add(AI.currentBlock);
-                    HorizontalMove = AI.Best();
-                    Totalnum = 0;
-                    numberOfMoves = 0;
-                    DrawBoard();
-                }
-
                 while (numberOfMoves < HorizontalMove)
                 {
                     Debug.WriteLine(RWall);
@@ -292,6 +277,22 @@ namespace tetris
                     numberOfMoves++;
                 }
 
+                if (bottom)
+                {
+                    GenerateNewBlock();
+                   
+                    BlockType = blocks.GetType();
+                    Debug.WriteLine(blocks);
+
+                    AI.SimulateMove(BlockType, currentBoards);
+                    //AI.SimulateMove(BlockType);
+                    HorizontalMove = AI.Best();
+                    Totalnum = 0;
+                    numberOfMoves = 0;
+                    DrawBoard();
+                }
+
+                
                 if (Keyboard.GetState().IsKeyDown(Keys.A))
                 {
                     if (Delay && !LWall)
@@ -318,7 +319,8 @@ namespace tetris
 
                     BlockType = blocks.GetType();
                     Debug.WriteLine(blocks);
-                    AI.SimulateMove(BlockType);
+                    AI.SimulateMove(BlockType, currentBoards);
+                    //AI.SimulateMove(BlockType);
                     HorizontalMove = AI.Best();
                     BlockList.Add(AI.currentBlock);
                     Totalnum = 0;
@@ -508,7 +510,8 @@ namespace tetris
             BlockList.Add(blocks);
             //RanBlock();
             blocks.board.currentGameBoards = currentBoards;
-            AI.board.currentGameBoards = currentBoards;
+            
+            //AI.board.currentGameBoards = currentBoards;
             blocks.StarPosition();
             DrawBoard();
         }

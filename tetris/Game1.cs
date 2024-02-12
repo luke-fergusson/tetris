@@ -510,7 +510,7 @@ namespace tetris
             //RanBlock();
             blocks.board.currentGameBoards = currentBoards;
             
-            AI.board.currentGameBoards = currentBoards;
+            
             blocks.StarPosition();
             DrawBoard();
         }

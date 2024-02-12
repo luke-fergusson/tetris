@@ -17,49 +17,55 @@ namespace tetris
         public int ClosestToWall { get; set; }
     }
 
-    public class GameAi : Blocks
+    public class GameAi 
     {
         public Blocks currentBlock;
-        
-
+        public int[] M1;
+        public int[] M2;
+        public int[] M3;
+        public int[] M4;
+        public char CurrentLetter;
         private int highestRow = 20;
-        public char[,] simBoard;
-        public char[,] newBoard;
+        //public char[,] simBoard;
+        //public char[,] newBoard;
+        public Board simBoard = new Board();
+        public Board newBoard = new Board();
         public List<BestMove> moves = new List<BestMove>();
 
 
 
         public GameAi()
         {
-            simBoard = new char[10, 20];
-            newBoard = new char[10, 20];
-
-            for (int i = 0; i < 10; i++)
+            //simBoard = new char[10, 20];
+            //newBoard = new char[10, 20];
+            //simBoard.currentGameBoards = currentBlock.board.GetBoard();
+            newBoard.currentGameBoards = new char[10, 20];
+            /*for (int i = 0; i < 10; i++)
             {
                 for (int j = 0; j < 20; j++)
                 {
                     simBoard[i, j] = '0';
                 }
-            }
+            }*/
         }
 
-        public override void SetToZero()
+        public void SetToZero()
         {
-            simBoard[currentBlock.M1[0], currentBlock.M1[1]] = '0';
-            simBoard[currentBlock.M2[0], currentBlock.M2[1]] = '0';
-            simBoard[currentBlock.M3[0], currentBlock.M3[1]] = '0';
-            simBoard[currentBlock.M4[0], currentBlock.M4[1]] = '0';
+            simBoard.currentGameBoards[currentBlock.M1[0], currentBlock.M1[1]] = '0';
+            simBoard.currentGameBoards[currentBlock.M2[0], currentBlock.M2[1]] = '0';
+            simBoard.currentGameBoards[currentBlock.M3[0], currentBlock.M3[1]] = '0';
+            simBoard.currentGameBoards[currentBlock.M4[0], currentBlock.M4[1]] = '0';
         }
-        public override void SetToLetter()
+        public void SetToLetter()
         {
           
-            simBoard[currentBlock.M1[0], currentBlock.M1[1]] = CurrentLetter;
-            simBoard[currentBlock.M2[0], currentBlock.M2[1]] = CurrentLetter;
-            simBoard[currentBlock.M3[0], currentBlock.M3[1]] = CurrentLetter;
-            simBoard[currentBlock.M4[0], currentBlock.M4[1]] = CurrentLetter;
+            simBoard.currentGameBoards[currentBlock.M1[0], currentBlock.M1[1]] = CurrentLetter;
+            simBoard.currentGameBoards[currentBlock.M2[0], currentBlock.M2[1]] = CurrentLetter;
+            simBoard.currentGameBoards[currentBlock.M3[0], currentBlock.M3[1]] = CurrentLetter;
+            simBoard.currentGameBoards[currentBlock.M4[0], currentBlock.M4[1]] = CurrentLetter;
               
         }
-        public override bool GroundCollision()
+        public bool GroundCollision()
         {
             if (currentBlock.M1[1] + 1 == 19)
             {
@@ -67,7 +73,7 @@ namespace tetris
             }
             return false;
         }
-        public override void Down()
+        public void Down()
         {
             SetToZero();
             currentBlock.M1[1] = currentBlock.M1[1] + 1;
@@ -76,7 +82,7 @@ namespace tetris
             currentBlock.M4[1] = currentBlock.M4[1] + 1;
             SetToLetter();
         }
-        public override void Right()
+        public void Right()
         {
             SetToZero();
             currentBlock.M1[0] = currentBlock.M1[0] + 1;
@@ -85,7 +91,7 @@ namespace tetris
             currentBlock.M4[0] = currentBlock.M4[0] + 1;
             SetToLetter();
         }
-        public override void Left()
+        public void Left()
         {
             SetToZero();
             currentBlock.M1[0] = currentBlock.M1[0] - 1;
@@ -97,8 +103,8 @@ namespace tetris
         public void SimulateMove(Type blockName,char[,] WorkBoard, Blocks blocks)
         {
 
-            //simBoard = board.currentGameBoards;
-            newBoard = simBoard;
+            simBoard.currentGameBoards = (char[,])blocks.board.GetBoard().Clone();
+            newBoard.currentGameBoards = simBoard.currentGameBoards;
             int count;
 
             //S_block
@@ -127,83 +133,101 @@ namespace tetris
 
                         while (!currentBlock.GroundCollision() && !currentBlock.BlockCollision())
                         {
-
                             Down();
-                            
-
                         }
 
-                        simBoard = newBoard;
-                        moves.Add(new BestMove { HorizontalMovement = count + 1, RotationState = currentBlock.State, HighestPoint = Highest(), ClosestToWall = DistanceToWall() });
+                        simBoard.currentGameBoards = newBoard.currentGameBoards;
+                        moves.Add(new BestMove { HorizontalMovement = count + 1, RotationState = currentBlock.State, HighestPoint = M1[1], ClosestToWall = DistanceToWall(M4[0], M1[1]) });
+                        Debug.WriteLine(M1[1]);
                     }
                     while (!currentBlock.GroundCollision() && !currentBlock.BlockCollision())
                     {
-                       Down();
+                        Down();
                     }
 
-                    simBoard = newBoard;
-                    moves.Add(new BestMove { HorizontalMovement = 0, RotationState = currentBlock.State, HighestPoint = Highest(), ClosestToWall = DistanceToWall() });
-
+                    simBoard.currentGameBoards = newBoard.currentGameBoards;
+                    moves.Add(new BestMove { HorizontalMovement = 0, RotationState = currentBlock.State, HighestPoint = M1[1], ClosestToWall = DistanceToWall(M4[0], M1[1]) });
+                    Debug.WriteLine(M1[1]);
                 }
 
             }
 
         }
-        public int Highest()
-        {
+        //public int Highest()
+        //{
 
-            highestRow = -1;
-            for (int j = 0; j < 20; j++)
+        //    highestRow = -1;
+        //    for (int j = 0; j < 20; j++)
+        //    {
+        //        for (int i = 0; i < 10; i++)
+        //        {
+        //            if (simBoard.currentGameBoards[i, j] != '0')
+        //            {
+        //                if (j >= highestRow)
+        //                {
+        //                    highestRow = j;
+        //                    Debug.WriteLine(highestRow);
+        //                }
+        //            }
+        //        }
+        //    }
+        //    //for (int i = 0; i < 10; i++)
+        //    //{
+        //    //    for (int j = 0; j < 20; j++)
+        //    //    {
+        //    //        Debug.Write(simBoard[i, j] + " ");
+        //    //    }
+        //    //    Debug.WriteLine(""); // Move to the next row
+        //    //}
+        //    return highestRow;
+        //}
+        public int DistanceToWall(int DM4, int DM1)
+        {
+            int RWall = 9;
+            int LWall = 0;
+            RWall = RWall - DM4;
+            LWall = LWall + DM1;
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    for (int j = 0; j < 20; j++)
+            //    {
+            //        Debug.Write(simBoard.currentGameBoards[i, j] + " ");
+            //    }
+            //    Debug.WriteLine(""); // Move to the next row
+            //}
+            if (RWall < LWall)
             {
-                for (int i = 0; i < 10; i++)
-                {
-                    if (simBoard[i, j] != '0')
-                    {
-                        if (j >= highestRow)
-                        {
-                            highestRow = j;
-                            Debug.WriteLine(highestRow);
-                        }
-                    }
-                }
+                Debug.WriteLine(RWall);
+                return RWall;
+            }
+            else
+            {
+                return LWall;
             }
             //for (int i = 0; i < 10; i++)
             //{
             //    for (int j = 0; j < 20; j++)
             //    {
-            //        Debug.Write(simBoard[i, j] + " ");
+            //        if (simBoard.currentGameBoards[i, j] != '0')
+            //        {
+            //            RWall = RWall - i;
+            //            LWall = LWall + i;
+            //            if (RWall < LWall)
+            //            {
+            //                Debug.WriteLine(RWall);
+            //                return RWall;
+            //            }
+            //            else
+            //            {
+            //                return LWall;
+            //            }
+            //        }
+
             //    }
-            //    Debug.WriteLine(""); // Move to the next row
             //}
-            return highestRow;
-        }
-        public int DistanceToWall()
-        {
-            int RWall = 9;
-            int LWall = 0;
+            //return 0;
 
-            for (int i = 0; i < 10; i++)
-            {
-                for (int j = 0; j < 20; j++)
-                {
-                    if (simBoard[i, j] != '0')
-                    {
-                        RWall = RWall - i;
-                        LWall = LWall + i;
-                        if (RWall < LWall)
-                        {
-                            Debug.WriteLine(RWall);
-                            return RWall;
-                        }
-                        else
-                        {
-                            return LWall;
-                        }
-                    }
 
-                }
-            }
-            return 0;
         }
         public int Best()
         {

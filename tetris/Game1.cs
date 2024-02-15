@@ -262,26 +262,40 @@ namespace tetris
                     blocks.Down();
                     DrawBoard();  
                 }
-                while (numberOfMoves < HorizontalMove)
+                if (AI.HPoint.Direction == "Right")
                 {
-                    Debug.WriteLine(RWall);
-
-                    if (!RWall && Totalnum != 3)
+                    while (numberOfMoves < HorizontalMove)
                     {
-                        blocks.Right();
-                        DrawBoard();
 
-                        Totalnum++;
+                        if (!RWall && Totalnum != 3)
+                        {
+                            blocks.Right();
+                            DrawBoard();
+
+                            Totalnum++;
+                        }
+                        numberOfMoves++;
                     }
-                    numberOfMoves++;
                 }
+                if(AI.HPoint.Direction == "Left")
+                {
+                    while(numberOfMoves < HorizontalMove)
+                    {
+                        if(!LWall && Totalnum != 4)
+                        {
+                            blocks.Left();
+                            DrawBoard();
 
+                            Totalnum++;
+                        }
+                        numberOfMoves++;
+                    }
+                }
                 if (bottom)
                 {
                     GenerateNewBlock();
                    
                     BlockType = blocks.GetType();
-                    Debug.WriteLine(blocks);
 
                     AI.SimulateMove(BlockType, blocks.board.GetBoard(), blocks);
                     //AI.SimulateMove(BlockType);

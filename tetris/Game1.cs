@@ -95,6 +95,7 @@ namespace tetris
         private List<component> _gameComponents;
 
         private int numberOfMoves = 0;
+        private int numOfRot = 0;
 
         public Game1()
         {
@@ -154,7 +155,7 @@ namespace tetris
             // TODO: Add your initialization logic here
             
             previousBoards = blocks.board.GetBoard();
-            blocks = S_Block;
+            blocks = T_Block;
             blocks.StarPosition();
             IsMouseVisible = true;
             _state = GameStates.Menu;
@@ -248,14 +249,6 @@ namespace tetris
                 bool Timer = SpeedRampUp(gameTime);
                 Delay = DelayInput(gameTime);
 
-                //BlockType = blocks.GetType();
-                //Debug.WriteLine(blocks);
-
-                //AI.SimulateMove(BlockType);
-                //HorizontalMove = AI.Best();
-                //Totalnum = 0;
-                //numberOfMoves = 0;
-                //DrawBoard();
                 if (!bottom && Timer)
                 {
                     
@@ -302,9 +295,19 @@ namespace tetris
                     HorizontalMove = AI.Best();
                     Totalnum = 0;
                     numberOfMoves = 0;
+                    numOfRot = 0;
                     DrawBoard();
                 }
-
+                if(AI.HPoint.RotationState > 0)
+                {
+                    
+                    while(numOfRot < AI.HPoint.RotationState)
+                    {
+                        blocks.RotateClockwise();
+                        DrawBoard();
+                        numOfRot++;
+                    }
+                }
                 
                 if (Keyboard.GetState().IsKeyDown(Keys.A))
                 {
@@ -337,6 +340,7 @@ namespace tetris
                     HorizontalMove = AI.Best();
                     Totalnum = 0;
                     numberOfMoves = 0;
+                    numOfRot = 0; 
                     DrawBoard();
                 }
             
@@ -519,7 +523,7 @@ namespace tetris
             
             currentBoards = previousBoards;
 
-            blocks = new S_Block();
+            blocks = new T_Block();
             BlockList.Add(blocks);
             //RanBlock();
             blocks.board.currentGameBoards = currentBoards;

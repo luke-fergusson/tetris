@@ -151,18 +151,7 @@ namespace tetris
                     PB = board.GetBoard();
 
                     Debug.WriteLine(M1[1]);
-                    /*if (DirectCollision())
-                    {
-                        SetToZero();
-                        M1[0] = M1[0] - 1;
-                        M3[0] = M3[0] + 1;
-                        M4[0] = M4[0] - 1;
-
-
-                        M1[1] = M1[1] + 2;
-                        M2[1] = M2[1] + 1;
-                        SetToLetter();
-                    }*/
+                  
                     SetToLetter();
                     
                     State = 1;
@@ -178,18 +167,7 @@ namespace tetris
                     M4[1] = M4[1] + 1;
 
                     SetToLetter();
-                    /*if (DirectCollision())
-                    {
-                        SetToZero();
-                        M1[0] = M1[0] - 1;
-                        M3[0] = M3[0] + 1;
-                        M4[0] = M4[0] + 1;
-
-                        M1[1] = M1[1] - 1;
-                        M3[1] = M3[1] + 1;
-                        M4[1] = M4[1] - 1;
-                        SetToLetter();
-                    }*/
+                 
 
                     State = 2;
                     break;
@@ -205,19 +183,7 @@ namespace tetris
                     M3[1] = M3[1] - 1;
                     M4[1] = M4[1] - 1;
                     SetToLetter();
-                    /*if (DirectCollision())
-                    {
-                        SetToZero();
-                        M1[0] = M1[0] + 1;
-                        M3[0] = M3[0] - 1;
-                        M4[0] = M4[0] + 1;
-
-
-                        M1[1] = M1[1] - 1;
-                        M3[1] = M3[1] + 1;
-                        M4[1] = M4[1] + 1;
-                        SetToLetter();
-                    }*/
+                   
 
                         State = 3;
                     break;
@@ -230,17 +196,7 @@ namespace tetris
                     M2[1] = M2[1] + 1;
                     M3[1] = M3[1] + 2;
                     SetToLetter();
-                    /*if (DirectCollision())
-                    {
-                        SetToZero();
-                        M1[0] = M1[0] + 1;
-                        M3[0] = M3[0] - 1;
-                        M4[0] = M4[0] - 1;
-
-                        M2[1] = M2[1] - 1;
-                        M3[1] = M3[1] - 2;
-                        SetToLetter();
-                    }*/
+                  
                     State = 0;
                     break;
             }

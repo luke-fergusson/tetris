@@ -140,7 +140,7 @@ namespace tetris
             {
                 case 0:
                     SetToZero();
-                    Debug.WriteLine(M1[1]);
+                    
                     M1[0] = M1[0] + 1;
                     M3[0] = M3[0] - 1;
                     M4[0] = M4[0] + 1;
@@ -150,7 +150,7 @@ namespace tetris
                     M2[1] = M2[1] - 1;
                     PB = board.GetBoard();
 
-                    Debug.WriteLine(M1[1]);
+                   
                   
                     SetToLetter();
                     

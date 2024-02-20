@@ -155,7 +155,7 @@ namespace tetris
             // TODO: Add your initialization logic here
             
             previousBoards = blocks.board.GetBoard();
-            blocks = T_Block;
+            blocks = I_Block;
             blocks.StarPosition();
             IsMouseVisible = true;
             _state = GameStates.Menu;
@@ -260,7 +260,7 @@ namespace tetris
                     while (numberOfMoves < HorizontalMove)
                     {
 
-                        if (!RWall && Totalnum != 3)
+                        if (!RWall && Totalnum != 6)
                         {
                             blocks.Right();
                             DrawBoard();
@@ -303,6 +303,7 @@ namespace tetris
                     
                     while(numOfRot < AI.HPoint.RotationState)
                     {
+                        blocks.Down();
                         blocks.RotateClockwise();
                         DrawBoard();
                         numOfRot++;
@@ -523,7 +524,7 @@ namespace tetris
             
             currentBoards = previousBoards;
 
-            blocks = new T_Block();
+            blocks = new I_Block();
             BlockList.Add(blocks);
             //RanBlock();
             blocks.board.currentGameBoards = currentBoards;

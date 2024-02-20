@@ -23,13 +23,7 @@ public class Board
     public Board()
 	{       
         currentGameBoards = new char[10, 20];
-        /*for (int i = 0; i < 10; i++)
-        {
-            for (int j = 0; j < 20; j++)
-            {
-                currentGameBoards[i, j] = '0';
-            }
-        }*/
+        
     }
     public void blankBoard()
     {

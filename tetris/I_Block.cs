@@ -12,14 +12,7 @@ namespace tetris
 {
     public class I_Block : Blocks
     {     
-        /*int[] M1 = new int[] {4, 0};
-        int[] M2 = new int[] {4, 1};
-        int[] M3 = new int[] {4, 2};
-        int[] M4 = new int[] {4, 3};
-        int CurrentM1;
-        int CurrentM2;
-        int CurrentM3;
-        int CurrentM4;*/
+     
        
         /*
          *          M1
@@ -69,7 +62,7 @@ namespace tetris
             PB = board.GetBoard();
             if (!GroundCollision())
             {
-                if (State == 1)
+                if (State == 1 )
                 {
 
                     if (PB[M4[0], M4[1] + 1] != '0' || PB[M3[0], M3[1] + 1] != '0' || PB[M2[0], M2[1] + 1] != '0' || PB[M1[0], M1[1] + 1] != '0')

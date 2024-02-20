@@ -226,6 +226,7 @@ namespace tetris
                     if (currentBlock.State == 1)
                     {
                         Down();
+                        Down();
                         RotateClockwiseSBlock();
                         CheckLogicBlock(blockName);
                     }
@@ -266,13 +267,13 @@ namespace tetris
                         RotateClockwiseTBlock();
                         CheckLogicBlock(blockName);
                     }
-                    //if (currentBlock.State == 1)
-                    //{
+                    if (currentBlock.State == 1)
+                    {
 
-                    //    Down();
-                    //    RotateClockwiseTBlock();
-                    //    CheckLogicBlock(blockName);
-                    //}
+                        Down();
+                        RotateClockwiseTBlock();
+                        CheckLogicBlock(blockName);
+                    }
                     //if (currentBlock.State == 2)
                     //{
                     //    Down();
@@ -301,7 +302,7 @@ namespace tetris
                 case 1:
                     SetToZero();
 
-                    M1[0] = M1[0] + 1;
+                    currentBlock.M1[0] = currentBlock.M1[0] + 1;
                     M3[0] = M3[0] - 1;
                     M4[0] = M4[0] + 1;
 
@@ -405,7 +406,7 @@ namespace tetris
 
             return false;
         }
-        public void CheckLogicBlock(Type name)//Different
+        public void CheckLogicBlock(Type name)//same
         {
             int count;
             int leftNum = 0;

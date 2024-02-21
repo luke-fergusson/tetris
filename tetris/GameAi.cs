@@ -27,6 +27,7 @@ namespace tetris
         public Blocks currentBlock;
    
         private int highestRow = 20;
+        private int genNum = 0;
 
         public Board simBoard = new Board();
         public Board newBoard = new Board();
@@ -309,27 +310,71 @@ namespace tetris
                     if (currentBlock.State == 0)
                     {
                         Down();
-                        RotateClockwiseTBlock();
+                        RotateClockwiseIBlock();
                         CheckLogicBlock(blockName);
                     }
-                    //if (currentBlock.State == 1)
-                    //{
+                    if (currentBlock.State == 1)
+                    {
+                        Down();
+                        Down();
+                        RotateClockwiseIBlock();
+                        CheckLogicBlock(blockName);
+                    }
+                    if (currentBlock.State == 2)
+                    {
+                        Down();
+                        Down();
+                        RotateClockwiseIBlock();
+                        CheckLogicBlock(blockName);
+                    }
+                    if (currentBlock.State == 3)
+                    {
+                        Down();
+                        RotateClockwiseIBlock();
+                        CheckLogicBlock(blockName);
+                    }
 
-                    //    Down();
-                    //    RotateClockwiseTBlock();
-                    //    CheckLogicBlock(blockName);
-                    //}
-                    //if (currentBlock.State == 2)
-                    //{
-                    //    Down();
-                    //    Down();
-                    //    RotateClockwiseTBlock();
-                    //    CheckLogicBlock(blockName);
-                    //}
+                }
+
+            }
+            //L_block
+            if (blockName.FullName == "tetris.L_Block")
+            {
+                currentBlock = new L_Block();
+                M1 = (int[])currentBlock.M1.Clone();
+                M2 = (int[])currentBlock.M2.Clone();
+                M3 = (int[])currentBlock.M3.Clone();
+                M4 = (int[])currentBlock.M4.Clone();
+
+                for (int k = 0; k < 4; k++)
+                {
+                    currentBlock.State = k;
+
+
+                    if (currentBlock.State == 0)
+                    {
+                        Down();
+                        RotateClockwiseLBlock();
+                        CheckLogicBlock(blockName);
+                    }
+                    if (currentBlock.State == 1)
+                    {
+
+                        Down();
+                        RotateClockwiseLBlock();
+                        CheckLogicBlock(blockName);
+                    }
+                    if (currentBlock.State == 2)
+                    {
+                        Down();
+                        Down();
+                        RotateClockwiseLBlock();
+                        CheckLogicBlock(blockName);
+                    }
                     //if (currentBlock.State == 3)
                     //{
                     //    Down();
-                    //    RotateClockwiseTBlock();
+                    //    RotateClockwiseLBlock();
                     //    CheckLogicBlock(blockName);
                     //}
 
@@ -357,19 +402,19 @@ namespace tetris
             {
                 case 1:
                     SetToZero();
-                    M1[1] = M1[1] + 1;
-                    M2[1] = M2[1] + 1;
-                    M3[1] = M3[1] + 1;
-                    M4[1] = M4[1] + 1;
+                    M1[1] = M1[1] + 4;
+                    M2[1] = M2[1] + 4;
+                    M3[1] = M3[1] + 4;
+                    M4[1] = M4[1] + 4;
 
+                 
                     M1[0] = M2[0] - 1;
                     M3[0] = M2[0] + 1;
-                    M4[0] = M2[0] + 2;
+                    M4[0] = M2[0] + 2;// rotating clockwise
 
                     M1[1] = M2[1];
                     M3[1] = M2[1];
                     M4[1] = M2[1];
-
                     SetToLetter();
                     break;
                 case 2:
@@ -429,26 +474,26 @@ namespace tetris
 
         public bool GroundCollisionIBlock()// different
         {
-            //if (currentBlock.State == 0 || currentBlock.State == 1 || currentBlock.State == 3)
-            //{
-            //    if (currentBlock.M4[1] == 19)
-            //    {
-            //        return true;
-            //    }
-            //}
-            //else
-            //{
-            //    if (currentBlock.M1[1] == 19)
-            //    {
-            //        return true;
-            //    }
-
-            //}
-
-            if (currentBlock.M4[1] == 19)
+            if (currentBlock.State == 0 || currentBlock.State == 1 || currentBlock.State == 3)
             {
-                return true;
+                if (currentBlock.M4[1] == 19)
+                {
+                    return true;
+                }
             }
+            if(currentBlock.State == 2 )
+            {
+                if (currentBlock.M1[1] == 19)
+                {
+                    return true;
+                }
+                if (currentBlock.M4[1] == 19)
+                {
+                    return true;
+                }
+            }
+
+
             return false;
         }
 
@@ -469,10 +514,10 @@ namespace tetris
             {
                 case 1:
                     SetToZero();
-                    M1[1] = M1[1] +1;
-                    M2[1] = M2[1] + 1;
-                    M3[1] = M3[1] + 1;
-                    M4[1] = M4[1] + 1;
+                    M1[1] = M1[1] +3;
+                    M2[1] = M2[1] + 3;
+                    M3[1] = M3[1] + 3;
+                    M4[1] = M4[1] + 3;
 
                     M1[0] = M1[0] + 1;
                     M3[0] = M3[0] - 1;
@@ -518,7 +563,7 @@ namespace tetris
         }
         public bool BlockCollisionTBlock() // different
         {
-            if (!GroundCollisionSBlock())
+            if (!GroundCollisionTBlock())
             {
                 if (currentBlock.State == 0)
                 {
@@ -585,7 +630,131 @@ namespace tetris
 
             return false;
         }
+        /*
+         * 
+         * 
+         *              L block
+         * 
+         * 
+         * 
+         */
 
+
+        public void RotateClockwiseLBlock() // different
+        {
+            switch (currentBlock.State)
+            {
+                case 1:
+                    SetToZero();
+                    M1[1] = M1[1] + 1;
+                    M2[1] = M2[1] + 1;
+                    M3[1] = M3[1] + 1;
+                    M4[1] = M4[1] + 1;
+
+                    M1[0] = M1[0] + 1;
+                    M3[0] = M3[0] - 1;
+
+                    M1[1] = M1[1] - 2;
+                    M2[1] = M2[1] - 1;
+                    M4[1] = M4[1] + 1;
+
+                    SetToLetter();
+                    break;
+                case 2:
+                    SetToZero();
+
+                    M1[0] = M1[0] + 1;
+                    M3[0] = M3[0] - 1;
+                    M4[0] = M4[0] - 2;
+
+                    M1[1] = M1[1] + 1;
+                    M3[1] = M3[1] - 1;
+                    SetToLetter();
+                    break;
+                case 3:
+                    SetToZero();
+
+                    M1[0] = M1[0] - 1;
+                    M3[0] = M3[0] + 1;
+
+                    M1[1] = M1[1] + 1;
+                    M3[1] = M3[1] - 1;
+                    M4[1] = M4[1] - 2;
+
+                    SetToLetter();
+                    break;
+
+                default:
+                    break;
+
+            }
+        }
+        public bool BlockCollisionLBlock() // different
+        {
+            if (!GroundCollisionLBlock())
+            {
+                if (currentBlock.State == 0)
+                {
+                    if (simBoard.currentGameBoards[currentBlock.M1[0], currentBlock.M1[1] + 1] != '0' || simBoard.currentGameBoards[currentBlock.M2[0], currentBlock.M2[1] + 1] != '0' || simBoard.currentGameBoards[currentBlock.M3[0], currentBlock.M3[1] + 1] != '0')
+                    {
+                        return true;
+                    }
+                }
+                if (currentBlock.State == 1)
+                {
+                    if (currentBlock.M1[1] > 6)
+                    {
+                        if (simBoard.currentGameBoards[currentBlock.M3[0], currentBlock.M3[1] + 1] != '0' || simBoard.currentGameBoards[currentBlock.M4[0], currentBlock.M4[1] + 1] != '0')
+                        {
+                            return true;
+                        }
+                    }
+                }
+                if (currentBlock.State == 2)
+                {
+                    if (simBoard.currentGameBoards[currentBlock.M1[0], currentBlock.M1[1] + 1] != '0' || simBoard.currentGameBoards[currentBlock.M2[0], currentBlock.M2[1] + 1] != '0' || simBoard.currentGameBoards[currentBlock.M4[0], currentBlock.M4[1] + 1] != '0')
+                    {
+                        return true;
+                    }
+                }
+                if (currentBlock.State == 3)
+                {
+                    if (simBoard.currentGameBoards[currentBlock.M1[0], currentBlock.M1[1] + 1] != '0' || simBoard.currentGameBoards[currentBlock.M4[0], currentBlock.M4[1] + 1] != '0')
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public bool GroundCollisionLBlock()// different
+        {
+            if (currentBlock.State == 0 || currentBlock.State == 3)
+            {
+                if (currentBlock.M1[1] == 19)
+                {
+                    return true;
+                }
+            }
+            if (currentBlock.State == 1 || currentBlock.State == 2)
+            {
+                if (currentBlock.M4[1] == 19 || currentBlock.M3[1] == 19 || currentBlock.M1[1] == 19 || currentBlock.M2[1] == 19)
+                {
+                    return true;
+                }
+            }
+            if ( currentBlock.State == 3)
+            {
+                if (currentBlock.M4[1] == 19)
+                {
+                    return true;
+                }
+            }
+
+
+            return false;
+        }
         public void CheckLogicBlock(Type name)//same
         {
             int original = FillGap();
@@ -612,13 +781,37 @@ namespace tetris
                     
                     break;
                 case "tetris.I_Block":
-                    leftNum = 5;
-                    rightNum = 6;
+                    if(currentBlock.State == 0)
+                    {
+                        leftNum = 5;
+                        rightNum = 6;
+                    }
+                    if(currentBlock.State == 1 || currentBlock.State == 3)
+                    {
+                        leftNum = 4;
+                        rightNum = 4;
+                    }
+                    if (currentBlock.State == 2)
+                    {
+                        leftNum = 4;
+                        rightNum = 3;
+                    }
+                    break;
+                case "tetris.L_Block":
+                    if(currentBlock.State == 0 || currentBlock.State == 2 || currentBlock.State == 3)
+                    {
+                        leftNum = 5;
+                        rightNum = 4;
+                    }
+                    if (currentBlock.State == 1)
+                    {
+                        leftNum = 5;
+                        rightNum = 4;
+                    }
                     break;
 
-
             }
-            
+
             for (int i = 0; i < rightNum; i++)
             {
                 count = 0;
@@ -627,14 +820,14 @@ namespace tetris
                     Right();
                     count++;
                 }
-                if(name.FullName == "tetris.S_Block")
+                if (name.FullName == "tetris.S_Block")
                 {
                     while (!GroundCollisionSBlock() && !BlockCollisionSBlock())
                     {
                         Down();
                     }
                 }
-                if(name.FullName == "tetris.T_Block")
+                if (name.FullName == "tetris.T_Block")
                 {
                     while (!GroundCollisionTBlock() && !BlockCollisionTBlock())
                     {
@@ -648,15 +841,22 @@ namespace tetris
                         Down();
                     }
                 }
-                moves.Add(new BestMove { HorizontalMovement = count, RotationState = currentBlock.State, HighestPoint = Highest(), ClosestToWall = DistanceToWall(currentBlock.M4[0], currentBlock.M1[0], "Right"), Direction = "Right", NumOfGaps = CountGaps(), CompleteRows = CompleteRow(), FillHole =  FillGapCheck(original) });
+                if (name.FullName == "tetris.L_Block")
+                {
+                    while (!GroundCollisionLBlock() && !BlockCollisionLBlock())
+                    {
+                        Down();
+                    }
+                }
+                moves.Add(new BestMove { HorizontalMovement = count, RotationState = currentBlock.State, HighestPoint = Highest(), ClosestToWall = DistanceToWall(currentBlock.M4[0], currentBlock.M1[0], "Right"), Direction = "Right", NumOfGaps = CountGaps(), CompleteRows = CompleteRow(), FillHole = FillGapCheck(original) });
 
                 //Debug.WriteLine("M1 " + currentBlock.M1[0] + currentBlock.M1[1]);
                 //Debug.WriteLine("M2 " + currentBlock.M2[0] + currentBlock.M2[1]);
                 //Debug.WriteLine("M3 " + currentBlock.M3[0] + currentBlock.M3[1]);
                 //Debug.WriteLine("M4 " + currentBlock.M4[0] + currentBlock.M4[1]);
 
-                
-                if (currentBlock.State == 5)
+
+                if (currentBlock.State == 3)
                 {
                     for (int k = 0; k < 10; k++)
                     {
@@ -705,8 +905,15 @@ namespace tetris
                         Down();
                     }
                 }
+                if (name.FullName == "tetris.L_Block")
+                {
+                    while (!GroundCollisionLBlock() && !BlockCollisionLBlock())
+                    {
+                        Down();
+                    }
+                }
                 moves.Add(new BestMove { HorizontalMovement = count, RotationState = currentBlock.State, HighestPoint = Highest(), ClosestToWall = DistanceToWall(currentBlock.M4[0], currentBlock.M1[0], "Left"), Direction = "Left", NumOfGaps = CountGaps(), CompleteRows = CompleteRow(), FillHole = FillGapCheck(original) });
-                if (currentBlock.State == 5)
+                if (currentBlock.State == 3)
                 {
                     for (int k = 0; k < 10; k++)
                     {
@@ -736,7 +943,7 @@ namespace tetris
                 {
                     for (int i = 0; i < 10; i++)
                     {
-                        if (simBoard.currentGameBoards[i, j] != '0' && j != 0 && j != 1)
+                        if (simBoard.currentGameBoards[i, j] != '0' && j != 0 && j != 1 && j != 2 && j != 3)
                         {
                             
                             highestRow = j;
@@ -775,15 +982,16 @@ namespace tetris
 
             for (int i = 0; i < 10; i++)
             {
-                if(CurrentRow +1 < 19)
+                if (CurrentRow + 1 < 19)
                 {
                     if (simBoard.currentGameBoards[i, CurrentRow + 1] == '0')
                     {
                         count++;
                     }
                 }
-                   
+
             }
+
             return count;
         }
         
@@ -809,19 +1017,21 @@ namespace tetris
             }
             return false;
         }
+
         public int FillGap()
         {
-            int CurrentRow = Highest();
+           
             int count = 0;
             for (int i = 0; i < 10; i++)
             {
-                if (CurrentRow + 1 < 19)
+                for (int j = 0; j < 19; j++)
                 {
-                    if (simBoard.currentGameBoards[i, CurrentRow] == '0')
+
+                    if (simBoard.currentGameBoards[i, j] == '0')
                     {
                         if (i + 1 < 10 && i - 1 > 0)
                         {
-                            if (simBoard.currentGameBoards[i + 1, CurrentRow] != '0' && simBoard.currentGameBoards[i - 1, CurrentRow] != '0')
+                            if (simBoard.currentGameBoards[i + 1, j] != '0' && simBoard.currentGameBoards[i - 1, j] != '0')
                             {
                                 count++;
                             }
@@ -829,21 +1039,21 @@ namespace tetris
 
                         if (i == 9)
                         {
-                            if (simBoard.currentGameBoards[i, CurrentRow] == '0' && simBoard.currentGameBoards[i - 1, CurrentRow] != '0')
+                            if (simBoard.currentGameBoards[i, j] == '0' && simBoard.currentGameBoards[i - 1, j] != '0')
                             {
                                 count++;
                             }
                         }
                         if (i == 0)
                         {
-                            if (simBoard.currentGameBoards[i, CurrentRow] == '0' && simBoard.currentGameBoards[i + 1, CurrentRow] != '0')
+                            if (simBoard.currentGameBoards[i, j] == '0' && simBoard.currentGameBoards[i + 1, j] != '0')
                             {
                                 count++;
                             }
                         }
 
-
                     }
+                    
                 }
 
 
@@ -878,10 +1088,16 @@ namespace tetris
                 }
 
             }
-            if(currentBlock.CurrentLetter == 's')
+
+            if (currentBlock.CurrentLetter != 't')
             {
+                
                 foreach (BestMove move in moves)
                 {
+                    if(currentBlock.CurrentLetter == 'l' && currentBlock.State == 3 )
+                    {
+                        break;
+                    }
                     if (move.FillHole == true)
                     {
                         HPointList.Add(move);
@@ -898,8 +1114,10 @@ namespace tetris
 
                 }
             }
+            
             if (HPoint.CompleteRows == true)
             {
+               
                 HPoint = HPointList.OrderByDescending(Top => Top.HighestPoint).FirstOrDefault();
                 Debug.WriteLine(" HM " + HPoint.HorizontalMovement);
                 Debug.WriteLine(" HP " + HPoint.HighestPoint);
@@ -911,6 +1129,7 @@ namespace tetris
             }
             foreach (BestMove bestMove in moves)
             {
+                
                 if (HPoint.HighestPoint == bestMove.HighestPoint)
                 {
                     HPointList.Add(bestMove);

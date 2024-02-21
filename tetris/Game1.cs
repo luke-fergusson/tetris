@@ -137,7 +137,7 @@ namespace tetris
         {
             delay = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             
-            totalDelay= totalDelay + delay;
+            totalDelay += delay;
 
 
             
@@ -155,7 +155,7 @@ namespace tetris
             // TODO: Add your initialization logic here
             
             previousBoards = blocks.board.GetBoard();
-            blocks = I_Block;
+            blocks = L_Block;
             blocks.StarPosition();
             IsMouseVisible = true;
             _state = GameStates.Menu;
@@ -524,7 +524,7 @@ namespace tetris
             
             currentBoards = previousBoards;
 
-            blocks = new I_Block();
+            blocks = new L_Block();
             BlockList.Add(blocks);
             //RanBlock();
             blocks.board.currentGameBoards = currentBoards;

@@ -155,7 +155,7 @@ namespace tetris
             // TODO: Add your initialization logic here
             
             previousBoards = blocks.board.GetBoard();
-            blocks = L_Block;
+            blocks = O_Block;
             blocks.StarPosition();
             IsMouseVisible = true;
             _state = GameStates.Menu;
@@ -524,7 +524,7 @@ namespace tetris
             
             currentBoards = previousBoards;
 
-            blocks = new L_Block();
+            blocks = new O_Block();
             BlockList.Add(blocks);
             //RanBlock();
             blocks.board.currentGameBoards = currentBoards;

@@ -15,10 +15,6 @@ using tetris;
 public class O_Block: Blocks
 {
     
-    /*int[] L1 = new int[] { 4, 0 };
-    int[] L2 = new int[] { 5, 0 };
-    int[] R1 = new int[] { 4, 1 };
-    int[] R2 = new int[] { 5, 1 };*/
 
     /* 
      *          L1  L2

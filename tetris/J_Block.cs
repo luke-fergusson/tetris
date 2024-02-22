@@ -11,14 +11,7 @@ namespace tetris
 {
     public class J_Block : Blocks
     {
-        /*int[] M1 = new int[] { 4, 0 }; // { x,y } 
-        int[] M2 = new int[] { 4, 1 };
-        int[] M3 = new int[] { 5, 1 };
-        int[] M4 = new int[] { 6, 1 };
-        int CurrentM1;
-        int CurrentM2;
-        int CurrentM3;
-        int CurrentM4;*/
+       
         /*
          *  M1
          *  
@@ -174,10 +167,7 @@ namespace tetris
                     M1[1] = M1[1] - 1;
                     M2[1] = M2[1] + 2;
                     M3[1] = M3[1] + 1;
-                    /*Debug.WriteLine("M1 " + M1[0] + ", " + M1[1]);
-                    Debug.WriteLine("M2 " + M2[0] + ", " + M2[1]);
-                    Debug.WriteLine("M3 " + M3[0] + ", " + M3[1]);
-                    Debug.WriteLine("M4 " + M4[0] + ", " + M4[1]);*/
+                    
                     
                     SetToLetter();
                     State = 0;

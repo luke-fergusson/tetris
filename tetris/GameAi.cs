@@ -327,12 +327,7 @@ namespace tetris
                         RotateClockwiseIBlock();
                         CheckLogicBlock(blockName);
                     }
-                    //if (currentBlock.State == 3) // doesn#t work
-                    //{
-                    //    Down();
-                    //    RotateClockwiseIBlock();
-                    //    CheckLogicBlock(blockName);
-                    //}
+                    
 
                 }
 
@@ -397,7 +392,322 @@ namespace tetris
                 CheckLogicBlock(blockName);
 
             }
+            //Z_block
+            if (blockName.FullName == "tetris.Z_Block")
+            {
+                currentBlock = new Z_Block();
+                M1 = (int[])currentBlock.M1.Clone();
+                M2 = (int[])currentBlock.M2.Clone();
+                M3 = (int[])currentBlock.M3.Clone();
+                M4 = (int[])currentBlock.M4.Clone();
+
+                for (int k = 0; k < 4; k++)
+                {
+                    currentBlock.State = k;
+
+
+                    if (currentBlock.State == 0)
+                    {
+                        Down();
+                        RotateClockwiseZBlock();
+                        CheckLogicBlock(blockName);
+                    }
+                    if (currentBlock.State == 1)
+                    {
+                        Down();
+                        Down();
+                        RotateClockwiseZBlock();
+                        CheckLogicBlock(blockName);
+                    }
+                    if (currentBlock.State == 2)
+                    {
+                        Down();
+                        Down();
+                        RotateClockwiseZBlock();
+                        CheckLogicBlock(blockName);
+                    }
+                    if (currentBlock.State == 3)
+                    {
+                        Down();
+                        RotateClockwiseZBlock();
+                        CheckLogicBlock(blockName);
+                    }
+
+                }
+
+            }
+            //J_block
+            if (blockName.FullName == "tetris.J_Block")
+            {
+                currentBlock = new J_Block();
+                M1 = (int[])currentBlock.M1.Clone();
+                M2 = (int[])currentBlock.M2.Clone();
+                M3 = (int[])currentBlock.M3.Clone();
+                M4 = (int[])currentBlock.M4.Clone();
+
+                for (int k = 0; k < 4; k++)
+                {
+                    currentBlock.State = k;
+
+
+                    if (currentBlock.State == 0)
+                    {
+                        Down();
+                        RotateClockwiseJBlock();
+                        CheckLogicBlock(blockName);
+                    }
+                    if (currentBlock.State == 1)
+                    {
+
+                        Down();
+                        RotateClockwiseJBlock();
+                        CheckLogicBlock(blockName);
+                    }
+                    if (currentBlock.State == 2)
+                    {
+                        Down();
+                        Down();
+                        RotateClockwiseJBlock();
+                        CheckLogicBlock(blockName);
+                    }
+                    if (currentBlock.State == 3)
+                    {
+                        Down();
+                        RotateClockwiseJBlock();
+                        CheckLogicBlock(blockName);
+                    }
+
+                }
+            }
         }
+        /*
+         * 
+         * 
+         *              J block
+         * 
+         * 
+         * 
+         */
+
+
+        public void RotateClockwiseJBlock() // different
+        {
+            switch (currentBlock.State)
+            {
+                case 1:
+                    SetToZero();
+                    M1[1] = M1[1] + 1;
+                    M2[1] = M2[1] + 1;
+                    M3[1] = M3[1] + 1;
+                    M4[1] = M4[1] + 1;
+
+                    M1[0] = M1[0] + 2;
+                    M2[0] = M2[0] + 1;
+                    M4[0] = M4[0] - 1;
+
+                    M1[1] = M1[1] - 1;
+                    M2[1] = M2[1] - 2;
+                    M3[1] = M3[1] - 1;
+
+                    SetToLetter();
+                    break;
+                case 2:
+                    SetToZero();
+
+                    M1[0] = M1[0] - 2;
+                    M3[0] = M3[0] + 1;
+                    M4[0] = M4[0] + 1;
+
+                    M1[1] = M1[1] + 1;
+                    M2[1] = M2[1] + 1;
+                    SetToLetter();
+                    break;
+                case 3:
+                    SetToZero();
+
+                    M3[0] = M3[0] - 1;
+                    M4[0] = M4[0] - 1;
+
+                    M1[1] = M1[1] + 1;
+                    M2[1] = M2[1] - 1;
+
+                    SetToLetter();
+                    break;
+
+                default:
+                    break;
+
+            }
+        }
+        public bool BlockCollisionJBlock() // different
+        {
+            if (!GroundCollisionJBlock())
+            {
+                if (currentBlock.State == 0)
+                {
+                    if (simBoard.currentGameBoards[currentBlock.M4[0], currentBlock.M4[1] + 1] != '0' || simBoard.currentGameBoards[currentBlock.M2[0], currentBlock.M2[1] + 1] != '0' || simBoard.currentGameBoards[currentBlock.M3[0], currentBlock.M3[1] + 1] != '0')
+                    {
+                        return true;
+                    }
+                }
+                if (currentBlock.State == 1 || currentBlock.State == 3)
+                {                
+                    if (simBoard.currentGameBoards[currentBlock.M1[0], currentBlock.M1[1] + 1] != '0' || simBoard.currentGameBoards[currentBlock.M4[0], currentBlock.M4[1] + 1] != '0')
+                    {
+                        return true;
+                    }
+                    
+                }
+                if (currentBlock.State == 2)
+                {
+                    if (simBoard.currentGameBoards[currentBlock.M1[0], currentBlock.M1[1] + 1] != '0' || simBoard.currentGameBoards[currentBlock.M2[0], currentBlock.M2[1] + 1] != '0' || simBoard.currentGameBoards[currentBlock.M4[0], currentBlock.M4[1] + 1] != '0')
+                    {
+                        return true;
+                    }
+                }
+                
+            }
+            return false;
+        }
+
+        public bool GroundCollisionJBlock()// different
+        {
+            if (currentBlock.State == 0 || currentBlock.State == 3 || currentBlock.State == 1)
+            {
+                if (currentBlock.M4[1] == 19 || currentBlock.M2[1] == 19 || currentBlock.M3[1] == 19)
+                {
+                    return true;
+                }
+            }
+            if (currentBlock.State == 2)
+            {
+                if (currentBlock.M1[1] == 19 || currentBlock.M4[1] == 19)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /*
+         * 
+         * 
+         *          Z block
+         * 
+         * 
+         * 
+         * 
+         */
+
+
+        public void RotateClockwiseZBlock() // different
+        {
+            switch (currentBlock.State)
+            {
+                case 1:
+                    SetToZero();
+                    M1[1] = M1[1] + 2;
+                    M2[1] = M2[1] + 2;
+                    M3[1] = M3[1] + 2;
+                    M4[1] = M4[1] + 2;
+
+
+                    M1[0] = M1[0] + 2;
+                    M2[0] = M2[0] + 1;
+                    M4[0] = M4[0] - 1;
+
+                    M2[1] = M2[1] + 1;
+                    M4[1] = M4[1] + 1;
+                    SetToLetter();
+                    break;
+                case 2:
+                    SetToZero();
+
+                    M2[0] = M2[0] - 1;
+                    M4[0] = M4[0] - 1;
+
+                    M1[1] = M1[1] + 2;
+                    M2[1] = M2[1] + 1;
+                    M4[1] = M4[1] - 1;
+
+                    SetToLetter();
+                    break;
+                case 3:
+                    SetToZero();
+
+                    M1[0] = M1[0] - 2;
+                    M2[0] = M2[0] - 1;
+                    M4[0] = M4[0] + 1;
+
+                    M2[1] = M2[1] - 1;
+                    M4[1] = M4[1] - 1;
+
+                    SetToLetter();
+                    break;
+
+                default:
+                    break;
+
+            }
+        }
+        public bool BlockCollisionZBlock() // different
+        {
+            if (!GroundCollisionZBlock())
+            {
+                if (currentBlock.State == 0 )
+                {
+                    if (simBoard.currentGameBoards[currentBlock.M1[0], currentBlock.M1[1] + 1] != '0' || simBoard.currentGameBoards[currentBlock.M3[0], currentBlock.M3[1] + 1] != '0' || simBoard.currentGameBoards[currentBlock.M4[0], currentBlock.M4[1] + 1] != '0')
+                    {
+                        return true;
+                    }
+                }
+                if (currentBlock.State == 1)
+                {
+                    if (simBoard.currentGameBoards[currentBlock.M4[0], currentBlock.M4[1] + 1] != '0' || simBoard.currentGameBoards[currentBlock.M2[0], currentBlock.M2[1] + 1] != '0')
+                    {
+                        return true;
+                    }
+                }
+                if (currentBlock.State == 2)
+                {
+                    if (simBoard.currentGameBoards[currentBlock.M4[0], currentBlock.M4[1] + 1] != '0' || simBoard.currentGameBoards[currentBlock.M2[0], currentBlock.M2[1] + 1] != '0' || simBoard.currentGameBoards[currentBlock.M1[0], currentBlock.M1[1] + 1] != '0')
+                    {
+                        return true;
+                    }
+                }
+                if (currentBlock.State == 3)
+                {
+                    if (simBoard.currentGameBoards[currentBlock.M1[0], currentBlock.M1[1] + 1] != '0' || simBoard.currentGameBoards[currentBlock.M3[0], currentBlock.M3[1] + 1] != '0')
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public bool GroundCollisionZBlock()// different
+        {
+            if (currentBlock.State == 0 || currentBlock.State == 1)
+            {
+                if (currentBlock.M4[1] == 19)
+                {
+                    return true;
+                }
+            }
+            if (currentBlock.State == 2 || currentBlock.State == 3)
+            {
+                if (currentBlock.M1[1] == 19)
+                {
+                    return true;
+                }              
+            }
+
+
+            return false;
+        }
+
         /*
          * 
          *      O block
@@ -630,7 +940,7 @@ namespace tetris
                 }
                 if (currentBlock.State == 2)
                 {
-                    if (simBoard.currentGameBoards[currentBlock.M1[0], currentBlock.M1[1] + 1] != '0' || simBoard.currentGameBoards[currentBlock.M4[0], currentBlock.M4[1] + 1] != '0' || simBoard.currentGameBoards[currentBlock.M4[0], currentBlock.M4[1] + 1] != '0')
+                    if (simBoard.currentGameBoards[currentBlock.M1[0], currentBlock.M1[1] + 1] != '0' || simBoard.currentGameBoards[currentBlock.M4[0], currentBlock.M4[1] + 1] != '0' || simBoard.currentGameBoards[currentBlock.M3[0], currentBlock.M3[1] + 1] != '0')
                     {
                         return true;
                     }
@@ -862,6 +1172,31 @@ namespace tetris
                     leftNum = 5;
                     rightNum = 5;
                     break;
+                case "tetris.Z_Block":
+                    if(currentBlock.State == 0 || currentBlock.State == 2)
+                    {
+                        leftNum = 5;
+                        rightNum = 4;
+                    }
+                    if (currentBlock.State == 1 || currentBlock.State == 3)
+                    {
+                        leftNum = 5;
+                        rightNum = 4;
+                    }
+
+                    break;
+                case "tetris.J_Block":
+                    if (currentBlock.State == 0 || currentBlock.State == 2 || currentBlock.State == 3)
+                    {
+                        leftNum = 5;
+                        rightNum = 4;
+                    }
+                    if (currentBlock.State == 1)
+                    {
+                        leftNum = 5;
+                        rightNum = 4;
+                    }
+                    break;
 
             }
 
@@ -908,6 +1243,20 @@ namespace tetris
                         Down();
                     }
                 }
+                if (name.FullName == "tetris.Z_Block")
+                {
+                    while (!GroundCollisionZBlock() && !BlockCollisionZBlock())
+                    {
+                        Down();
+                    }
+                }
+                if (name.FullName == "tetris.J_Block")
+                {
+                    while (!GroundCollisionJBlock() && !BlockCollisionJBlock())
+                    {
+                        Down();
+                    }
+                }
                 moves.Add(new BestMove { HorizontalMovement = count, RotationState = currentBlock.State, HighestPoint = Highest(), ClosestToWall = DistanceToWall(currentBlock.M4[0], currentBlock.M1[0], "Right"), Direction = "Right", NumOfGaps = CountGaps(), CompleteRows = CompleteRow(), FillHole = FillGapCheck(original) });
 
                 //Debug.WriteLine("M1 " + currentBlock.M1[0] + currentBlock.M1[1]);
@@ -916,7 +1265,7 @@ namespace tetris
                 //Debug.WriteLine("M4 " + currentBlock.M4[0] + currentBlock.M4[1]);
 
 
-                if (currentBlock.State == 0)
+                if (currentBlock.State == 1)
                 {
                     for (int k = 0; k < 10; k++)
                     {
@@ -979,8 +1328,22 @@ namespace tetris
                         Down();
                     }
                 }
+                if (name.FullName == "tetris.Z_Block")
+                {
+                    while (!GroundCollisionZBlock() && !BlockCollisionZBlock())
+                    {
+                        Down();
+                    }
+                }
+                if (name.FullName == "tetris.J_Block")
+                {
+                    while (!GroundCollisionJBlock() && !BlockCollisionJBlock())
+                    {
+                        Down();
+                    }
+                }
                 moves.Add(new BestMove { HorizontalMovement = count, RotationState = currentBlock.State, HighestPoint = Highest(), ClosestToWall = DistanceToWall(currentBlock.M4[0], currentBlock.M1[0], "Left"), Direction = "Left", NumOfGaps = CountGaps(), CompleteRows = CompleteRow(), FillHole = FillGapCheck(original) });
-                if (currentBlock.State == 0)
+                if (currentBlock.State == 1)
                 {
                     for (int k = 0; k < 10; k++)
                     {
@@ -1156,31 +1519,31 @@ namespace tetris
 
             }
 
-            if (currentBlock.CurrentLetter != 't')
-            {
+            //if (currentBlock.CurrentLetter != 't')
+            //{
                 
-                foreach (BestMove move in moves)
-                {
-                    if(currentBlock.CurrentLetter == 'l' && currentBlock.State == 3 )
-                    {
-                        break;
-                    }
-                    if (move.FillHole == true)
-                    {
-                        HPointList.Add(move);
+            //    foreach (BestMove move in moves)
+            //    {
+            //        if(currentBlock.CurrentLetter == 'l' && currentBlock.State == 3 )
+            //        {
+            //            break;
+            //        }
+            //        if (move.FillHole == true)
+            //        {
+            //            HPointList.Add(move);
 
-                        HPoint = move;
-                        Debug.WriteLine(" HM " + HPoint.HorizontalMovement);
-                        Debug.WriteLine(" HP " + HPoint.HighestPoint);
-                        Debug.WriteLine(" RS " + HPoint.RotationState);
-                        HPointList.Clear();
-                        moves.Clear();
-                        GapList.Clear();
-                        return HPoint.HorizontalMovement;
-                    }
+            //            HPoint = move;
+            //            Debug.WriteLine(" HM " + HPoint.HorizontalMovement);
+            //            Debug.WriteLine(" HP " + HPoint.HighestPoint);
+            //            Debug.WriteLine(" RS " + HPoint.RotationState);
+            //            HPointList.Clear();
+            //            moves.Clear();
+            //            GapList.Clear();
+            //            return HPoint.HorizontalMovement;
+            //        }
 
-                }
-            }
+            //    }
+            //}
             
             if (HPoint.CompleteRows == true)
             {
@@ -1204,15 +1567,15 @@ namespace tetris
                 
             }
             TopGap = HPointList.OrderBy(Gap => Gap.NumOfGaps).FirstOrDefault();
-            foreach(BestMove bestMove in HPointList)
+            foreach (BestMove bestMove in HPointList)
             {
-                if(TopGap.NumOfGaps == bestMove.NumOfGaps)
+                if (TopGap.NumOfGaps == bestMove.NumOfGaps)
                 {
                     GapList.Add(bestMove);
                 }
             }
-            HPoint = GapList.OrderBy(Top => Top.ClosestToWall).FirstOrDefault();
-            
+            HPoint = HPointList.OrderBy(Top => Top.ClosestToWall).FirstOrDefault();
+
             Debug.WriteLine(" HM " + HPoint.HorizontalMovement);
             Debug.WriteLine(" HP " + HPoint.HighestPoint);
             Debug.WriteLine(" RS " + HPoint.RotationState);

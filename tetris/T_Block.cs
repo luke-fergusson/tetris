@@ -117,7 +117,7 @@ namespace tetris
                 }
                 if (State == 2)
                 {
-                    if (PB[M1[0], M1[1] + 1] != '0' || PB[M4[0], M4[1] + 1] != '0')
+                    if (PB[M1[0], M1[1] + 1] != '0' || PB[M4[0], M4[1] + 1] != '0' || PB[M3[0], M3[1] + 1] != '0')
                     {
                         
                         return true;

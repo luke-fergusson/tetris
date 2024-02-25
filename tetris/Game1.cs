@@ -10,7 +10,7 @@ using System.Threading;
 using System.Timers;
 using System.Collections.Generic;
 using SharpDX.MediaFoundation;
-
+using System.Reflection.Metadata.Ecma335;
 
 namespace tetris
 {
@@ -35,7 +35,7 @@ namespace tetris
         private SpriteFont _font;
         private SpriteFont _ScreenTitle;
         private string Title = "TETRIS";
-        private string buttonFont = "buttonFont";
+        private string Font = "buttonFont";
         
 
 
@@ -84,10 +84,10 @@ namespace tetris
         public bool RWall;
         public bool BlockHit;
 
-        public List<Blocks> BlockList = new List<Blocks>();
+        public List<Blocks> BlockList = new List<Blocks>();// list of blocks
 
         public Random random = new Random();
-        public Queue<int> upComingBlocks = new Queue<int>(4);
+        public Queue<int> upComingBlocks = new Queue<int>(4);// stores the next fall blocks to be called
 
         public Type BlockType;
         public int HorizontalMove;
@@ -96,6 +96,9 @@ namespace tetris
 
         private int numberOfMoves = 0;
         private int numOfRot = 0;
+
+        private int score = 10000;
+        private double speed = 200; // in miliseonds how fast pieces fall
 
         public Game1()
         {
@@ -108,7 +111,7 @@ namespace tetris
             _graphics.HardwareModeSwitch = false; //sets screen to boarderless 
 
 
-            _width = Window.ClientBounds.Width;
+            _width = Window.ClientBounds.Width;// get the current persons screen size
             _height = Window.ClientBounds.Height;
             _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;// sets the screen to size of the monitor 
@@ -121,11 +124,19 @@ namespace tetris
         }
         private bool SpeedRampUp(GameTime gameTime)// the game progress speeds up the drop speed of the blocks
         {
-            count = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            double newSpeed;
+            count = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             TimeElapsed = TimeElapsed + count;
-
-
-            if (TimeElapsed > 0.2)
+            int speedMultiplier = score % 1000;// checks the score for every thousand 
+            if(speedMultiplier == 0 && score != 0) 
+            {
+                newSpeed = speed /(score / 1000);// for every thousand score increase by 10000th of that
+            }
+            else
+            {
+                newSpeed = speed;
+            }
+            if (TimeElapsed > newSpeed)
             {
                 
                 TimeElapsed = Time;
@@ -228,7 +239,7 @@ namespace tetris
 
         protected override void Update(GameTime gameTime)
         {
-           
+            
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             if(_state == GameStates.Menu)
@@ -242,7 +253,7 @@ namespace tetris
             {
                 DrawBoard();
 
-                LineCheck();
+                LineCheck(blocks.GroundCollision(), blocks.BlockCollision());
                 bottom = blocks.GroundCollision();
                 RWall = blocks.RWallCollision();
                 LWall = blocks.LWallCollision();
@@ -350,7 +361,7 @@ namespace tetris
             if (_state == GameStates.Game)
             {
 
-                LineCheck();
+                LineCheck(blocks.GroundCollision(), blocks.BlockCollision());
                 bottom = blocks.GroundCollision();
                 RWall = blocks.RWallCollision();
                 LWall = blocks.LWallCollision();
@@ -504,7 +515,9 @@ namespace tetris
 
                 }
             }
-                
+            _spriteBatch.Begin();
+            _spriteBatch.DrawString(_font, "Score: " + score, new Vector2(150, 10), Color.White);
+            _spriteBatch.End();
 
         }
         public void DrawMenu(GameTime gameTime)
@@ -563,30 +576,61 @@ namespace tetris
             }
             BlockList.Add(blocks);
         }
-        public void LineCheck()
+        public void LineCheck(bool Bottom, bool BlockHit)
         {
+            int RowCount = 0;
             int LineCount = 0;
             currentBoards = blocks.board.GetBoard();
-            for (int j = 0; j < 20; j++)
+            if (!Bottom && !BlockHit)
             {
-                for (int i = 0; i < 10; i++)
-                {
-                    if (currentBoards[i, j] != '0')
-                    {
-                        LineCount++;
-                    }
-                }
-                if (LineCount == 10)
-                {
 
-                    blocks.LineMoveDown(j);
+
+                for (int j = 0; j < 20; j++)
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                        if (currentBoards[i, j] != '0')
+                        {
+                            LineCount++;
+                        }
+                    }
+                    if (LineCount == 10)
+                    {
+                        RowCount++;
+                        blocks.LineMoveDown(j);
+                    }
+                    LineCount = 0;
                 }
-                LineCount = 0;
             }
+            Score(RowCount);
+        }
+
+        public void Score(int RowCount)
+        {
+            switch (RowCount)
+            {
+                case 0:
+                    break;
+                case 1:
+                    score += 100;
+                    break;
+                case 2:
+                    score += 200;
+                    break;
+                case 3:
+                    score += 500;
+                    break;
+                case 4:
+                    score += 800;
+                    break;
+                default:
+                    break;
+            }
+            
         }
         
-
-
+        
+        
     }
 
  

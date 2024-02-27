@@ -25,10 +25,10 @@ namespace tetris
         public I_Block()
         {
             State = 0;
-            M1 = new int[] { 4, 0 };
-            M2 = new int[] { 4, 1 };
-            M3 = new int[] { 4, 2 };
-            M4 = new int[] { 4, 3 };
+            M1 = new int[] { 4, 1 };
+            M2 = new int[] { 4, 2 };
+            M3 = new int[] { 4, 3 };
+            M4 = new int[] { 4, 4 };
 
             CurrentLetter = 'i';
         }

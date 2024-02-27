@@ -23,10 +23,10 @@ namespace tetris
         {
             State = 0;
 
-            M1 = new int[] { 4, 1 };
-            M2 = new int[] { 5, 1 };
-            M3 = new int[] { 5, 0 };
-            M4 = new int[] { 6, 0 };
+            M1 = new int[] { 4, 2 };
+            M2 = new int[] { 5, 2 };
+            M3 = new int[] { 5, 1 };
+            M4 = new int[] { 6, 1 };
 
             CurrentLetter = 's';
         }

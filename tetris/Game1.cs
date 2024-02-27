@@ -19,55 +19,41 @@ namespace tetris
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private Texture2D _grid;
-        private Texture2D _testBlock;
         private Texture2D _newBlock;
-        private Texture2D _block;
-        private Texture2D _menu;
-        public enum GameStates
+        public enum GameStates//the differnt game states that are available 
         {
             Menu,
             Game,
-            Pause,
+            End,
             Ai
         }
         private GameStates _state;
         private SpriteFont _font;
         private SpriteFont _ScreenTitle;
-        private string Title = "TETRIS";
-        private string Font = "buttonFont";
+        private readonly string Title = "TETRIS";
         
-
-
         public char Row;
         public char col;
 
-        //public Board board = new Board();
         public Blocks blocks = new Blocks();
         public O_Block O_Block = new O_Block();
         public I_Block I_Block = new I_Block();
         public J_Block J_Block = new J_Block();
         public L_Block L_Block = new L_Block(); 
         public T_Block T_Block = new T_Block(); 
-        public S_Block S_Block = new S_Block();
+        public S_Block S_Block = new S_Block();// all block inisalised 
         public Z_Block Z_Block = new Z_Block();
 
         public GameAi AI = new GameAi();
-        //private Vector2 _velocity;
 
         public char[,] currentBoards;
         public char[,] previousBoards;
         
         private const float Time = 0;
         private float TimeElapsed;
-        private bool Displayed = false;
-
-       // private bool OutOfBounds;
 
         public int _height = 0;
         public int _width = 0;
-
-       // public int _spawnLocation = 0;
 
         private float count = 0;
 
@@ -77,7 +63,6 @@ namespace tetris
         public bool Delay = true;
 
         public float Count { get => count; set => count = value; }
-        //public int SpawnLocation { get => _spawnLocation; set => _spawnLocation = value; }
 
         public bool bottom;
         public bool LWall;
@@ -97,7 +82,7 @@ namespace tetris
         private int numberOfMoves = 0;
         private int numOfRot = 0;
 
-        private int score = 10000;
+        private int score = 0;
         private double speed = 200; // in miliseonds how fast pieces fall
 
         public Game1()
@@ -166,17 +151,16 @@ namespace tetris
             // TODO: Add your initialization logic here
             
             previousBoards = blocks.board.GetBoard();
-            blocks = J_Block;
-            //RanBlock();
+            //blocks = L_Block;
+            RanBlock();// generates a radom block
             blocks.StarPosition();
             IsMouseVisible = true;
             _state = GameStates.Menu;
             currentBoards = new char[10,20];
-            BlockList.Add(blocks);
+            //BlockList.Add(blocks);
             BlockType = blocks.GetType();
 
-            AI.SimulateMove(BlockType, previousBoards , blocks);
-            //AI.SimulateMove(BlockType);
+            AI.SimulateMove(BlockType, blocks);
             HorizontalMove = AI.Best();
             base.Initialize();
         }
@@ -184,15 +168,15 @@ namespace tetris
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _newBlock = Content.Load<Texture2D>("sa");
+            _newBlock = Content.Load<Texture2D>("sa");// this texture is used as the indivual blocks on the grid 
            
             _font = Content.Load<SpriteFont>("buttonFont");
             _ScreenTitle = Content.Load<SpriteFont>("Title");
 
 
-            var PlayButton = new Button(Content.Load<Texture2D>("sa"), Content.Load<SpriteFont>("buttonFont"))
+            var PlayButton = new Button(Content.Load<Texture2D>("sa"), Content.Load<SpriteFont>("buttonFont"))// loads each button
             {
-                Position = new Vector2(_width / 2 + 375, _height / 2 + 150),
+                Position = new Vector2(_width / 2 + 375, _height / 2 + 150),// position of each button
                 Text = "play",
                 
             };
@@ -211,7 +195,7 @@ namespace tetris
             QuitButton.Click += QuitButton_Click;
 
             PlayButton.Click += PlayButton_Click;
-            _gameComponents = new List<component>()
+            _gameComponents = new List<component>()// list of component so easily can be drawn
             {
                 PlayButton,
                 AIButton,
@@ -223,20 +207,27 @@ namespace tetris
 
         private void QuitButton_Click(object sender, EventArgs e)
         {
-            Exit();
+            Exit();// exits application
         }
 
         private void AIButton_Click(object sender, EventArgs e)
         {
-            _state = GameStates.Ai;
+            _state = GameStates.Ai;// loads ai
             GenerateNewBlock();
         }
 
         private void PlayButton_Click(object sender, EventArgs e)
         {
-            _state = GameStates.Game;
+            _state = GameStates.Game; // loads game
         }
-
+        /// <summary>
+        /// 
+        /// Each simulation of a move returns a horizonatal movement, left or right and rotation state
+        /// based on the quantites specified it plays each move by going though a while loop until the condition is met
+        /// these values are reset after each move is played 
+        /// 
+        /// </summary>
+        /// <param name="gameTime"></param>
         protected override void Update(GameTime gameTime)
         {
             
@@ -244,7 +235,7 @@ namespace tetris
                 Exit();
             if(_state == GameStates.Menu)
             {
-                foreach(var component in _gameComponents)
+                foreach(var component in _gameComponents)// checks the buttons for interactions
                 {
                     component.Update(gameTime);
                 }
@@ -253,7 +244,7 @@ namespace tetris
             {
                 DrawBoard();
 
-                LineCheck(blocks.GroundCollision(), blocks.BlockCollision());
+                
                 bottom = blocks.GroundCollision();
                 RWall = blocks.RWallCollision();
                 LWall = blocks.LWallCollision();
@@ -264,6 +255,7 @@ namespace tetris
                 {
                     
                     blocks.Down();
+                    LineCheck(blocks.GroundCollision(), blocks.BlockCollision());
                     DrawBoard();  
                 }
                 if (AI.HPoint.Direction == "Right")
@@ -295,20 +287,7 @@ namespace tetris
                         numberOfMoves++;
                     }
                 }
-                if (bottom)
-                {
-                    GenerateNewBlock();
-                   
-                    BlockType = blocks.GetType();
-
-                    AI.SimulateMove(BlockType, blocks.board.GetBoard(), blocks);
-                    //AI.SimulateMove(BlockType);
-                    HorizontalMove = AI.Best();
-                    Totalnum = 0;
-                    numberOfMoves = 0;
-                    numOfRot = 0;
-                    DrawBoard();
-                }
+               
                 if(AI.HPoint.RotationState > 0)
                 {
                     
@@ -321,43 +300,44 @@ namespace tetris
                     }
                 }
                 
-                if (Keyboard.GetState().IsKeyDown(Keys.A))
+                
+                if (bottom)
                 {
-                    if (Delay && !LWall)
-                    {
-                        blocks.Left();
-                        DrawBoard();
+                    LineCheck(blocks.GroundCollision(), blocks.BlockCollision());
+                    ClearTop();
+                    GenerateNewBlock();
 
-                    }
+                    BlockType = blocks.GetType();
 
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.W))
-                {
-                    if (Delay)
-                    {
-                        blocks.RotateClockwise();
-                        DrawBoard();
-                    }
+                    AI.SimulateMove(BlockType, blocks);
+                    HorizontalMove = AI.Best();
+                    Totalnum = 0;
+                    numberOfMoves = 0;
+                    numOfRot = 0;
+                    DrawBoard();
                 }
                 BlockHit = blocks.BlockCollision();
                 if (BlockHit && BlockList.Count > 1)
                 {
-                    Debug.WriteLine(blocks);
+                    LineCheck(blocks.GroundCollision(), blocks.BlockCollision());
+                   
+                    ClearTop();
                     GenerateNewBlock();
 
                     BlockType = blocks.GetType();
-                    Debug.WriteLine(blocks);
-                    AI.SimulateMove(BlockType, blocks.board.GetBoard(), blocks);
-                    //AI.SimulateMove(BlockType);
+                    AI.SimulateMove(BlockType, blocks);
                     HorizontalMove = AI.Best();
                     Totalnum = 0;
                     numberOfMoves = 0;
                     numOfRot = 0; 
                     DrawBoard();
                 }
-            
+                LineCheck(blocks.GroundCollision(), blocks.BlockCollision());
             }
-
+            /// Game takes user input a and d as left and right with W being rotation state
+            /// a Delay method stops the user from spamming inputs and breaking the game
+            /// timer method is the speed at which the block falls
+            /// 
             if (_state == GameStates.Game)
             {
 
@@ -373,11 +353,15 @@ namespace tetris
                 if (Timer && !bottom)
                 {
                     blocks.Down();
+                    LineCheck(blocks.GroundCollision(), blocks.BlockCollision());
                     DrawBoard();
                 }
 
                 if (bottom)
                 {
+                    LineCheck(blocks.GroundCollision(), blocks.BlockCollision());
+                    ClearTop();
+
                     GenerateNewBlock();
 
                 }
@@ -415,6 +399,9 @@ namespace tetris
                 if (BlockHit && BlockList.Count > 1)
                 {
                     Debug.WriteLine(blocks);
+                    LineCheck(blocks.GroundCollision(), blocks.BlockCollision());
+                    ClearTop();
+                
                     GenerateNewBlock();
                 }
             }
@@ -449,13 +436,20 @@ namespace tetris
                 DrawBoard();
                 this.IsMouseVisible = false;    
             }
+            if(_state == GameStates.End) 
+            {
+                DrawEndScreen(gameTime); this.IsMouseVisible = true;
+            }
             
             
 
 
             base.Draw(gameTime);
         }
-
+        /// <summary>
+        /// Draws goes through every position on the board comparing its value with 0 and the leters defining the blocks
+        /// and colour coding them based on there letter
+        /// </summary>
         private void DrawBoard()
         {
             previousBoards = blocks.board.GetBoard();
@@ -537,9 +531,9 @@ namespace tetris
             
             currentBoards = previousBoards;
 
-            blocks = new J_Block();
-            BlockList.Add(blocks);
-            //RanBlock();
+            //blocks = new L_Block();
+            //BlockList.Add(blocks);
+            RanBlock();
             blocks.board.currentGameBoards = currentBoards;
             
             
@@ -576,6 +570,13 @@ namespace tetris
             }
             BlockList.Add(blocks);
         }
+        /// <summary>
+        /// Goes through the entire board checking if a line has been filled thats defined as 10 non zeros in a single line
+        /// and calls the linemovedown method
+        /// the number of lines cleared is counted and passed to score to calculate the score
+        /// </summary>
+        /// <param name="Bottom"></param>
+        /// <param name="BlockHit"></param>
         public void LineCheck(bool Bottom, bool BlockHit)
         {
             int RowCount = 0;
@@ -628,10 +629,30 @@ namespace tetris
             }
             
         }
-        
-        
-        
-    }
+        public void ClearTop()// used to stop duplicate blocks when moving everything down
+        {
+            /*for (int j = 0; j < 10; j++)
+            {
+                for(int i = 0;i < 5; i++)
+                {
+                    blocks.board.ChangeBoard(j, i, '0');
+                }
+                    
+            }*/
+        }
+       
+        public void DrawEndScreen(GameTime gameTime)
+        {
+            _spriteBatch.Begin();
+            _spriteBatch.DrawString(_ScreenTitle, "GameOver", new Vector2(_width / 2 + 375, _height - 375), Color.Black);
+            foreach (var component in _gameComponents)
+            {
 
+                component.Draw(gameTime, _spriteBatch);
+            }
+            _spriteBatch.End();
+        }
+    }
+    
  
 }

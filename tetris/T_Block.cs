@@ -4,12 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using SharpDX;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,13 +23,14 @@ namespace tetris
         public T_Block()
         {
             State = 0;
-            M1 = new int[] { 4, 1 };
-            M2 = new int[] { 5, 1 };
-            M3 = new int[] { 6, 1 };
-            M4 = new int[] { 5, 0 };
+            M1 = new int[] { 4, 2 };// spawn coordinates
+            M2 = new int[] { 5, 2 };
+            M3 = new int[] { 6, 2 };
+            M4 = new int[] { 5, 1 };
 
             CurrentLetter = 't';
         }
+        
         public override bool GroundCollision()
         {
             if(State == 0 || State ==3)

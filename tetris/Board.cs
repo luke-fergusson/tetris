@@ -22,10 +22,10 @@ public class Board
 
     public Board()
 	{       
-        currentGameBoards = new char[10, 20];
+        currentGameBoards = new char[10, 20]; // contructor
         
     }
-    public void blankBoard()
+    public void blankBoard()// sets all the values in the grid to 0
     {
         currentGameBoards = new char[10,20];
         for (int i = 0; i < 10; i++)
@@ -36,9 +36,9 @@ public class Board
             }
         }
     }
-    public void ChangeBoard(int row, int col, char val)
+    public void ChangeBoard(int row, int col, char val)// used to update board
     {
-        if(row <=9 && col <=19) 
+        if(row <=9 && col <=19) // checks that changes don't go out of bounds of the array
         {
             currentGameBoards[row, col] = val;
         }

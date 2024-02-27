@@ -21,17 +21,26 @@ namespace tetris
         public bool FillHole { get; set; }
         public bool CompleteRows { get; set; }
     }
-
+    /// <summary>
+    /// A stucture is used to store all the information about each block
+    /// 
+    /// HorizontalMovement - how far its been moved left or right
+    /// RotationState - what rotation state it is for the optium move
+    /// Highestpoint - the highest point after each block has been placed
+    /// ClosestToWall - Distance to wall
+    /// NumOfGaps - each move creates and do the one with the lowest amount
+    /// FillHole - does it fill a hole
+    /// CompleteRows - does it fill a hole
+    /// </summary>
     public class GameAi 
     {
         public Blocks currentBlock;
    
         private int highestRow = 20;
-        private int genNum = 0;
 
-        public Board simBoard = new Board();
-        public Board newBoard = new Board();
-        public List<BestMove> moves = new List<BestMove>();
+        public Board simBoard = new Board();// generates a new gameboard to simulate moves
+        public Board newBoard = new Board();// to store current game board
+        public List<BestMove> moves = new List<BestMove>();// list of the struct of all moves played
         public BestMove HPoint;
 
         public int[] M1;
@@ -198,15 +207,15 @@ namespace tetris
             }
         }
 
-        public void SimulateMove(Type blockName, char[,] WorkBoard, Blocks blocks) // stay the same 
+        public void SimulateMove(Type blockName, Blocks blocks) // stay the same 
         {
 
-            simBoard.currentGameBoards = (char[,])blocks.board.GetBoard().Clone();
+            simBoard.currentGameBoards = (char[,])blocks.board.GetBoard().Clone();// .Clone() is used as arrays in c# are path traversed and doesn't automaticly copy the contentence from one to another, it links one to another
             newBoard.currentGameBoards = (char[,])simBoard.currentGameBoards.Clone();
 
             //S_block
 
-            if (blockName.FullName == "tetris.S_Block")
+            if (blockName.FullName == "tetris.S_Block")// checks for each block
             {
                 currentBlock = new S_Block();
                 M1 = (int[])currentBlock.M1.Clone();
@@ -216,14 +225,14 @@ namespace tetris
 
                 for (int k = 0; k < 4; k++)
                 {
-                    currentBlock.State = k;
+                    currentBlock.State = k;// goes through each rotation state
 
 
                     if (currentBlock.State == 0)
                     {
                         Down();
-                        RotateClockwiseSBlock();
-                        CheckLogicBlock(blockName);
+                        RotateClockwiseSBlock();// rotates block based on rotation state
+                        CheckLogicBlock(blockName); // simulates each move
                     }
                     if (currentBlock.State == 1)
                     {
@@ -355,7 +364,6 @@ namespace tetris
                     }
                     if (currentBlock.State == 1)
                     {
-
                         Down();
                         RotateClockwiseLBlock();
                         CheckLogicBlock(blockName);
@@ -380,7 +388,7 @@ namespace tetris
 
             // O_block
 
-            if (blockName.FullName == "O_Block")
+            if (blockName.FullName == "O_Block")// tetrsi. doesn't work
             {
                 currentBlock = new O_Block();
                 M1 = (int[])currentBlock.M1.Clone();
@@ -458,7 +466,6 @@ namespace tetris
                     }
                     if (currentBlock.State == 1)
                     {
-
                         Down();
                         RotateClockwiseJBlock();
                         CheckLogicBlock(blockName);
@@ -552,7 +559,7 @@ namespace tetris
                 }
                 if (currentBlock.State == 1 || currentBlock.State == 3)
                 {                
-                    if (simBoard.currentGameBoards[currentBlock.M1[0], currentBlock.M1[1] + 1] != '0' || simBoard.currentGameBoards[currentBlock.M4[0], currentBlock.M4[1] + 1] != '0')
+                    if (/*simBoard.currentGameBoards[currentBlock.M1[0], currentBlock.M1[1] + 1] != '0' || */simBoard.currentGameBoards[currentBlock.M4[0], currentBlock.M4[1] + 1] != '0')
                     {
                         return true;
                     }
@@ -1116,14 +1123,14 @@ namespace tetris
         }
         public void CheckLogicBlock(Type name)//same
         {
-            int original = FillGap();
+            int original = FillGap();// count the number of holes before simulations
             int count;
             int leftNum = 0;
             int rightNum = 0;
             switch (name.FullName)
             {
                 case "tetris.S_Block":
-                    leftNum = 5;
+                    leftNum = 5;// each block and rotation needs it own different travsal number
                     rightNum = 4;
                     break;
                 case "tetris.T_Block":
@@ -1212,7 +1219,7 @@ namespace tetris
                 {
                     while (!GroundCollisionSBlock() && !BlockCollisionSBlock())
                     {
-                        Down();
+                        Down();// moves as far down and then store all that information in the stuct
                     }
                 }
                 if (name.FullName == "tetris.T_Block")
@@ -1258,14 +1265,11 @@ namespace tetris
                     }
                 }
                 moves.Add(new BestMove { HorizontalMovement = count, RotationState = currentBlock.State, HighestPoint = Highest(), ClosestToWall = DistanceToWall(currentBlock.M4[0], currentBlock.M1[0], "Right"), Direction = "Right", NumOfGaps = CountGaps(), CompleteRows = CompleteRow(), FillHole = FillGapCheck(original) });
-
-                //Debug.WriteLine("M1 " + currentBlock.M1[0] + currentBlock.M1[1]);
-                //Debug.WriteLine("M2 " + currentBlock.M2[0] + currentBlock.M2[1]);
-                //Debug.WriteLine("M3 " + currentBlock.M3[0] + currentBlock.M3[1]);
-                //Debug.WriteLine("M4 " + currentBlock.M4[0] + currentBlock.M4[1]);
+                // list of moves
+       
 
 
-                if (currentBlock.State == 1)
+                if (currentBlock.State == 5)
                 {
                     for (int k = 0; k < 10; k++)
                     {
@@ -1343,7 +1347,7 @@ namespace tetris
                     }
                 }
                 moves.Add(new BestMove { HorizontalMovement = count, RotationState = currentBlock.State, HighestPoint = Highest(), ClosestToWall = DistanceToWall(currentBlock.M4[0], currentBlock.M1[0], "Left"), Direction = "Left", NumOfGaps = CountGaps(), CompleteRows = CompleteRow(), FillHole = FillGapCheck(original) });
-                if (currentBlock.State == 1)
+                if (currentBlock.State == 5)
                 {
                     for (int k = 0; k < 10; k++)
                     {
@@ -1373,7 +1377,7 @@ namespace tetris
                 {
                     for (int i = 0; i < 10; i++)
                     {
-                        if (simBoard.currentGameBoards[i, j] != '0' && j != 0 && j != 1 && j != 2 && j != 3)
+                        if (simBoard.currentGameBoards[i, j] != '0' && j != 0 && j != 1 && j != 2 && j != 3)// so blocks generating don't cause a false positive
                         {
                            
                             highestRow = j;
@@ -1387,7 +1391,7 @@ namespace tetris
             
             return highestRow;
         }
-        public int DistanceToWall(int DM4, int DM1, string Dir)// places block closest to the wall first //???
+        public int DistanceToWall(int DM4, int DM1, string Dir)// places block closest to the wall first 
         {
             int RWall = 9;
             int LWall = 0;
@@ -1425,7 +1429,7 @@ namespace tetris
             return count;
         }
         
-        public bool CompleteRow()
+        public bool CompleteRow()// if block complete a row play this
         {
             int LineCount = 0;
             
@@ -1448,7 +1452,7 @@ namespace tetris
             return false;
         }
 
-        public int FillGap()
+        public int FillGap()// if it fills in a gap
         {
            
             int count = 0;
@@ -1502,11 +1506,12 @@ namespace tetris
      
         public int Best()
         {
-            List<BestMove> HPointList = new List<BestMove>();
-            List<BestMove> GapList = new List<BestMove>();
+            List<BestMove> HPointList = new List<BestMove>();// a list of the Lowest down block
+            List<BestMove> GapList = new List<BestMove>();// list of the moves with the fewest number of gaps created
+            List<BestMove> MovesToRemove = new List<BestMove>();
             BestMove TopGap = new BestMove();
             
-            HPoint = moves.OrderByDescending(Top => Top.HighestPoint).FirstOrDefault(); //.ThenBy(Top => Top.ClosestToWall).FirstOrDefault();//highest point on the board
+            HPoint = moves.OrderByDescending(Top => Top.HighestPoint).FirstOrDefault(); //highest point on the board
             foreach (BestMove move in moves)
             {
                 if (move.CompleteRows == true)
@@ -1518,34 +1523,57 @@ namespace tetris
                 }
 
             }
+            if(currentBlock.CurrentLetter == 'j')// fills gaps giving false positives so needs to be removed
+            {
+                foreach (BestMove move in moves)
+                {
+                    if (move.RotationState == 1 )
+                    {
+                       MovesToRemove.Add(move);
+                    }
 
-            //if (currentBlock.CurrentLetter != 't')
-            //{
-                
-            //    foreach (BestMove move in moves)
-            //    {
-            //        if(currentBlock.CurrentLetter == 'l' && currentBlock.State == 3 )
-            //        {
-            //            break;
-            //        }
-            //        if (move.FillHole == true)
-            //        {
-            //            HPointList.Add(move);
+                }
+            }
+            if (currentBlock.CurrentLetter == 'l')
+            {
+                foreach (BestMove move in moves)
+                {
+                    if (move.RotationState == 3)
+                    {
+                        MovesToRemove.Add(move);
+                    }
 
-            //            HPoint = move;
-            //            Debug.WriteLine(" HM " + HPoint.HorizontalMovement);
-            //            Debug.WriteLine(" HP " + HPoint.HighestPoint);
-            //            Debug.WriteLine(" RS " + HPoint.RotationState);
-            //            HPointList.Clear();
-            //            moves.Clear();
-            //            GapList.Clear();
-            //            return HPoint.HorizontalMovement;
-            //        }
+                }
+            }
+            foreach (BestMove moveToRem in MovesToRemove)
+            {
+                HPointList.Remove(moveToRem);
+            }
 
-            //    }
-            //}
-            
-            if (HPoint.CompleteRows == true)
+            if (currentBlock.CurrentLetter == 'i')
+            {
+
+                foreach (BestMove move in HPointList)// filles in a gap for i blocks
+                {
+
+                    if (move.FillHole == true)
+                    {
+                        HPointList.Add(move);
+
+                        HPoint = move;
+                        Debug.WriteLine(" HM " + HPoint.HorizontalMovement);
+                        Debug.WriteLine(" HP " + HPoint.HighestPoint);
+                        Debug.WriteLine(" RS " + HPoint.RotationState);
+                        HPointList.Clear();
+                        moves.Clear();
+                        GapList.Clear();
+                        return HPoint.HorizontalMovement;
+                    }
+
+                }
+            }
+            //HPoint = HPointList.OrderByDescending(Top => Top.HighestPoint).FirstOrDefault();
+            if (HPoint.CompleteRows == true)// checks if a completed row is found and plays that
             {
                
                 HPoint = HPointList.OrderByDescending(Top => Top.HighestPoint).FirstOrDefault();
@@ -1562,7 +1590,7 @@ namespace tetris
                 
                 if (HPoint.HighestPoint == bestMove.HighestPoint)
                 {
-                    HPointList.Add(bestMove);
+                    HPointList.Add(bestMove);// makes a list of all lowest moves 
                 }
                 
             }
@@ -1571,11 +1599,12 @@ namespace tetris
             {
                 if (TopGap.NumOfGaps == bestMove.NumOfGaps)
                 {
-                    GapList.Add(bestMove);
+                    GapList.Add(bestMove);// sort to find the move with the fewest gaps
                 }
             }
-            HPoint = HPointList.OrderBy(Top => Top.ClosestToWall).FirstOrDefault();
+            HPoint = GapList.OrderBy(Top => Top.ClosestToWall).FirstOrDefault();
 
+            Debug.WriteLine(" current letter: " + currentBlock.CurrentLetter);
             Debug.WriteLine(" HM " + HPoint.HorizontalMovement);
             Debug.WriteLine(" HP " + HPoint.HighestPoint);
             Debug.WriteLine(" RS " + HPoint.RotationState);
@@ -1585,7 +1614,6 @@ namespace tetris
             GapList.Clear();
             return HPoint.HorizontalMovement;
         }
-       // to get back to normal remove the foreach loop
 
 
     }

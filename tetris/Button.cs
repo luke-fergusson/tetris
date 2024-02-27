@@ -12,9 +12,8 @@ namespace tetris
 {
     public class Button : component
     {
-        private MouseState mouseState;
+        private MouseState mouseState;// used to see if mouse is over block
         private SpriteFont _font;
-        private SpriteBatch spriteBatch;
         private bool _ishov;
         private MouseState previousState;
         private Texture2D _texture;
@@ -49,7 +48,7 @@ namespace tetris
             spriteBatch.Draw(_texture, Rectangle, colour);
             if (!string.IsNullOrEmpty(Text))
             {
-                var x = (Rectangle.X  + (Rectangle.Width / 2))-(_font.MeasureString(Text).X /2);
+                var x = (Rectangle.X  + (Rectangle.Width / 2))-(_font.MeasureString(Text).X /2);// used to center text and draw buttons
                 var y = (Rectangle.Y + (Rectangle.Height / 2)) - (_font.MeasureString(Text).Y / 2);
 
                 spriteBatch.DrawString(_font, Text, new Vector2(x,y), Color.Black);

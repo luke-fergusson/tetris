@@ -13,7 +13,7 @@ using SharpDX.MediaFoundation;
 
 namespace tetris
 {
-    public abstract class component
+    public abstract class component// used to when generating buttons
     {
         public abstract void Draw(GameTime gameTime, SpriteBatch spriteBatch);
         public abstract void Update(GameTime gameTime);

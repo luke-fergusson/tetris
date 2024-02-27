@@ -17,19 +17,19 @@ public class O_Block: Blocks
     
 
     /* 
-     *          L1  L2
+     *          M1  M2
      *          
-     *          R1  R2
-     * O block
+     *          M3  M4
+     *           O block
      */
     
     
     public O_Block()
     {
-        M1 = new int[] { 4, 0 };
-        M2 = new int[] { 5, 0 };
-        M3 = new int[] { 4, 1 };
-        M4 = new int[] { 5, 1 };
+        M1 = new int[] { 4, 1 };
+        M2 = new int[] { 5, 1 };
+        M3 = new int[] { 4, 2 };
+        M4 = new int[] { 5, 2 };
         CurrentLetter = 'o';
     }
     
@@ -37,7 +37,6 @@ public class O_Block: Blocks
     {
         BottomRow = M4[1];
         BottomColumn = M4[0];
-        //CharacterBottom = board.currentGameBoards[BottomColumn, BottomRow];
         PB = board.currentGameBoards;
         
         return base.GroundCollision();
@@ -61,8 +60,7 @@ public class O_Block: Blocks
         BottomRow = M3[1];
         BottomColumn = M3[0];
         RRow = M4[1];
-        RColumn = M4[0];
-        //Debug.Write(M3[1].ToString()+" "+ M3[0].ToString()+ " "+ M4[1].ToString()+ " " + M4[0].ToString());
+        RColumn = M4[0];        
         PB = board.GetBoard();
         return base.BlockCollision();
     }

@@ -11,6 +11,8 @@ using System.Timers;
 using System.Collections.Generic;
 using SharpDX.MediaFoundation;
 using System.Reflection.Metadata.Ecma335;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace tetris
 {
@@ -85,6 +87,11 @@ namespace tetris
         private int score = 0;
         private double speed = 200; // in miliseonds how fast pieces fall
 
+        private KeyboardState previousKeyboardState;
+        private KeyboardState currentKeyboardState;
+
+        private Song gameMusic;
+       
         public Game1()
         {
             
@@ -201,6 +208,11 @@ namespace tetris
                 AIButton,
                 QuitButton,
             };
+            gameMusic = Content.Load<Song>("Tetris");
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(gameMusic);
+            MediaPlayer.Volume = 0.1f;
+
 
             // TODO: use this.Content to load your game content here
         }
@@ -340,17 +352,31 @@ namespace tetris
             /// 
             if (_state == GameStates.Game)
             {
-
+                previousKeyboardState = currentKeyboardState;
+                currentKeyboardState = Keyboard.GetState();
                 LineCheck(blocks.GroundCollision(), blocks.BlockCollision());
                 bottom = blocks.GroundCollision();
                 RWall = blocks.RWallCollision();
                 LWall = blocks.LWallCollision();
                 bool Timer = SpeedRampUp(gameTime);
                 Delay = DelayInput(gameTime);
-                
-                
+                bool DropBlock = false; ;
+                if (currentKeyboardState.IsKeyDown(Keys.Space) && previousKeyboardState.IsKeyDown(Keys.Space))
+                {
+                    if (Delay)
+                    {
 
-                if (Timer && !bottom)
+
+                        while (!blocks.GroundCollision() && !blocks.BlockCollision())
+                        {
+                            blocks.Down();
+                           
+                            DropBlock =true;
+                        }
+                    }
+                }
+
+                if (Timer && !bottom && !DropBlock)
                 {
                     blocks.Down();
                     LineCheck(blocks.GroundCollision(), blocks.BlockCollision());
@@ -361,11 +387,10 @@ namespace tetris
                 {
                     LineCheck(blocks.GroundCollision(), blocks.BlockCollision());
                     ClearTop();
-
                     GenerateNewBlock();
 
                 }
-
+                
                 if (Keyboard.GetState().IsKeyDown(Keys.D))
                 {
                     
@@ -398,7 +423,6 @@ namespace tetris
                 BlockHit = blocks.BlockCollision();
                 if (BlockHit && BlockList.Count > 1)
                 {
-                    Debug.WriteLine(blocks);
                     LineCheck(blocks.GroundCollision(), blocks.BlockCollision());
                     ClearTop();
                 
@@ -415,7 +439,7 @@ namespace tetris
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
 
@@ -518,7 +542,7 @@ namespace tetris
         {
 
             _spriteBatch.Begin();
-            _spriteBatch.DrawString(_ScreenTitle, Title, new Vector2(_width / 2 + 375, _height -375), Color.Black);
+            _spriteBatch.DrawString(_ScreenTitle, Title, new Vector2(_width / 2 + 375, _height -375), Color.White);
             foreach (var component in _gameComponents)
             {
                 
@@ -631,14 +655,14 @@ namespace tetris
         }
         public void ClearTop()// used to stop duplicate blocks when moving everything down
         {
-            /*for (int j = 0; j < 10; j++)
+            for (int j = 0; j < 10; j++)
             {
                 for(int i = 0;i < 5; i++)
                 {
                     blocks.board.ChangeBoard(j, i, '0');
                 }
                     
-            }*/
+            }
         }
        
         public void DrawEndScreen(GameTime gameTime)

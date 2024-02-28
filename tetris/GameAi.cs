@@ -1121,7 +1121,7 @@ namespace tetris
 
             return false;
         }
-        public void CheckLogicBlock(Type name)//same
+        public void CheckLogicBlock(Type name)//used to simulate each moves logic
         {
             int original = FillGap();// count the number of holes before simulations
             int count;

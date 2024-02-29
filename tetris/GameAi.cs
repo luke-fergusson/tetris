@@ -1517,61 +1517,61 @@ namespace tetris
                 if (move.CompleteRows == true)
                 {
                     HPointList.Add(move);
-                    
+
                     HPoint = move;
-                    
-                }
-
-            }
-            if(currentBlock.CurrentLetter == 'j')// fills gaps giving false positives so needs to be removed
-            {
-                foreach (BestMove move in moves)
-                {
-                    if (move.RotationState == 1 )
-                    {
-                       MovesToRemove.Add(move);
-                    }
 
                 }
+
             }
-            if (currentBlock.CurrentLetter == 'l')
-            {
-                foreach (BestMove move in moves)
-                {
-                    if (move.RotationState == 3)
-                    {
-                        MovesToRemove.Add(move);
-                    }
+            //if (currentBlock.CurrentLetter == 'j')// fills gaps giving false positives so needs to be removed
+            //{
+            //    foreach (BestMove move in moves)
+            //    {
+            //        if (move.RotationState == 1)
+            //        {
+            //            MovesToRemove.Add(move);
+            //        }
 
-                }
-            }
-            foreach (BestMove moveToRem in MovesToRemove)
-            {
-                HPointList.Remove(moveToRem);
-            }
+            //    }
+            //}
+            //if (currentBlock.CurrentLetter == 'l')
+            //{
+            //    foreach (BestMove move in moves)
+            //    {
+            //        if (move.RotationState == 3)
+            //        {
+            //            MovesToRemove.Add(move);
+            //        }
 
-            if (currentBlock.CurrentLetter == 'i')
-            {
+            //    }
+            //}
+            //foreach (BestMove moveToRem in MovesToRemove)
+            //{
+            //    HPointList.Remove(moveToRem);
+            //}
 
-                foreach (BestMove move in HPointList)// filles in a gap for i blocks
-                {
+            //if (currentBlock.CurrentLetter == 'i' || currentBlock.CurrentLetter == 's')
+            //{
 
-                    if (move.FillHole == true)
-                    {
-                        HPointList.Add(move);
+            //    foreach (BestMove move in HPointList)// filles in a gap for i blocks
+            //    {
 
-                        HPoint = move;
-                        Debug.WriteLine(" HM " + HPoint.HorizontalMovement);
-                        Debug.WriteLine(" HP " + HPoint.HighestPoint);
-                        Debug.WriteLine(" RS " + HPoint.RotationState);
-                        HPointList.Clear();
-                        moves.Clear();
-                        GapList.Clear();
-                        return HPoint.HorizontalMovement;
-                    }
+            //        if (move.FillHole == true)
+            //        {
+            //            HPointList.Add(move);
 
-                }
-            }
+            //            HPoint = move;
+            //            Debug.WriteLine(" HM " + HPoint.HorizontalMovement);
+            //            Debug.WriteLine(" HP " + HPoint.HighestPoint);
+            //            Debug.WriteLine(" RS " + HPoint.RotationState);
+            //            HPointList.Clear();
+            //            moves.Clear();
+            //            GapList.Clear();
+            //            return HPoint.HorizontalMovement;
+            //        }
+
+            //    }
+            //}
             //HPoint = HPointList.OrderByDescending(Top => Top.HighestPoint).FirstOrDefault();
             if (HPoint.CompleteRows == true)// checks if a completed row is found and plays that
             {

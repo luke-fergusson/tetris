@@ -35,7 +35,7 @@ public class Blocks
     {
         board = new Board();
         PB = new char[10, 20];
-        board.blankBoard();
+        board.BlankBoard();
         for (int i = 0; i < 10; i++)
         {
             for (int j = 0; j < 20; j++)

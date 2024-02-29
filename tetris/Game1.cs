@@ -13,6 +13,8 @@ using SharpDX.MediaFoundation;
 using System.Reflection.Metadata.Ecma335;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace tetris
 {
@@ -26,14 +28,15 @@ namespace tetris
         {
             Menu,
             Game,
-            End,
-            Ai
+            Difficulty,
+            Ai,
+            Paused
         }
         private GameStates _state;
         private SpriteFont _font;
         private SpriteFont _ScreenTitle;
         private readonly string Title = "TETRIS";
-        
+
         public char Row;
         public char col;
 
@@ -41,8 +44,8 @@ namespace tetris
         public O_Block O_Block = new O_Block();
         public I_Block I_Block = new I_Block();
         public J_Block J_Block = new J_Block();
-        public L_Block L_Block = new L_Block(); 
-        public T_Block T_Block = new T_Block(); 
+        public L_Block L_Block = new L_Block();
+        public T_Block T_Block = new T_Block();
         public S_Block S_Block = new S_Block();// all block inisalised 
         public Z_Block Z_Block = new Z_Block();
 
@@ -50,7 +53,7 @@ namespace tetris
 
         public char[,] currentBoards;
         public char[,] previousBoards;
-        
+
         private const float Time = 0;
         private float TimeElapsed;
 
@@ -80,6 +83,8 @@ namespace tetris
         public int HorizontalMove;
 
         private List<component> _gameComponents;
+        private List<component> _DifficultySettings;
+        private List<component> _PausedList;
 
         private int numberOfMoves = 0;
         private int numOfRot = 0;
@@ -91,10 +96,12 @@ namespace tetris
         private KeyboardState currentKeyboardState;
 
         private Song gameMusic;
-       
+
+        private const string PATH = "stats.json";
+
         public Game1()
         {
-            
+
 
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -112,7 +119,7 @@ namespace tetris
             _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
 
-            
+
         }
         private bool SpeedRampUp(GameTime gameTime)// the game progress speeds up the drop speed of the blocks
         {
@@ -120,9 +127,9 @@ namespace tetris
             count = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             TimeElapsed = TimeElapsed + count;
             int speedMultiplier = score % 1000;// checks the score for every thousand 
-            if(speedMultiplier == 0 && score != 0) 
+            if (speedMultiplier == 0 && score != 0)
             {
-                newSpeed = speed /(score / 1000);// for every thousand score increase by 10000th of that
+                newSpeed = speed / (score / 1000);// for every thousand score increase by 10000th of that
             }
             else
             {
@@ -130,7 +137,7 @@ namespace tetris
             }
             if (TimeElapsed > newSpeed)
             {
-                
+
                 TimeElapsed = Time;
                 return true;
             }
@@ -139,15 +146,15 @@ namespace tetris
         private bool DelayInput(GameTime gameTime)// the game progress speeds up the drop speed of the blocks
         {
             delay = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            
+
             totalDelay += delay;
 
 
-            
-            if(totalDelay > 100)
+
+            if (totalDelay > 100)
             {
                 totalDelay = Time;
-                return true ;
+                return true;
             }
             return false;
         }
@@ -156,15 +163,15 @@ namespace tetris
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            
+
             previousBoards = blocks.board.GetBoard();
-            //blocks = L_Block;
-            RanBlock();// generates a radom block
+            blocks = T_Block;
+            //RanBlock();// generates a radom block
             blocks.StarPosition();
             IsMouseVisible = true;
             _state = GameStates.Menu;
-            currentBoards = new char[10,20];
-            //BlockList.Add(blocks);
+            currentBoards = new char[10, 20];
+            BlockList.Add(blocks);
             BlockType = blocks.GetType();
 
             AI.SimulateMove(BlockType, blocks);
@@ -176,38 +183,107 @@ namespace tetris
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _newBlock = Content.Load<Texture2D>("sa");// this texture is used as the indivual blocks on the grid 
-           
+
             _font = Content.Load<SpriteFont>("buttonFont");
             _ScreenTitle = Content.Load<SpriteFont>("Title");
 
-
+            
             var PlayButton = new Button(Content.Load<Texture2D>("sa"), Content.Load<SpriteFont>("buttonFont"))// loads each button
             {
-                Position = new Vector2(_width / 2 + 375, _height / 2 + 150),// position of each button
+                Position = new Vector2(_width / 2 + 375, _height / 2 + 100),// position of each button
                 Text = "play",
-                
             };
             var AIButton = new Button(Content.Load<Texture2D>("sa"), Content.Load<SpriteFont>("buttonFont"))
             {
-                Position = new Vector2(_width / 2 + 375, _height / 2 + 350),
+                Position = new Vector2(_width / 2 + 375, _height / 2 + 300),
                 Text = "AI",
 
             }; var QuitButton = new Button(Content.Load<Texture2D>("sa"), Content.Load<SpriteFont>("ButtonFont"))
             {
-                Position = new Vector2(_width / 2 + 375, _height / 2 + 550),
+                Position = new Vector2(_width / 2 + 375, _height / 2 + 700),
                 Text = "Quit",
 
+            }; var DifficultyOne = new Button(Content.Load<Texture2D>("sa"), Content.Load<SpriteFont>("buttonFont"))
+            {
+                Position = new Vector2(_width / 2 + 250, _height / 2 + 300),
+                Text = "one",
+            }; var DifficultyTwo = new Button(Content.Load<Texture2D>("sa"), Content.Load<SpriteFont>("buttonFont"))
+            {
+                Position = new Vector2(_width / 2 + 500, _height / 2 + 300),
+                Text = "two",
+
+            }; var DifficultyThree = new Button(Content.Load<Texture2D>("sa"), Content.Load<SpriteFont>("ButtonFont"))
+            {
+                Position = new Vector2(_width / 2 + 750, _height / 2 + 300),
+                Text = "three",
+
+            }; var Resume = new Button(Content.Load<Texture2D>("sa"), Content.Load<SpriteFont>("buttonFont"))
+            {
+                Position = new Vector2(_width / 2 + 375, _height / 2 + 100),
+                Text = "Res-\nume",
+
             };
+            var Menu = new Button(Content.Load<Texture2D>("sa"), Content.Load<SpriteFont>("buttonFont"))
+            {
+                Position = new Vector2(_width / 2 + 375, _height / 2 + 300),
+                Text = "Menu",
+
+            };
+            var SaveGame = new Button(Content.Load<Texture2D>("sa"), Content.Load<SpriteFont>("buttonFont"))
+            {
+                Position = new Vector2(_width / 2 + 375, _height / 2 + 500),
+                Text = "Save",
+
+            };
+            var LoadGame = new Button(Content.Load<Texture2D>("sa"), Content.Load<SpriteFont>("buttonFont"))
+            {
+                Position = new Vector2(_width / 2 + 375, _height / 2 + 500),
+                Text = "Load",
+
+            };
+            var Wipe = new Button(Content.Load<Texture2D>("sa"), Content.Load<SpriteFont>("buttonFont"))
+            {
+                Position = new Vector2(_width / 2 + 525, _height / 2 + 500),
+                Text = "Wipe",
+
+            };
+            DifficultyOne.Click += DifficultyOne_Click;
+            DifficultyTwo.Click += DifficultyTwo_Click;
+            DifficultyThree.Click += DifficultyThree_Click;
+
             AIButton.Click += AIButton_Click;
             QuitButton.Click += QuitButton_Click;
-
             PlayButton.Click += PlayButton_Click;
+            LoadGame.Click += Load_Click;
+            Wipe.Click += Wipe_Click;
+
+            Resume.Click += Resume_Click;
+            Menu.Click += Menu_Click;
+            SaveGame.Click += Save_Click;
+
             _gameComponents = new List<component>()// list of component so easily can be drawn
             {
                 PlayButton,
                 AIButton,
+                LoadGame,
+                Wipe,
                 QuitButton,
             };
+
+            _DifficultySettings = new List<component>()
+            {
+                DifficultyOne,
+                DifficultyTwo,
+                DifficultyThree,
+            };
+            _PausedList = new List<component>()
+            {
+                Resume,
+                Menu,
+                SaveGame,
+                QuitButton,
+            };
+
             gameMusic = Content.Load<Song>("Tetris");
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Play(gameMusic);
@@ -216,7 +292,12 @@ namespace tetris
 
             // TODO: use this.Content to load your game content here
         }
-
+        /// <summary>
+        /// button methods
+        /// Control what happens after a button is clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void QuitButton_Click(object sender, EventArgs e)
         {
             Exit();// exits application
@@ -230,7 +311,55 @@ namespace tetris
 
         private void PlayButton_Click(object sender, EventArgs e)
         {
+            blocks.board.currentGameBoards = blocks.board.RestBoard();
+            blocks.StarPosition();
+            _state = GameStates.Difficulty; // loads game
+        }
+
+        private void DifficultyOne_Click(object sender, EventArgs e)
+        {
+            speed = 200;
             _state = GameStates.Game; // loads game
+        }
+
+        private void DifficultyTwo_Click(object sender, EventArgs e)
+        {
+            speed = 100;
+            _state = GameStates.Game; // loads game
+        }
+
+        private void DifficultyThree_Click(object sender, EventArgs e)
+        {
+            speed = 50;
+            _state = GameStates.Game; // loads game
+        }
+
+        private void Resume_Click(object sender, EventArgs e)
+        {
+
+            _state = GameStates.Game; // loads game
+        }
+
+        private void Menu_Click(object sender, EventArgs e)
+        { 
+            _state = GameStates.Menu; // loads game
+        }
+
+        private void Save_Click(object sender, EventArgs e)
+        {
+            Save(PATH);
+            _state = GameStates.Menu; // loads game
+        }
+
+        private void Load_Click(object sender, EventArgs e)
+        {
+            Load(PATH);
+            _state = GameStates.Game; // loads game
+        }
+        private void Wipe_Click(object sender, EventArgs e)
+        {
+            Wipe(PATH);
+            _state = GameStates.Menu; // loads game
         }
         /// <summary>
         /// 
@@ -242,7 +371,10 @@ namespace tetris
         /// <param name="gameTime"></param>
         protected override void Update(GameTime gameTime)
         {
-            
+            if(Keyboard.GetState().IsKeyDown(Keys.Enter) && (_state == GameStates.Game|| _state == GameStates.Ai))
+            {
+                _state = GameStates.Paused;
+            }
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             if(_state == GameStates.Menu)
@@ -252,7 +384,21 @@ namespace tetris
                     component.Update(gameTime);
                 }
             }
-            if(_state == GameStates.Ai)
+            if(_state == GameStates.Difficulty)
+            {
+                foreach(var component in _DifficultySettings)
+                {
+                    component.Update(gameTime);
+                }
+            }
+            if (_state == GameStates.Paused)
+            {
+                foreach (var component in _PausedList)
+                {
+                    component.Update(gameTime);
+                }
+            }
+            if (_state == GameStates.Ai)
             {
                 DrawBoard();
 
@@ -460,14 +606,17 @@ namespace tetris
                 DrawBoard();
                 this.IsMouseVisible = false;    
             }
-            if(_state == GameStates.End) 
+            if(_state == GameStates.Difficulty) 
             {
-                DrawEndScreen(gameTime); this.IsMouseVisible = true;
+                DrawDifficultyOption(gameTime);
+                this.IsMouseVisible = true;
+            }
+            if(_state == GameStates.Paused) 
+            {
+                DrawPausedMenu(gameTime);
+                this.IsMouseVisible= true;
             }
             
-            
-
-
             base.Draw(gameTime);
         }
         /// <summary>
@@ -538,24 +687,23 @@ namespace tetris
             _spriteBatch.End();
 
         }
-        public void DrawMenu(GameTime gameTime)
+        private void DrawMenu(GameTime gameTime)
         {
 
             _spriteBatch.Begin();
             _spriteBatch.DrawString(_ScreenTitle, Title, new Vector2(_width / 2 + 375, _height -375), Color.White);
             foreach (var component in _gameComponents)
-            {
-                
+            { 
                 component.Draw(gameTime, _spriteBatch);
             }
             _spriteBatch.End();
         }
-        public void GenerateNewBlock()
+        private void GenerateNewBlock()
         {
             
             currentBoards = previousBoards;
 
-            //blocks = new L_Block();
+            //blocks = new T_Block();
             //BlockList.Add(blocks);
             RanBlock();
             blocks.board.currentGameBoards = currentBoards;
@@ -564,7 +712,7 @@ namespace tetris
             blocks.StarPosition();
             DrawBoard();
         }
-        public void RanBlock()
+        private void RanBlock()
         {
             int num = random.Next(0, 7);
             switch (num)
@@ -601,7 +749,7 @@ namespace tetris
         /// </summary>
         /// <param name="Bottom"></param>
         /// <param name="BlockHit"></param>
-        public void LineCheck(bool Bottom, bool BlockHit)
+        private void LineCheck(bool Bottom, bool BlockHit)
         {
             int RowCount = 0;
             int LineCount = 0;
@@ -630,7 +778,7 @@ namespace tetris
             Score(RowCount);
         }
 
-        public void Score(int RowCount)
+        private void Score(int RowCount)
         {
             switch (RowCount)
             {
@@ -653,28 +801,86 @@ namespace tetris
             }
             
         }
-        public void ClearTop()// used to stop duplicate blocks when moving everything down
+        private void ClearTop()// used to stop duplicate blocks when moving everything down
         {
             for (int j = 0; j < 10; j++)
             {
-                for(int i = 0;i < 5; i++)
+                for(int i = 0;i < 6; i++)
                 {
                     blocks.board.ChangeBoard(j, i, '0');
                 }
                     
             }
         }
-       
-        public void DrawEndScreen(GameTime gameTime)
+        private void DrawDifficultyOption(GameTime gameTime)
         {
             _spriteBatch.Begin();
-            _spriteBatch.DrawString(_ScreenTitle, "GameOver", new Vector2(_width / 2 + 375, _height - 375), Color.Black);
-            foreach (var component in _gameComponents)
+            _spriteBatch.DrawString(_ScreenTitle, "Difficulty", new Vector2(_width / 2 + 375, _height - 375), Color.White);
+            foreach (var component in _DifficultySettings)
             {
-
                 component.Draw(gameTime, _spriteBatch);
             }
             _spriteBatch.End();
+        }
+        private void DrawPausedMenu(GameTime gameTime)
+        {
+            _spriteBatch.Begin();
+            _spriteBatch.DrawString(_ScreenTitle, "Paused", new Vector2(_width / 2 + 375, _height - 375), Color.White);
+            foreach (var component in _PausedList)
+            {
+                component.Draw(gameTime, _spriteBatch);
+            }
+            _spriteBatch.End();
+        }
+        private void Save(string fileName)
+        {
+            //blocks.M1[0] = '0';// sets current position to null so not copied over
+            //blocks.M2[0] = '0';
+            //blocks.M3[0] = '0';
+            //blocks.M4[0] = '0';
+
+            //blocks.M1[1] = '0';
+            //blocks.M2[1] = '0';
+            //blocks.M3[1] = '0';
+            //blocks.M4[1] = '0';
+            var gameStates = new
+            {
+                GameBoard = blocks.board.currentGameBoards,
+                CurrentScore = score,
+                CM1_0 = blocks.M1[0],
+                CM2_0 = blocks.M2[0],
+                CM3_0 = blocks.M3[0],
+                CM4_0 = blocks.M4[0],
+
+                CM1_1 = blocks.M1[1],
+                CM2_1 = blocks.M2[1],
+                CM3_1 = blocks.M3[1],
+                CM4_1 = blocks.M4[1],
+                CurrentSpeed = speed,
+            };
+            string jsonData = JsonConvert.SerializeObject(gameStates, Formatting.Indented);//used to convert array into a json format
+            File.WriteAllText(fileName, jsonData);
+        }
+        private void Load(string fileName)
+        {
+            try
+            {
+                string jsonData = File.ReadAllText(fileName);
+
+                var gameState = JsonConvert.DeserializeObject<dynamic>(jsonData);
+                blocks.board.currentGameBoards = gameState.GameBoard.ToObject<char[,]>();
+                score = gameState.CurrentScore;
+                blocks.board.currentGameBoards[gameState.CM1_0, gameState.CM1_1] = '0';
+                blocks.board.currentGameBoards[gameState.CM2_0, gameState.CM2_1] = '0';
+                blocks.board.currentGameBoards[gameState.CM3_0, gameState.CM3_1] = '0';
+                blocks.board.currentGameBoards[gameState.CM4_0, gameState.CM4_1] = '0';
+                speed = gameState.CurrentSpeed;
+            }
+            catch { }
+        }
+        private void Wipe(string fileName)
+        {
+            File.WriteAllText(fileName, string.Empty);
         }
     }
     

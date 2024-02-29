@@ -22,6 +22,7 @@ namespace tetris
         public Vector2 Position;
         public string Text { get; set; }
 
+
         public Button(Texture2D texture, SpriteFont font)
         {
             _texture = texture;

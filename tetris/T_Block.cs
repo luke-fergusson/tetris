@@ -1,13 +1,4 @@
-﻿using SharpDX;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace tetris
+﻿namespace tetris
 {
     public class T_Block : Blocks
     {
@@ -30,20 +21,20 @@ namespace tetris
 
             CurrentLetter = 't';
         }
-        
+
         public override bool GroundCollision()
         {
-            if(State == 0 || State ==3)
+            if (State == 0 || State == 3)
             {
                 BottomColumn = M1[0];
                 BottomRow = M1[1];
             }
-            if(State == 1)
+            if (State == 1)
             {
                 BottomColumn = M3[0];
                 BottomRow = M3[1];
             }
-            if(State == 2)
+            if (State == 2)
             {
                 BottomColumn = M4[0];
                 BottomRow = M4[1];
@@ -52,48 +43,48 @@ namespace tetris
         }
         public override bool RWallCollision()
         {
-            if(State == 0 || State == 3)
+            if (State == 0 || State == 3)
             {
-                BottomColumn = M3[0] +1;
-                BottomRow = M3[1] +1;
+                BottomColumn = M3[0] + 1;
+                BottomRow = M3[1] + 1;
             }
             if (State == 1)
             {
-                BottomColumn = M4[0] +1;
+                BottomColumn = M4[0] + 1;
                 BottomRow = M4[1] + 1;
             }
-            if(State == 2)
+            if (State == 2)
             {
                 BottomColumn = M1[0] + 1;
                 BottomRow = M1[1] + 1;
             }
-            
+
             return base.RWallCollision();
         }
         public override bool LWallCollision()
         {
-            if(State == 0 || State == 1)
+            if (State == 0 || State == 1)
             {
-                BottomColumn = M1[0]-1;
-                BottomRow = M1[1]-1;
+                BottomColumn = M1[0] - 1;
+                BottomRow = M1[1] - 1;
             }
-            if(State == 2)
+            if (State == 2)
             {
-                BottomColumn = M3[0]-1;
+                BottomColumn = M3[0] - 1;
                 BottomRow = M3[1] - 1;
             }
-            if(State == 3)
+            if (State == 3)
             {
                 BottomColumn = M4[0] - 1;
-                BottomRow = M4[1]-1;
+                BottomRow = M4[1] - 1;
             }
-            
+
             return base.LWallCollision();
         }
         public override bool BlockCollision()
         {
             PB = board.GetBoard();
-            
+
             if (!GroundCollision())
             {
                 if (State == 0)
@@ -114,7 +105,7 @@ namespace tetris
                 {
                     if (PB[M1[0], M1[1] + 1] != '0' || PB[M4[0], M4[1] + 1] != '0' || PB[M3[0], M3[1] + 1] != '0')
                     {
-                        
+
                         return true;
                     }
                 }
@@ -130,12 +121,12 @@ namespace tetris
         }
         public override void RotateClockwise()
         {
-            
+
             switch (State)
             {
                 case 0:
                     SetToZero();
-                    
+
                     M1[0] = M1[0] + 1;
                     M3[0] = M3[0] - 1;
                     M4[0] = M4[0] + 1;
@@ -145,10 +136,10 @@ namespace tetris
                     M2[1] = M2[1] - 1;
                     PB = board.GetBoard();
 
-                   
-                  
+
+
                     SetToLetter();
-                    
+
                     State = 1;
                     break;
                 case 1:
@@ -162,7 +153,7 @@ namespace tetris
                     M4[1] = M4[1] + 1;
 
                     SetToLetter();
-                 
+
 
                     State = 2;
                     break;
@@ -178,20 +169,20 @@ namespace tetris
                     M3[1] = M3[1] - 1;
                     M4[1] = M4[1] - 1;
                     SetToLetter();
-                   
 
-                        State = 3;
+
+                    State = 3;
                     break;
                 case 3:
                     SetToZero();
                     M1[0] = M1[0] - 1;
-                    M3[0] = M3[0] + 1; 
+                    M3[0] = M3[0] + 1;
                     M4[0] = M4[0] + 1;
 
                     M2[1] = M2[1] + 1;
                     M3[1] = M3[1] + 2;
                     SetToLetter();
-                  
+
                     State = 0;
                     break;
             }

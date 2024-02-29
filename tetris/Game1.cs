@@ -1,20 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SharpDX.DirectWrite;
-using SharpDX.XInput;
-using System;
-using System.Diagnostics;
-using System.Reflection;
-using System.Threading;
-using System.Timers;
-using System.Collections.Generic;
-using SharpDX.MediaFoundation;
-using System.Reflection.Metadata.Ecma335;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
-using System.IO;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace tetris
 {
@@ -187,7 +178,7 @@ namespace tetris
             _font = Content.Load<SpriteFont>("buttonFont");
             _ScreenTitle = Content.Load<SpriteFont>("Title");
 
-            
+
             var PlayButton = new Button(Content.Load<Texture2D>("sa"), Content.Load<SpriteFont>("buttonFont"))// loads each button
             {
                 Position = new Vector2(_width / 2 + 375, _height / 2 + 100),// position of each button
@@ -341,7 +332,7 @@ namespace tetris
         }
 
         private void Menu_Click(object sender, EventArgs e)
-        { 
+        {
             _state = GameStates.Menu; // loads game
         }
 
@@ -371,22 +362,22 @@ namespace tetris
         /// <param name="gameTime"></param>
         protected override void Update(GameTime gameTime)
         {
-            if(Keyboard.GetState().IsKeyDown(Keys.Enter) && (_state == GameStates.Game|| _state == GameStates.Ai))
+            if (Keyboard.GetState().IsKeyDown(Keys.Enter) && (_state == GameStates.Game || _state == GameStates.Ai))
             {
                 _state = GameStates.Paused;
             }
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            if(_state == GameStates.Menu)
+            if (_state == GameStates.Menu)
             {
-                foreach(var component in _gameComponents)// checks the buttons for interactions
+                foreach (var component in _gameComponents)// checks the buttons for interactions
                 {
                     component.Update(gameTime);
                 }
             }
-            if(_state == GameStates.Difficulty)
+            if (_state == GameStates.Difficulty)
             {
-                foreach(var component in _DifficultySettings)
+                foreach (var component in _DifficultySettings)
                 {
                     component.Update(gameTime);
                 }
@@ -402,7 +393,7 @@ namespace tetris
             {
                 DrawBoard();
 
-                
+
                 bottom = blocks.GroundCollision();
                 RWall = blocks.RWallCollision();
                 LWall = blocks.LWallCollision();
@@ -411,10 +402,10 @@ namespace tetris
 
                 if (!bottom && Timer)
                 {
-                    
+
                     blocks.Down();
                     LineCheck(blocks.GroundCollision(), blocks.BlockCollision());
-                    DrawBoard();  
+                    DrawBoard();
                 }
                 if (AI.HPoint.Direction == "Right")
                 {
@@ -431,11 +422,11 @@ namespace tetris
                         numberOfMoves++;
                     }
                 }
-                if(AI.HPoint.Direction == "Left")
+                if (AI.HPoint.Direction == "Left")
                 {
-                    while(numberOfMoves < HorizontalMove)
+                    while (numberOfMoves < HorizontalMove)
                     {
-                        if(!LWall && Totalnum != 4)
+                        if (!LWall && Totalnum != 4)
                         {
                             blocks.Left();
                             DrawBoard();
@@ -445,11 +436,11 @@ namespace tetris
                         numberOfMoves++;
                     }
                 }
-               
-                if(AI.HPoint.RotationState > 0)
+
+                if (AI.HPoint.RotationState > 0)
                 {
-                    
-                    while(numOfRot < AI.HPoint.RotationState)
+
+                    while (numOfRot < AI.HPoint.RotationState)
                     {
                         blocks.Down();
                         blocks.RotateClockwise();
@@ -457,8 +448,8 @@ namespace tetris
                         numOfRot++;
                     }
                 }
-                
-                
+
+
                 if (bottom)
                 {
                     LineCheck(blocks.GroundCollision(), blocks.BlockCollision());
@@ -478,7 +469,7 @@ namespace tetris
                 if (BlockHit && BlockList.Count > 1)
                 {
                     LineCheck(blocks.GroundCollision(), blocks.BlockCollision());
-                   
+
                     ClearTop();
                     GenerateNewBlock();
 
@@ -487,7 +478,7 @@ namespace tetris
                     HorizontalMove = AI.Best();
                     Totalnum = 0;
                     numberOfMoves = 0;
-                    numOfRot = 0; 
+                    numOfRot = 0;
                     DrawBoard();
                 }
                 LineCheck(blocks.GroundCollision(), blocks.BlockCollision());
@@ -516,8 +507,8 @@ namespace tetris
                         while (!blocks.GroundCollision() && !blocks.BlockCollision())
                         {
                             blocks.Down();
-                           
-                            DropBlock =true;
+
+                            DropBlock = true;
                         }
                     }
                 }
@@ -536,13 +527,13 @@ namespace tetris
                     GenerateNewBlock();
 
                 }
-                
+
                 if (Keyboard.GetState().IsKeyDown(Keys.D))
                 {
-                    
+
                     if (Delay && !RWall)
                     {
-                        
+
                         blocks.Right();
                         DrawBoard();
                     }
@@ -571,12 +562,12 @@ namespace tetris
                 {
                     LineCheck(blocks.GroundCollision(), blocks.BlockCollision());
                     ClearTop();
-                
+
                     GenerateNewBlock();
                 }
             }
-            
-            
+
+
 
             // TODO: Add your update logic here
 
@@ -589,34 +580,34 @@ namespace tetris
 
             // TODO: Add your drawing code here
 
-            if(_state == GameStates.Menu)
+            if (_state == GameStates.Menu)
             {
-                
+
                 DrawMenu(gameTime);
                 this.IsMouseVisible = true;
             }
-            if(_state == GameStates.Game)
+            if (_state == GameStates.Game)
             {
                 DrawBoard();
                 this.IsMouseVisible = false;
             }
-            if(_state == GameStates.Ai) 
+            if (_state == GameStates.Ai)
             {
 
                 DrawBoard();
-                this.IsMouseVisible = false;    
+                this.IsMouseVisible = false;
             }
-            if(_state == GameStates.Difficulty) 
+            if (_state == GameStates.Difficulty)
             {
                 DrawDifficultyOption(gameTime);
                 this.IsMouseVisible = true;
             }
-            if(_state == GameStates.Paused) 
+            if (_state == GameStates.Paused)
             {
                 DrawPausedMenu(gameTime);
-                this.IsMouseVisible= true;
+                this.IsMouseVisible = true;
             }
-            
+
             base.Draw(gameTime);
         }
         /// <summary>
@@ -626,18 +617,18 @@ namespace tetris
         private void DrawBoard()
         {
             previousBoards = blocks.board.GetBoard();
-            
+
             for (int i = 0; i < 10; i++)
             {
                 for (int j = 0; j < 20; j++)
                 {
-                    if (previousBoards[i,j] == '0' || previousBoards[i, j] == 0)
+                    if (previousBoards[i, j] == '0' || previousBoards[i, j] == 0)
                     {
                         _spriteBatch.Begin();
                         _spriteBatch.Draw(_newBlock, new Rectangle((50 * i) + _width - 100, 50 * j + 10, 50, 50), Color.White);
                         _spriteBatch.End();
                     }
-                    if(previousBoards[i, j] == 'o')
+                    if (previousBoards[i, j] == 'o')
                     {
                         _spriteBatch.Begin();
                         _spriteBatch.Draw(_newBlock, new Rectangle((50 * i) + _width - 100, 50 * j + 10, 50, 50), Color.Yellow);
@@ -655,13 +646,13 @@ namespace tetris
                         _spriteBatch.Draw(_newBlock, new Rectangle((50 * i) + _width - 100, 50 * j + 10, 50, 50), Color.Blue);
                         _spriteBatch.End();
                     }
-                    if (previousBoards[i,j] == 'l')
+                    if (previousBoards[i, j] == 'l')
                     {
                         _spriteBatch.Begin();
                         _spriteBatch.Draw(_newBlock, new Rectangle((50 * i) + _width - 100, 50 * j + 10, 50, 50), Color.Orange);
                         _spriteBatch.End();
                     }
-                    if(previousBoards[i,j] == 't')
+                    if (previousBoards[i, j] == 't')
                     {
                         _spriteBatch.Begin();
                         _spriteBatch.Draw(_newBlock, new Rectangle((50 * i) + _width - 100, 50 * j + 10, 50, 50), Color.Purple);
@@ -691,24 +682,24 @@ namespace tetris
         {
 
             _spriteBatch.Begin();
-            _spriteBatch.DrawString(_ScreenTitle, Title, new Vector2(_width / 2 + 375, _height -375), Color.White);
+            _spriteBatch.DrawString(_ScreenTitle, Title, new Vector2(_width / 2 + 375, _height - 375), Color.White);
             foreach (var component in _gameComponents)
-            { 
+            {
                 component.Draw(gameTime, _spriteBatch);
             }
             _spriteBatch.End();
         }
         private void GenerateNewBlock()
         {
-            
+
             currentBoards = previousBoards;
 
             //blocks = new T_Block();
             //BlockList.Add(blocks);
             RanBlock();
             blocks.board.currentGameBoards = currentBoards;
-            
-            
+
+
             blocks.StarPosition();
             DrawBoard();
         }
@@ -738,7 +729,7 @@ namespace tetris
                 case 6:
                     blocks = new T_Block();
                     break;
-                default:break;
+                default: break;
             }
             BlockList.Add(blocks);
         }
@@ -799,17 +790,17 @@ namespace tetris
                 default:
                     break;
             }
-            
+
         }
         private void ClearTop()// used to stop duplicate blocks when moving everything down
         {
             for (int j = 0; j < 10; j++)
             {
-                for(int i = 0;i < 6; i++)
+                for (int i = 0; i < 6; i++)
                 {
                     blocks.board.ChangeBoard(j, i, '0');
                 }
-                    
+
             }
         }
         private void DrawDifficultyOption(GameTime gameTime)
@@ -883,6 +874,6 @@ namespace tetris
             File.WriteAllText(fileName, string.Empty);
         }
     }
-    
- 
+
+
 }

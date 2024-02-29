@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-public class Blocks
+﻿public class Blocks
 {
     public Board board { get; set; }
     public int BottomRow;
@@ -17,7 +15,7 @@ public class Blocks
 
     public virtual void Down()
     {
-        
+
         SetToZero();
         M1[1] = M1[1] + 1;
         M2[1] = M2[1] + 1;
@@ -25,7 +23,7 @@ public class Blocks
         M4[1] = M4[1] + 1;
         SetToLetter();
         //sets each current position on the board to 0 moves all the coordinates down and updates there position
-        
+
     }
     public virtual void StarPosition()
     {
@@ -68,20 +66,20 @@ public class Blocks
     {
         if (BottomRow == 19)// an inherited method as this needs to be different for each block as the bottom coordinates change with each rotation state and block
         {
-            
+
             return true;
         }
-        
+
         return false;
     }
     public virtual bool RWallCollision()// checks for Right wall collisions, stopping blocks going out of bounds in the array 
     {
-        if (BottomColumn-1 == 9)
+        if (BottomColumn - 1 == 9)
         {
             return true;
         }
         PB = board.GetBoard();
-        if (PB[BottomColumn, BottomRow-1] != '0')
+        if (PB[BottomColumn, BottomRow - 1] != '0')
         {
             return true;
         }
@@ -91,12 +89,12 @@ public class Blocks
     }
     public virtual bool LWallCollision()// checks for left wall collisions, stoppin gblocks going out of bounds in the array
     {
-        if (BottomColumn+1 == 0)
+        if (BottomColumn + 1 == 0)
         {
             return true;
         }
         PB = board.GetBoard();
-        if (PB[BottomColumn, BottomRow+1] != '0')
+        if (PB[BottomColumn, BottomRow + 1] != '0')
         {
             return true;
         }
@@ -110,7 +108,7 @@ public class Blocks
     /// </summary>
     /// <returns></returns>
     public virtual bool BlockCollision()
-    {  
+    {
         if (!GroundCollision())
         {
             if (PB[BottomColumn, BottomRow + 1] != '0')
@@ -120,7 +118,7 @@ public class Blocks
             if (PB[RColumn - 1, RRow + 1] != '0')
             {
                 return true;
-            }  
+            }
             return false;
         }
         return false;
@@ -163,18 +161,18 @@ public class Blocks
 
                 if (count - 1 >= 0)// moves everything down one line as long as your not at the bottom
                 {
-                    
+
                     board.ChangeBoard(i, count, board.GetCurrentPos(i, count - 1));
                 }
                 count--;
-                
+
             }
 
 
         }
 
     }
-    
+
 
 
 

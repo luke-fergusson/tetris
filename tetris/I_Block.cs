@@ -1,19 +1,9 @@
-﻿using SharpDX;
-using SharpDX.Direct2D1;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace tetris
+﻿namespace tetris
 {
     public class I_Block : Blocks
-    {     
-     
-       
+    {
+
+
         /*
          *          M1
          *          M2
@@ -32,11 +22,11 @@ namespace tetris
 
             CurrentLetter = 'i';
         }
-        
-       
-       
-        
-        
+
+
+
+
+
         public override bool GroundCollision()
         {
             BottomRow = M4[1];
@@ -45,53 +35,53 @@ namespace tetris
         }
         public override bool RWallCollision()
         {
-            BottomRow = M4[1] +1;
-            BottomColumn = M4[0]+1;
+            BottomRow = M4[1] + 1;
+            BottomColumn = M4[0] + 1;
             return base.RWallCollision();
         }
         public override bool LWallCollision()
         {
-            BottomRow = M1[1]-1;
-            BottomColumn = M1[0]-1;
+            BottomRow = M1[1] - 1;
+            BottomColumn = M1[0] - 1;
             return base.LWallCollision();
         }
         public override bool BlockCollision()
         {
-            
+
 
             PB = board.GetBoard();
             if (!GroundCollision())
             {
-                if (State == 1 )
+                if (State == 1)
                 {
 
                     if (PB[M4[0], M4[1] + 1] != '0' || PB[M3[0], M3[1] + 1] != '0' || PB[M2[0], M2[1] + 1] != '0' || PB[M1[0], M1[1] + 1] != '0')
                     {
-                        
+
                         return true;
                     }
                 }
-                else if(State == 0 || State ==2)
+                else if (State == 0 || State == 2)
                 {
-                    if(PB[M4[0], M4[1] + 1] != '0' )
+                    if (PB[M4[0], M4[1] + 1] != '0')
                     {
-                        
+
                         return true;
                     }
                 }
-                
-                
+
+
             }
             return false;
-            
+
         }
         public override void RotateClockwise()
         {
-            
+
             switch (State)
             {
                 case 0:
-       
+
                     SetToZero();
 
                     M1[0] = M2[0] - 1;
@@ -107,7 +97,7 @@ namespace tetris
                     break;
                 case 1:
                     SetToZero();
-                   
+
 
                     M1[0] = M3[0];
                     M2[0] = M3[0];
@@ -117,32 +107,32 @@ namespace tetris
                     M3[1] = M3[1] + 1;
                     M4[1] = M3[1] + 1;
 
-                   
+
                     SetToLetter();
                     State = 2;
                     break;
                 case 2:
                     SetToZero();
-                 
 
-                    M1[0] = M3[0] -2;
+
+                    M1[0] = M3[0] - 2;
                     M2[0] = M3[0] - 1;
-                    M4[0] = M3[0]+1;
+                    M4[0] = M3[0] + 1;
 
                     M1[1] = M3[1];
                     M2[1] = M3[1];
                     M4[1] = M3[1];
 
-                    
+
                     SetToLetter();
                     State = 0;
                     break;
-                
+
             }
 
-            
+
         }
-        
-        
+
+
     }
 }

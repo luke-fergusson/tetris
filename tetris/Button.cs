@@ -1,12 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SharpDX.Direct3D9;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace tetris
 {
@@ -36,23 +31,23 @@ namespace tetris
                 return new Rectangle((int)Position.X, (int)Position.Y, 100, 100);
             }
         }
-        
-        public override void Draw(GameTime gameTime , SpriteBatch spriteBatch)
+
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             var colour = Color.White;
             if (_ishov)
             {
                 colour = Color.Gray;
-                
+
 
             }
             spriteBatch.Draw(_texture, Rectangle, colour);
             if (!string.IsNullOrEmpty(Text))
             {
-                var x = (Rectangle.X  + (Rectangle.Width / 2))-(_font.MeasureString(Text).X /2);// used to center text and draw buttons
+                var x = (Rectangle.X + (Rectangle.Width / 2)) - (_font.MeasureString(Text).X / 2);// used to center text and draw buttons
                 var y = (Rectangle.Y + (Rectangle.Height / 2)) - (_font.MeasureString(Text).Y / 2);
 
-                spriteBatch.DrawString(_font, Text, new Vector2(x,y), Color.Black);
+                spriteBatch.DrawString(_font, Text, new Vector2(x, y), Color.Black);
             }
         }
 
@@ -61,7 +56,7 @@ namespace tetris
             previousState = mouseState;
             mouseState = Mouse.GetState();
 
-            var mouseRectangle = new Rectangle(mouseState.X, mouseState.Y,1,1);
+            var mouseRectangle = new Rectangle(mouseState.X, mouseState.Y, 1, 1);
 
             _ishov = false;
             if (mouseRectangle.Intersects(Rectangle))

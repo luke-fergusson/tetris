@@ -1,13 +1,4 @@
-﻿using SharpDX;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace tetris
+﻿namespace tetris
 {
     public class Z_Block : Blocks
     {
@@ -33,47 +24,47 @@ namespace tetris
         }
         public override bool GroundCollision()
         {
-            if(State == 0 || State == 1)
+            if (State == 0 || State == 1)
             {
                 BottomColumn = M4[0];
                 BottomRow = M4[1];
             }
-            if(State == 2 || State == 3)
+            if (State == 2 || State == 3)
             {
                 BottomColumn = M1[0];
                 BottomRow = M1[1];
             }
-            
+
             return base.GroundCollision();
         }
         public override bool RWallCollision()
         {
-            if(State == 0 || State == 3)
+            if (State == 0 || State == 3)
             {
                 BottomColumn = M4[0] + 1;
                 BottomRow = M4[1] + 1;
             }
-            if(State == 1 || State == 2)
+            if (State == 1 || State == 2)
             {
-                BottomColumn = M1[0] +1;
+                BottomColumn = M1[0] + 1;
                 BottomRow = M1[1] + 1;
             }
-           
+
             return base.RWallCollision();
         }
         public override bool LWallCollision()
         {
-            if(State == 0 || State ==3)
+            if (State == 0 || State == 3)
             {
                 BottomColumn = M1[0] - 1;
                 BottomRow = M1[1] - 1;
             }
-            if(State == 1 || State == 2)
+            if (State == 1 || State == 2)
             {
                 BottomColumn = M4[0] - 1;
-                BottomRow = M4[1] -1;
+                BottomRow = M4[1] - 1;
             }
-            
+
             return base.LWallCollision();
         }
         public override bool BlockCollision()

@@ -1,34 +1,19 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using SharpDX.Direct2D1;
-using tetris;
-
-public class Board
+﻿public class Board
 {
     public char[,] currentGameBoards;
     public char Row;
     public char Col;
-    
+
 
     public Board()
-	{       
+    {
         currentGameBoards = new char[10, 20]; // contructor
-        
+
     }
 
     public void BlankBoard()// sets all the values in the grid to 0
     {
-        currentGameBoards = new char[10,20];
+        currentGameBoards = new char[10, 20];
         for (int i = 0; i < 10; i++)
         {
             for (int j = 0; j < 20; j++)
@@ -40,11 +25,11 @@ public class Board
 
     public void ChangeBoard(int row, int col, char val)// used to update board
     {
-        if(row <=9 && col <=19) // checks that changes don't go out of bounds of the array
+        if (row <= 9 && col <= 19) // checks that changes don't go out of bounds of the array
         {
             currentGameBoards[row, col] = val;
         }
-        
+
     }
 
     public char[,] GetBoard()

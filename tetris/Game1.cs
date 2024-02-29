@@ -66,6 +66,7 @@ namespace tetris
         public bool BlockHit;
 
         public List<Blocks> BlockList = new List<Blocks>();// list of blocks
+        public List<int> LeaderBoard = new List<int>();
 
         public Random random = new Random();
         public Queue<int> upComingBlocks = new Queue<int>(4);// stores the next fall blocks to be called
@@ -89,6 +90,7 @@ namespace tetris
         private Song gameMusic;
 
         private const string PATH = "stats.json";
+        private const string PATH_Leadboard = "leadboard.json";
 
         public Game1()
         {
@@ -680,9 +682,22 @@ namespace tetris
         }
         private void DrawMenu(GameTime gameTime)
         {
-
+            string jsonData = File.ReadAllText(PATH_Leadboard);
+            LeaderBoard = JsonConvert.DeserializeObject<List<int>>(jsonData);
+            LeaderBoard.Sort((x, y) => y.CompareTo(x));
             _spriteBatch.Begin();
             _spriteBatch.DrawString(_ScreenTitle, Title, new Vector2(_width / 2 + 375, _height - 375), Color.White);
+            _spriteBatch.DrawString(_font, "LeaderBoard", new Vector2(50, 50), Color.White);
+            _spriteBatch.DrawString(_font, "1. " + LeaderBoard[0], new Vector2(50, 100), Color.White);
+            _spriteBatch.DrawString(_font, "2. " + LeaderBoard[1], new Vector2(50, 150), Color.White);
+            _spriteBatch.DrawString(_font, "3. " + LeaderBoard[2], new Vector2(50, 200), Color.White);
+            _spriteBatch.DrawString(_font, "4. " + LeaderBoard[3], new Vector2(50, 250), Color.White);
+            _spriteBatch.DrawString(_font, "5. " + LeaderBoard[4], new Vector2(50, 300), Color.White);
+            _spriteBatch.DrawString(_font, "6. " + LeaderBoard[5], new Vector2(50, 350), Color.White);
+            _spriteBatch.DrawString(_font, "7. " + LeaderBoard[6], new Vector2(50, 400), Color.White);
+            _spriteBatch.DrawString(_font, "8. " + LeaderBoard[7], new Vector2(50, 450), Color.White);
+            _spriteBatch.DrawString(_font, "9. " + LeaderBoard[8], new Vector2(50, 500), Color.White);
+            _spriteBatch.DrawString(_font, "10. " + LeaderBoard[9], new Vector2(50, 550), Color.White);
             foreach (var component in _gameComponents)
             {
                 component.Draw(gameTime, _spriteBatch);
@@ -825,20 +840,12 @@ namespace tetris
         }
         private void Save(string fileName)
         {
-            //blocks.M1[0] = '0';// sets current position to null so not copied over
-            //blocks.M2[0] = '0';
-            //blocks.M3[0] = '0';
-            //blocks.M4[0] = '0';
-
-            //blocks.M1[1] = '0';
-            //blocks.M2[1] = '0';
-            //blocks.M3[1] = '0';
-            //blocks.M4[1] = '0';
+           
             var gameStates = new
             {
                 GameBoard = blocks.board.currentGameBoards,
                 CurrentScore = score,
-                CM1_0 = blocks.M1[0],
+                CM1_0 = blocks.M1[0],// sets current position to null so not copied over
                 CM2_0 = blocks.M2[0],
                 CM3_0 = blocks.M3[0],
                 CM4_0 = blocks.M4[0],
@@ -851,6 +858,10 @@ namespace tetris
             };
             string jsonData = JsonConvert.SerializeObject(gameStates, Formatting.Indented);//used to convert array into a json format
             File.WriteAllText(fileName, jsonData);
+
+            LeaderBoard.Add(score);
+            string topScore = JsonConvert.SerializeObject(LeaderBoard);
+            File.WriteAllText(PATH_Leadboard, topScore);
         }
         private void Load(string fileName)
         {

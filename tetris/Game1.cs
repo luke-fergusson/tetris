@@ -21,7 +21,8 @@ namespace tetris
             Game,
             Difficulty,
             Ai,
-            Paused
+            Paused,
+            End
         }
         private GameStates _state;
         private SpriteFont _font;
@@ -74,9 +75,10 @@ namespace tetris
         public Type BlockType;
         public int HorizontalMove;
 
-        private List<component> _gameComponents;
+        private List<component> _GameComponents;
         private List<component> _DifficultySettings;
         private List<component> _PausedList;
+        private List<component> _EndComponets;
 
         private int numberOfMoves = 0;
         private int numOfRot = 0;
@@ -91,6 +93,8 @@ namespace tetris
 
         private const string PATH = "stats.json";
         private const string PATH_Leadboard = "leadboard.json";
+
+        private bool Checked = false; // checks if line has been moved down
 
         public Game1()
         {
@@ -181,7 +185,7 @@ namespace tetris
             _ScreenTitle = Content.Load<SpriteFont>("Title");
 
 
-            var PlayButton = new Button(Content.Load<Texture2D>("sa"), Content.Load<SpriteFont>("buttonFont"))// loads each button
+            var PlayButton = new Button(Content.Load<Texture2D>("sa"), Content.Load<SpriteFont>("buttonFont"))// creates a new button with the text sa and with the font of of button font
             {
                 Position = new Vector2(_width / 2 + 375, _height / 2 + 100),// position of each button
                 Text = "play",
@@ -239,8 +243,13 @@ namespace tetris
                 Position = new Vector2(_width / 2 + 525, _height / 2 + 500),
                 Text = "Wipe",
 
+            }; var QuitButton2 = new Button(Content.Load<Texture2D>("sa"), Content.Load<SpriteFont>("ButtonFont"))
+            {
+                Position = new Vector2(_width / 2 + 375, _height / 2 + 500),
+                Text = "Quit",
+
             };
-            DifficultyOne.Click += DifficultyOne_Click;
+            DifficultyOne.Click += DifficultyOne_Click;// links an instance of a click with a method of what happens
             DifficultyTwo.Click += DifficultyTwo_Click;
             DifficultyThree.Click += DifficultyThree_Click;
 
@@ -254,7 +263,9 @@ namespace tetris
             Menu.Click += Menu_Click;
             SaveGame.Click += Save_Click;
 
-            _gameComponents = new List<component>()// list of component so easily can be drawn
+            QuitButton2.Click += QuitButton_Click;
+
+            _GameComponents = new List<component>()// list of component so easily can be drawn
             {
                 PlayButton,
                 AIButton,
@@ -275,6 +286,11 @@ namespace tetris
                 Menu,
                 SaveGame,
                 QuitButton,
+            };
+            _EndComponets = new List<component>()
+            {
+                Menu,
+                QuitButton2,
             };
 
             gameMusic = Content.Load<Song>("Tetris");
@@ -349,16 +365,21 @@ namespace tetris
             Load(PATH);
             _state = GameStates.Game; // loads game
         }
+
         private void Wipe_Click(object sender, EventArgs e)
         {
             Wipe(PATH);
             _state = GameStates.Menu; // loads game
         }
+
         /// <summary>
         /// 
         /// Each simulation of a move returns a horizonatal movement, left or right and rotation state
         /// based on the quantites specified it plays each move by going though a while loop until the condition is met
         /// these values are reset after each move is played 
+        /// 
+        /// checks each gamestate and checks the relavent code
+        /// if a menu is drawn then loops through each component checking for interactions
         /// 
         /// </summary>
         /// <param name="gameTime"></param>
@@ -372,7 +393,14 @@ namespace tetris
                 Exit();
             if (_state == GameStates.Menu)
             {
-                foreach (var component in _gameComponents)// checks the buttons for interactions
+                foreach (var component in _GameComponents)// checks the buttons for interactions
+                {
+                    component.Update(gameTime);
+                }
+            }
+            if (_state == GameStates.End)
+            {
+                foreach (var component in _EndComponets)// checks the buttons for interactions
                 {
                     component.Update(gameTime);
                 }
@@ -471,7 +499,6 @@ namespace tetris
                 if (BlockHit && BlockList.Count > 1)
                 {
                     LineCheck(blocks.GroundCollision(), blocks.BlockCollision());
-
                     ClearTop();
                     GenerateNewBlock();
 
@@ -491,6 +518,7 @@ namespace tetris
             /// 
             if (_state == GameStates.Game)
             {
+                Checked = false;
                 previousKeyboardState = currentKeyboardState;
                 currentKeyboardState = Keyboard.GetState();
                 LineCheck(blocks.GroundCollision(), blocks.BlockCollision());
@@ -510,7 +538,7 @@ namespace tetris
                         {
                             blocks.Down();
 
-                            DropBlock = true;
+                            DropBlock = true;// stops the drop block feature going out of bounds and going through blocks
                         }
                     }
                 }
@@ -525,9 +553,11 @@ namespace tetris
                 if (bottom)
                 {
                     LineCheck(blocks.GroundCollision(), blocks.BlockCollision());
-                    ClearTop();
+                    if (Checked == false)
+                    {
+                        EndGame();
+                    }
                     GenerateNewBlock();
-
                 }
 
                 if (Keyboard.GetState().IsKeyDown(Keys.D))
@@ -563,9 +593,12 @@ namespace tetris
                 if (BlockHit && BlockList.Count > 1)
                 {
                     LineCheck(blocks.GroundCollision(), blocks.BlockCollision());
-                    ClearTop();
-
+                    if (Checked == false)
+                    {
+                        EndGame();
+                    }
                     GenerateNewBlock();
+
                 }
             }
 
@@ -581,10 +614,9 @@ namespace tetris
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-
+            // draws each states screen
             if (_state == GameStates.Menu)
             {
-
                 DrawMenu(gameTime);
                 this.IsMouseVisible = true;
             }
@@ -607,6 +639,11 @@ namespace tetris
             if (_state == GameStates.Paused)
             {
                 DrawPausedMenu(gameTime);
+                this.IsMouseVisible = true;
+            }
+            if (_state == GameStates.End)
+            {
+                DrawEndScreen(gameTime);
                 this.IsMouseVisible = true;
             }
 
@@ -682,23 +719,17 @@ namespace tetris
         }
         private void DrawMenu(GameTime gameTime)
         {
-            string jsonData = File.ReadAllText(PATH_Leadboard);
-            LeaderBoard = JsonConvert.DeserializeObject<List<int>>(jsonData);
+            string jsonData = File.ReadAllText(PATH_Leadboard);// loads the data stored in the json file 
+            LeaderBoard = JsonConvert.DeserializeObject<List<int>>(jsonData);// converts data back into a useable format 
             LeaderBoard.Sort((x, y) => y.CompareTo(x));
             _spriteBatch.Begin();
             _spriteBatch.DrawString(_ScreenTitle, Title, new Vector2(_width / 2 + 375, _height - 375), Color.White);
             _spriteBatch.DrawString(_font, "LeaderBoard", new Vector2(50, 50), Color.White);
-            _spriteBatch.DrawString(_font, "1. " + LeaderBoard[0], new Vector2(50, 100), Color.White);
-            _spriteBatch.DrawString(_font, "2. " + LeaderBoard[1], new Vector2(50, 150), Color.White);
-            _spriteBatch.DrawString(_font, "3. " + LeaderBoard[2], new Vector2(50, 200), Color.White);
-            _spriteBatch.DrawString(_font, "4. " + LeaderBoard[3], new Vector2(50, 250), Color.White);
-            _spriteBatch.DrawString(_font, "5. " + LeaderBoard[4], new Vector2(50, 300), Color.White);
-            _spriteBatch.DrawString(_font, "6. " + LeaderBoard[5], new Vector2(50, 350), Color.White);
-            _spriteBatch.DrawString(_font, "7. " + LeaderBoard[6], new Vector2(50, 400), Color.White);
-            _spriteBatch.DrawString(_font, "8. " + LeaderBoard[7], new Vector2(50, 450), Color.White);
-            _spriteBatch.DrawString(_font, "9. " + LeaderBoard[8], new Vector2(50, 500), Color.White);
-            _spriteBatch.DrawString(_font, "10. " + LeaderBoard[9], new Vector2(50, 550), Color.White);
-            foreach (var component in _gameComponents)
+            for (int i = 0; i < Math.Min(LeaderBoard.Count, 10); i++)//loops through each item pasting the answer, maths . min if theres fewer than 10 items in the list error checking
+            {
+                _spriteBatch.DrawString(_font, $"{i + 1}. {LeaderBoard[i]}", new Vector2(50, 100 + i * 50), Color.White);
+            }
+            foreach (var component in _GameComponents)
             {
                 component.Draw(gameTime, _spriteBatch);
             }
@@ -706,18 +737,15 @@ namespace tetris
         }
         private void GenerateNewBlock()
         {
-
             currentBoards = previousBoards;
-
             //blocks = new T_Block();
             //BlockList.Add(blocks);
             RanBlock();
             blocks.board.currentGameBoards = currentBoards;
-
-
             blocks.StarPosition();
             DrawBoard();
         }
+        //generates a random block from 1 to sever and adds them to a queue
         private void RanBlock()
         {
             int num = random.Next(0, 7);
@@ -775,15 +803,17 @@ namespace tetris
                     }
                     if (LineCount == 10)
                     {
+                        Checked = true;
                         RowCount++;
                         blocks.LineMoveDown(j);
+                        ClearTop();
                     }
                     LineCount = 0;
                 }
             }
             Score(RowCount);
         }
-
+        // the scoring systme for lines
         private void Score(int RowCount)
         {
             switch (RowCount)
@@ -807,17 +837,7 @@ namespace tetris
             }
 
         }
-        private void ClearTop()// used to stop duplicate blocks when moving everything down
-        {
-            for (int j = 0; j < 10; j++)
-            {
-                for (int i = 0; i < 6; i++)
-                {
-                    blocks.board.ChangeBoard(j, i, '0');
-                }
 
-            }
-        }
         private void DrawDifficultyOption(GameTime gameTime)
         {
             _spriteBatch.Begin();
@@ -840,8 +860,8 @@ namespace tetris
         }
         private void Save(string fileName)
         {
-           
-            var gameStates = new
+
+            var gameStates = new// all the items you want copying over
             {
                 GameBoard = blocks.board.currentGameBoards,
                 CurrentScore = score,
@@ -864,7 +884,7 @@ namespace tetris
             File.WriteAllText(PATH_Leadboard, topScore);
         }
         private void Load(string fileName)
-        {
+        {// attempts to load the json file and vonvert back into a game board
             try
             {
                 string jsonData = File.ReadAllText(fileName);
@@ -880,9 +900,40 @@ namespace tetris
             }
             catch { }
         }
-        private void Wipe(string fileName)
+        private static void Wipe(string fileName)// deletes the current saved copy
         {
             File.WriteAllText(fileName, string.Empty);
+        }
+        private void ClearTop()// used to stop duplicate blocks when moving everything down
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                for (int i = 0; i < 6; i++)
+                {
+                    blocks.board.ChangeBoard(j, i, '0');
+                }
+
+            }
+        }
+        private void EndGame()// check if the game has been lost
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                if (blocks.board.currentGameBoards[i, 1] != '0')
+                {
+                    _state = GameStates.End;
+                }
+            }
+        }
+        private void DrawEndScreen(GameTime gameTime)
+        {
+            _spriteBatch.Begin();
+            _spriteBatch.DrawString(_ScreenTitle, "GameOver", new Vector2(_width / 2 + 375, _height - 375), Color.White);
+            foreach (var component in _EndComponets)
+            {
+                component.Draw(gameTime, _spriteBatch);
+            }
+            _spriteBatch.End();
         }
     }
 

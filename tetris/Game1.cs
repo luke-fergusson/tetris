@@ -161,14 +161,14 @@ namespace tetris
             // TODO: Add your initialization logic here
 
             previousBoards = blocks.board.GetBoard();
-            //blocks = T_Block;
+            //blocks = Z_Block;
             //RanBlock();// generates a radom block
             TempOrder();
             blocks.StarPosition();
             IsMouseVisible = true;
             _state = GameStates.Menu;
             currentBoards = new char[10, 20];
-            BlockList.Add(blocks);
+            //BlockList.Add(blocks);
             BlockType = blocks.GetType();
 
             AI.SimulateMove(BlockType, blocks);
@@ -532,8 +532,6 @@ namespace tetris
                 {
                     if (Delay)
                     {
-
-
                         while (!blocks.GroundCollision() && !blocks.BlockCollision())
                         {
                             blocks.Down();
@@ -738,7 +736,7 @@ namespace tetris
         private void GenerateNewBlock()
         {
             currentBoards = previousBoards;
-            //blocks = new T_Block();
+            //blocks = new Z_Block();
             //BlockList.Add(blocks);
             //RanBlock();
             TempOrder();

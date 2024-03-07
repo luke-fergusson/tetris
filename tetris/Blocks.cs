@@ -79,11 +79,17 @@
             return true;
         }
         PB = board.GetBoard();
-        if (PB[BottomColumn, BottomRow - 1] != '0')
+        try
         {
-            return true;
+            if (PB[BottomColumn, BottomRow - 1] != '0')
+            {
+                return true;
+            }
         }
+        catch
+        {
 
+        }
 
         return false;
     }
@@ -94,10 +100,18 @@
             return true;
         }
         PB = board.GetBoard();
-        if (PB[BottomColumn, BottomRow + 1] != '0')
+        try
         {
-            return true;
+            if (PB[BottomColumn, BottomRow + 1] != '0')
+            {
+                return true;
+            }
         }
+        catch
+        {
+
+        }
+        
         return false;
     }
     /// <summary>
@@ -127,14 +141,14 @@
     {
 
     }
-    public  void SetToZero()
+    public void SetToZero()
     {
         board.ChangeBoard(M1[0], M1[1], '0');
         board.ChangeBoard(M2[0], M2[1], '0');
         board.ChangeBoard(M3[0], M3[1], '0');
         board.ChangeBoard(M4[0], M4[1], '0');// replacing previous poistion with 0's 
     }
-    public  void SetToLetter()
+    public void SetToLetter()
     {
         board.ChangeBoard(M1[0], M1[1], CurrentLetter);
         board.ChangeBoard(M2[0], M2[1], CurrentLetter);

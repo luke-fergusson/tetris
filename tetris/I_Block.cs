@@ -48,25 +48,59 @@
         public override bool BlockCollision()
         {
 
-
             PB = board.GetBoard();
             if (!GroundCollision())
             {
                 if (State == 1)
                 {
-
-                    if (PB[M4[0], M4[1] + 1] != '0' || PB[M3[0], M3[1] + 1] != '0' || PB[M2[0], M2[1] + 1] != '0' || PB[M1[0], M1[1] + 1] != '0')
+                    try
                     {
+                        if (PB[M4[0], M4[1] + 1] != '0' || PB[M3[0], M3[1] + 1] != '0' || PB[M2[0], M2[1] + 1] != '0' || PB[M1[0], M1[1] + 1] != '0')
+                        {
 
-                        return true;
+                            return true;
+                        }
+                    }
+                    catch
+                    {
+                        if (M4[0] > 6)
+                        {
+                            SetToZero();
+                            M1[0] = M1[0] - 1;
+                            M2[0] = M2[0] - 1;
+                            M3[0] = M3[0] - 1;
+                            M4[0] = M4[0] - 1;
+                            SetToLetter();
+                        }
+                        if (M1[0] < 5)
+                        {
+                            SetToZero();
+                            M1[0] = M1[0] + 1;
+                            M2[0] = M2[0] + 1;
+                            M3[0] = M3[0] + 1;
+                            M4[0] = M4[0] + 1;
+                            SetToLetter();
+                        }
                     }
                 }
                 else if (State == 0 || State == 2)
                 {
-                    if (PB[M4[0], M4[1] + 1] != '0')
+                    try
                     {
+                        if (PB[M4[0], M4[1] + 1] != '0')
+                        {
 
-                        return true;
+                            return true;
+                        }
+                    }
+                    catch
+                    {
+                        SetToZero();
+                        M1[0] = M1[0] - 1;
+                        M2[0] = M2[0] - 1;
+                        M3[0] = M3[0] - 1;
+                        M4[0] = M4[0] - 1;
+                        SetToLetter();
                     }
                 }
 

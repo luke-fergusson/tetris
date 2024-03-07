@@ -25,9 +25,16 @@
 
     public void ChangeBoard(int row, int col, char val)// used to update board
     {
-        if (row <= 9 && col <= 19) // checks that changes don't go out of bounds of the array
+        try
         {
-            currentGameBoards[row, col] = val;
+            if (row <= 9 && col <= 19) // checks that changes don't go out of bounds of the array
+            {
+                currentGameBoards[row, col] = val;
+            }
+        }
+        catch
+        {
+
         }
 
     }

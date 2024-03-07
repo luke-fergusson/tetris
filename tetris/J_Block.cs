@@ -78,23 +78,59 @@
             {
                 if (State == 0)
                 {
-                    if (PB[M2[0], M2[1] + 1] != '0' || PB[M3[0], M3[1] + 1] != '0' || PB[M4[0], M4[1] + 1] != '0')
+                    try
                     {
-                        return true;
+                        if (PB[M2[0], M2[1] + 1] != '0' || PB[M3[0], M3[1] + 1] != '0' || PB[M4[0], M4[1] + 1] != '0')
+                        {
+                            return true;
+                        }
+                    }
+                    catch
+                    {
+                        SetToZero();
+                        M1[0] = M1[0] - 1;
+                        M2[0] = M2[0] - 1;
+                        M3[0] = M3[0] - 1;
+                        M4[0] = M4[0] - 1;
+                        SetToLetter();
                     }
                 }
                 if (State == 1 || State == 3)
                 {
-                    if (PB[M1[0], M1[1] + 1] != '0' || PB[M4[0], M4[1] + 1] != '0')
+                    try
                     {
-                        return true;
+                        if (PB[M1[0], M1[1] + 1] != '0' || PB[M4[0], M4[1] + 1] != '0')
+                        {
+                            return true;
+                        }
+                    }
+                    catch
+                    {
+                        SetToZero();
+                        M1[0] = M1[0] - 1;
+                        M2[0] = M2[0] - 1;
+                        M3[0] = M3[0] - 1;
+                        M4[0] = M4[0] - 1;
+                        SetToLetter();
                     }
                 }
                 if (State == 2)
                 {
-                    if (PB[M1[0], M1[1] + 1] != '0' || PB[M4[0], M4[1] + 1] != '0' || PB[M2[0], M2[1] + 1] != '0')
+                    try
+                    { 
+                        if (PB[M1[0], M1[1] + 1] != '0' || PB[M4[0], M4[1] + 1] != '0' || PB[M2[0], M2[1] + 1] != '0')
+                        {
+                            return true;
+                        }
+                    }
+                    catch
                     {
-                        return true;
+                        SetToZero();
+                        M1[0] = M1[0] + 1;
+                        M2[0] = M2[0] + 1;
+                        M3[0] = M3[0] + 1;
+                        M4[0] = M4[0] + 1;
+                        SetToLetter();
                     }
                 }
 

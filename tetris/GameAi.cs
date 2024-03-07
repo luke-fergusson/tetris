@@ -490,7 +490,11 @@ namespace tetris
          * 
          */
 
-
+        /// <summary>
+        /// As simulating the moves uses it own board can't use block objects so code needs to be copyied and modified to allow the move to be simulated
+        /// as block operate slightly differently than in the standard game as blocks need to be moved down then rotated to ensure no out of bounds error
+        /// collision are do differently as well and need to check the simulated board collisions not the game boards collisions
+        /// </summary>
         public void RotateClockwiseJBlock() // different
         {
             switch (currentBlock.State)
@@ -1124,7 +1128,7 @@ namespace tetris
             switch (name.FullName)
             {
                 case "tetris.S_Block":
-                    leftNum = 5;// each block and rotation needs it own different travsal number
+                    leftNum = 5;// each block and rotation needs it own different travsal number as not to cause an out of bounds error
                     rightNum = 4;
                     break;
                 case "tetris.T_Block":
@@ -1263,7 +1267,7 @@ namespace tetris
 
 
 
-                if (currentBlock.State == 5)
+                if (currentBlock.State == 5 || currentBlock.State == 5)
                 {
                     for (int k = 0; k < 10; k++)
                     {
@@ -1341,7 +1345,7 @@ namespace tetris
                     }
                 }
                 moves.Add(new BestMove { HorizontalMovement = count, RotationState = currentBlock.State, HighestPoint = Highest(), ClosestToWall = DistanceToWall(currentBlock.M4[0], currentBlock.M1[0], "Left"), Direction = "Left", NumOfGaps = CountGaps(), CompleteRows = CompleteRow(), FillHole = FillGapCheck(original) });
-                if (currentBlock.State == 5)
+                if (currentBlock.State == 5 || currentBlock.State == 5)
                 {
                     for (int k = 0; k < 10; k++)
                     {
@@ -1498,11 +1502,10 @@ namespace tetris
         }
 
 
-        public int Best()
+        public int Best()// sorts moves to find the best one
         {
             List<BestMove> HPointList = new List<BestMove>();// a list of the Lowest down block
             List<BestMove> GapList = new List<BestMove>();// list of the moves with the fewest number of gaps created
-            List<BestMove> MovesToRemove = new List<BestMove>();
             BestMove TopGap = new BestMove();
 
             HPoint = moves.OrderByDescending(Top => Top.HighestPoint).FirstOrDefault(); //highest point on the board
@@ -1517,55 +1520,8 @@ namespace tetris
                 }
 
             }
-            //if (currentBlock.CurrentLetter == 'j')// fills gaps giving false positives so needs to be removed
-            //{
-            //    foreach (BestMove move in moves)
-            //    {
-            //        if (move.RotationState == 1)
-            //        {
-            //            MovesToRemove.Add(move);
-            //        }
+            
 
-            //    }
-            //}
-            //if (currentBlock.CurrentLetter == 'l')
-            //{
-            //    foreach (BestMove move in moves)
-            //    {
-            //        if (move.RotationState == 3)
-            //        {
-            //            MovesToRemove.Add(move);
-            //        }
-
-            //    }
-            //}
-            //foreach (BestMove moveToRem in MovesToRemove)
-            //{
-            //    HPointList.Remove(moveToRem);
-            //}
-
-            //if (currentBlock.CurrentLetter == 'i' || currentBlock.CurrentLetter == 's')
-            //{
-
-            //    foreach (BestMove move in HPointList)// filles in a gap for i blocks
-            //    {
-
-            //        if (move.FillHole == true)
-            //        {
-            //            HPointList.Add(move);
-
-            //            HPoint = move;
-            //            Debug.WriteLine(" HM " + HPoint.HorizontalMovement);
-            //            Debug.WriteLine(" HP " + HPoint.HighestPoint);
-            //            Debug.WriteLine(" RS " + HPoint.RotationState);
-            //            HPointList.Clear();
-            //            moves.Clear();
-            //            GapList.Clear();
-            //            return HPoint.HorizontalMovement;
-            //        }
-
-            //    }
-            //}
             //HPoint = HPointList.OrderByDescending(Top => Top.HighestPoint).FirstOrDefault();
             if (HPoint.CompleteRows == true)// checks if a completed row is found and plays that
             {
@@ -1587,6 +1543,28 @@ namespace tetris
                     HPointList.Add(bestMove);// makes a list of all lowest moves 
                 }
 
+            }
+            if (currentBlock.CurrentLetter != 'i')
+            {
+
+                foreach (BestMove move in HPointList)// filles in a gap for i blocks
+                {
+
+                    if (move.FillHole == true)
+                    {
+                        HPointList.Add(move);
+
+                        HPoint = move;
+                        Debug.WriteLine(" HM " + HPoint.HorizontalMovement);
+                        Debug.WriteLine(" HP " + HPoint.HighestPoint);
+                        Debug.WriteLine(" RS " + HPoint.RotationState);
+                        HPointList.Clear();
+                        moves.Clear();
+                        GapList.Clear();
+                        return HPoint.HorizontalMovement;
+                    }
+
+                }
             }
             TopGap = HPointList.OrderBy(Gap => Gap.NumOfGaps).FirstOrDefault();
             foreach (BestMove bestMove in HPointList)

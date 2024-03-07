@@ -70,7 +70,6 @@ namespace tetris
         public List<int> LeaderBoard = new List<int>();
 
         public Random random = new Random();
-        public Queue<int> upComingBlocks = new Queue<int>(4);// stores the next fall blocks to be called
 
         public Type BlockType;
         public int HorizontalMove;
@@ -84,7 +83,7 @@ namespace tetris
         private int numOfRot = 0;
 
         private int score = 0;
-        private double speed = 200; // in miliseonds how fast pieces fall
+        private double speed = 200; // in miliseonds how fast pieces fall// start speed is 200
 
         private KeyboardState previousKeyboardState;
         private KeyboardState currentKeyboardState;
@@ -124,9 +123,9 @@ namespace tetris
             count = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             TimeElapsed = TimeElapsed + count;
             int speedMultiplier = score % 1000;// checks the score for every thousand 
-            if (speedMultiplier == 0 && score != 0)
+            if (speedMultiplier == 0 && score != 0 && score != 1000)
             {
-                newSpeed = speed / (score / 1000);// for every thousand score increase by 10000th of that
+                newSpeed = speed / (score / 1500);// for every thousand score increase by 1500th of that
             }
             else
             {
@@ -162,8 +161,9 @@ namespace tetris
             // TODO: Add your initialization logic here
 
             previousBoards = blocks.board.GetBoard();
-            blocks = T_Block;
+            //blocks = T_Block;
             //RanBlock();// generates a radom block
+            TempOrder();
             blocks.StarPosition();
             IsMouseVisible = true;
             _state = GameStates.Menu;
@@ -740,10 +740,133 @@ namespace tetris
             currentBoards = previousBoards;
             //blocks = new T_Block();
             //BlockList.Add(blocks);
-            RanBlock();
+            //RanBlock();
+            TempOrder();
             blocks.board.currentGameBoards = currentBoards;
             blocks.StarPosition();
             DrawBoard();
+        }
+        private int tempCount = 0;
+        private void TempOrder()
+        {
+            switch (tempCount)
+            {
+                case 0:
+                    blocks = new T_Block();
+                    
+                    break;
+                case 1:
+                    blocks = new T_Block();
+                    
+                    break;
+                case 2:
+                    blocks =new T_Block();
+                    
+                    break;
+                case 3:
+                    blocks = new O_Block();
+                    
+                    break;
+                case 4:
+                    blocks = new O_Block();
+                    
+                    break;
+                case 5:
+                    blocks = new I_Block();
+                    
+                    break;
+                case 6:
+                    blocks = new S_Block();
+                    
+                    break;
+                case 7:
+                    blocks = new Z_Block();
+                    
+                    break;
+                case 8:
+                    blocks = new Z_Block();
+                    
+                    break;
+                case 9:
+                    blocks = new O_Block();
+                    
+                    break;
+                case 10:
+                    blocks = new I_Block();
+                    
+                    break;
+                case 11:
+                    blocks = new T_Block();
+                    
+                    break;
+                case 12:
+                    blocks = new L_Block();
+                    
+                    break;
+                case 13:
+                    blocks = new J_Block();
+                    
+                    break;
+                case 14:
+                    blocks = new T_Block();
+                    
+                    break;
+                case 15:
+                    blocks = new O_Block();
+                    
+                    break;
+                case 16:
+                    blocks = new T_Block();
+                    
+                    break;
+                case 17:
+                    blocks = new L_Block();
+                    
+                    break;
+                case 18:
+                    blocks = new S_Block();
+                    
+                    break;
+                case 19:
+                    blocks = new J_Block();
+                    
+                    break;
+                case 20:
+                    blocks = new O_Block();
+                    
+                    break;
+                case 21:
+                    blocks = new T_Block();
+
+                    break;
+                case 22:
+
+                    blocks = new I_Block();
+                    break;
+                case 23:
+                    blocks = new Z_Block();
+                    break;
+                case 24:
+                    blocks = new O_Block();
+                    break;
+                case 25:
+                    blocks = new I_Block();
+                    break;
+                case 26:
+                    blocks = new L_Block();
+                    break;
+                case 27:
+                    blocks = new L_Block();
+                    break;
+                default:
+                    RanBlock();
+                    break;
+
+
+
+            }
+            BlockList.Add(blocks);
+            tempCount++;
         }
         //generates a random block from 1 to sever and adds them to a queue
         private void RanBlock()
@@ -865,7 +988,7 @@ namespace tetris
             {
                 GameBoard = blocks.board.currentGameBoards,
                 CurrentScore = score,
-                CM1_0 = blocks.M1[0],// sets current position to null so not copied over
+                CM1_0 = blocks.M1[0],
                 CM2_0 = blocks.M2[0],
                 CM3_0 = blocks.M3[0],
                 CM4_0 = blocks.M4[0],

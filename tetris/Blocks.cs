@@ -13,7 +13,7 @@
     public int[] M4;
     public char CurrentLetter;
 
-    public virtual void Down()
+    public void Down()
     {
 
         SetToZero();
@@ -25,7 +25,7 @@
         //sets each current position on the board to 0 moves all the coordinates down and updates there position
 
     }
-    public virtual void StarPosition()
+    public void StarPosition()
     {
         SetToLetter();// sets the coordinates of the blocks to its assigned letter
     }
@@ -127,14 +127,14 @@
     {
 
     }
-    public virtual void SetToZero()
+    public  void SetToZero()
     {
         board.ChangeBoard(M1[0], M1[1], '0');
         board.ChangeBoard(M2[0], M2[1], '0');
         board.ChangeBoard(M3[0], M3[1], '0');
         board.ChangeBoard(M4[0], M4[1], '0');// replacing previous poistion with 0's 
     }
-    public virtual void SetToLetter()
+    public  void SetToLetter()
     {
         board.ChangeBoard(M1[0], M1[1], CurrentLetter);
         board.ChangeBoard(M2[0], M2[1], CurrentLetter);

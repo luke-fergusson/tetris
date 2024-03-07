@@ -162,8 +162,8 @@ namespace tetris
 
             previousBoards = blocks.board.GetBoard();
             //blocks = Z_Block;
-            //RanBlock();// generates a radom block
-            TempOrder();
+            RanBlock();// generates a radom block
+            //TempOrder();
             blocks.StarPosition();
             IsMouseVisible = true;
             _state = GameStates.Menu;
@@ -738,8 +738,8 @@ namespace tetris
             currentBoards = previousBoards;
             //blocks = new Z_Block();
             //BlockList.Add(blocks);
-            //RanBlock();
-            TempOrder();
+            RanBlock();
+            //TempOrder();
             blocks.board.currentGameBoards = currentBoards;
             blocks.StarPosition();
             DrawBoard();
@@ -751,87 +751,87 @@ namespace tetris
             {
                 case 0:
                     blocks = new T_Block();
-                    
+
                     break;
                 case 1:
                     blocks = new T_Block();
-                    
+
                     break;
                 case 2:
-                    blocks =new T_Block();
-                    
+                    blocks = new T_Block();
+
                     break;
                 case 3:
                     blocks = new O_Block();
-                    
+
                     break;
                 case 4:
                     blocks = new O_Block();
-                    
+
                     break;
                 case 5:
                     blocks = new I_Block();
-                    
+
                     break;
                 case 6:
                     blocks = new S_Block();
-                    
+
                     break;
                 case 7:
                     blocks = new Z_Block();
-                    
+
                     break;
                 case 8:
                     blocks = new Z_Block();
-                    
+
                     break;
                 case 9:
                     blocks = new O_Block();
-                    
+
                     break;
                 case 10:
                     blocks = new I_Block();
-                    
+
                     break;
                 case 11:
                     blocks = new T_Block();
-                    
+
                     break;
                 case 12:
                     blocks = new L_Block();
-                    
+
                     break;
                 case 13:
                     blocks = new J_Block();
-                    
+
                     break;
                 case 14:
                     blocks = new T_Block();
-                    
+
                     break;
                 case 15:
                     blocks = new O_Block();
-                    
+
                     break;
                 case 16:
                     blocks = new T_Block();
-                    
+
                     break;
                 case 17:
                     blocks = new L_Block();
-                    
+
                     break;
                 case 18:
                     blocks = new S_Block();
-                    
+
                     break;
                 case 19:
                     blocks = new J_Block();
-                    
+
                     break;
                 case 20:
                     blocks = new O_Block();
-                    
+
                     break;
                 case 21:
                     blocks = new T_Block();

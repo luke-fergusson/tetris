@@ -997,7 +997,7 @@ namespace tetris
                 CM4_1 = blocks.M4[1],
                 CurrentSpeed = speed,
             };
-            string jsonData = JsonConvert.SerializeObject(gameStates, Formatting.Indented);//used to convert array into a json format
+            string jsonData = JsonConvert.SerializeObject(gameStates);//used to convert array into a json format
             File.WriteAllText(fileName, jsonData);
 
             LeaderBoard.Add(score);
